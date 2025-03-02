@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "org.xiyu.yee.createplus.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "createplus.refmap.json",
+  "mixins": [
+    "PlayerMixin",
+    "ClientPacketListenerMixin"
+  ],
+  "client": [
+    "MapRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

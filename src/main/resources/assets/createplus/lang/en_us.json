@@ -1,0 +1,9 @@
+{
+  "feature.createplus.spinbot.name": "Spin Bot",
+  "feature.createplus.spinbot.description": "Rotate like a spinning top",
+  "message.createplus.spinbot.enabled": "Spin Bot enabled - Third person view recommended",
+  "key.createplus.toggle_hud": "Toggle Feature Menu",
+  "key.categories.createplus": "Create Plus",
+  "itemGroup.createplus.player_items": "Create Plus - Player Items",
+  "itemGroup.createplus.spawn_eggs": "Create Plus - Spawn Eggs"
+} 

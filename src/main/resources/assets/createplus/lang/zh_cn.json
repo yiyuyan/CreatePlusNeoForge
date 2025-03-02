@@ -1,0 +1,20 @@
+{
+  "feature.createplus.spinbot.name": "陀螺旋转",
+  "feature.createplus.spinbot.description": "像陀螺一样旋转",
+  "message.createplus.spinbot.enabled": "陀螺旋转已启用 - 建议使用第三人称视角",
+  "feature.createplus.speedbuild.name": "快速建造",
+  "feature.createplus.speedbuild.description": "提高创造模式下的方块放置速度",
+  "feature.createplus.areacopy.name": "区域复制",
+  "feature.createplus.areacopy.description": "复制和粘贴选定区域的建筑",
+  "feature.createplus.infiniteplacement.name": "无限放置",
+  "feature.createplus.infiniteplacement.description": "创造模式下物品无限放置",
+  "feature.createplus.mirrorbuild.name": "镜像建造",
+  "feature.createplus.mirrorbuild.description": "同时在对称位置放置方块",
+  "key.createplus.toggle_hud": "切换功能菜单",
+  "key.categories.createplus": "Create Plus",
+  "feature.createplus.directplace.name": "直接放置",
+  "feature.createplus.directplace.description": "矿车可以直接放置而不需要铁轨",
+  "itemGroup.createplus.player_items": "Create Plus - 玩家物品",
+  "itemGroup.createplus.spawn_eggs": "Create Plus - 实体刷怪蛋",
+  "itemGroup.createplus.hidden_items": "隐藏物品"
+} 

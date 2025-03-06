@@ -1,57 +1,41 @@
 package org.xiyu.yee.createplus;
 
 import com.mojang.logging.LogUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 import net.minecraft.network.chat.Component;
-import org.xiyu.yee.createplus.features.FeatureManager;
+import org.xiyu.yee.createplus.features.*;
 
-import org.xiyu.yee.createplus.features.Gibbon;
-import org.xiyu.yee.createplus.features.SpeedAdjust;
 import org.xiyu.yee.createplus.ui.FeatureScreen;
 
 import org.xiyu.yee.createplus.commands.FeaturesCommand;
 
-import org.xiyu.yee.createplus.features.CreativePlusFeature;
-import net.minecraft.ChatFormatting;
-import org.xiyu.yee.createplus.utils.ConfigManager;
 import org.xiyu.yee.createplus.utils.KeyBindings;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import org.xiyu.yee.createplus.tabs.SpawnEggsTab;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.registries.BuiltInRegistries;
 import java.util.HashSet;
 import java.util.Set;
-import net.minecraftforge.client.event.RenderGuiEvent;
+
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import org.xiyu.yee.createplus.events.ChatSuggestionHandler;
 
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -61,10 +45,9 @@ public class Createplus {
     // Define mod id in a common place for everything to reference
     public static final String MODID = "createplus";
     // Directly reference a slf4j logger
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
     // Create a Deferred Register to hold Blocks which will all be registered under the "createplus" namespace
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
+
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
     // 创建创造模式物品栏
@@ -144,6 +127,14 @@ public class Createplus {
         // 在FEATURE_MANAGER初始化时添加新功能
         FEATURE_MANAGER.registerFeature(new Gibbon());
         FEATURE_MANAGER.registerFeature(new SpeedAdjust());
+        FEATURE_MANAGER.registerFeature(new Freecam());
+        FEATURE_MANAGER.registerFeature(new Zoom());
+        FEATURE_MANAGER.registerFeature(new Performance());
+        FEATURE_MANAGER.registerFeature(new TimeWeatherControl());
+        FEATURE_MANAGER.registerFeature(new MiniHUD());
+
+        // 注册聊天建议处理器
+        MinecraftForge.EVENT_BUS.register(ChatSuggestionHandler.class);
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
@@ -181,8 +172,9 @@ public class Createplus {
 
         @SubscribeEvent
         public static void registerBindings(RegisterKeyMappingsEvent event) {
-            // 在这里注册按键绑定
             event.register(KeyBindings.TOGGLE_HUD);
+            event.register(KeyBindings.TOGGLE_FREECAM);
+            event.register(KeyBindings.TOGGLE_ZOOM);
         }
     }
 
@@ -194,6 +186,13 @@ public class Createplus {
             if (featureScreen != null) {
                 featureScreen.render(event.getGuiGraphics(), 0, 0, event.getPartialTick());
             }
+            
+            // 渲染MiniHUD
+            FEATURE_MANAGER.getFeatures().stream()
+                .filter(feature -> feature instanceof MiniHUD)
+                .map(feature -> (MiniHUD) feature)
+                .findFirst()
+                .ifPresent(miniHUD -> miniHUD.render(event.getGuiGraphics(), event.getPartialTick()));
         }
     }
 }

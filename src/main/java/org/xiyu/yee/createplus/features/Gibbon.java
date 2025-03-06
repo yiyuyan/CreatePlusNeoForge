@@ -4,9 +4,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import java.util.Arrays;
 
 public class Gibbon extends CreativePlusFeature {
@@ -14,14 +16,14 @@ public class Gibbon extends CreativePlusFeature {
     private static final ItemStack GIBBON_LEGGINGS = createGibbonLeggings();
 
     public Gibbon() {
-        super("长臂猿", "获得超长的攻击和放置距离");
+        super("长臂猿", "通过特殊装备增加交互距离");
     }
 
     private static ItemStack createGibbonLeggings() {
         ItemStack leggings = new ItemStack(Items.CHAINMAIL_LEGGINGS);
         CompoundTag tag = new CompoundTag();
-        
-        // 设置显示名称和Lore
+
+        // 设置显示信息
         CompoundTag display = new CompoundTag();
         display.putString("Name", "[{\"text\":\"CreatePlus\",\"color\":\"aqua\"},{\"text\":\"-\",\"italic\":false,\"bold\":true,\"color\":\"dark_red\"},{\"text\":\"长臂猿裤衩子\",\"italic\":false,\"bold\":true,\"color\":\"gold\"}]");
         
@@ -33,14 +35,17 @@ public class Gibbon extends CreativePlusFeature {
 
         // 添加附魔
         ListTag enchantments = new ListTag();
-        String[] enchants = {"aqua_affinity:1", "bane_of_arthropods:255", "binding_curse:1", "blast_protection:255",
-                "channeling:1", "depth_strider:255", "efficiency:255", "feather_falling:255", "fire_aspect:255",
-                "fire_protection:255", "flame:1", "fortune:255", "frost_walker:255", "impaling:255", "infinity:1",
-                "knockback:255", "looting:255", "loyalty:255", "luck_of_the_sea:255", "lure:255", "mending:1",
-                "multishot:1", "piercing:255", "power:255", "projectile_protection:255", "protection:255",
-                "punch:255", "quick_charge:255", "respiration:255", "riptide:255", "sharpness:255", "silk_touch:1",
-                "smite:255", "soul_speed:255", "sweeping:255", "swift_sneak:255", "thorns:255", "unbreaking:255",
-                "vanishing_curse:1"};
+        String[] enchants = {
+            "aqua_affinity:1", "bane_of_arthropods:255", "binding_curse:1", "blast_protection:255",
+            "channeling:1", "depth_strider:255", "efficiency:255", "feather_falling:255",
+            "fire_aspect:255", "fire_protection:255", "flame:1", "fortune:255", "frost_walker:255",
+            "impaling:255", "infinity:1", "knockback:255", "looting:255", "loyalty:255",
+            "luck_of_the_sea:255", "lure:255", "mending:1", "multishot:1", "piercing:255",
+            "power:255", "projectile_protection:255", "protection:255", "punch:255",
+            "quick_charge:255", "respiration:255", "riptide:255", "sharpness:255",
+            "silk_touch:1", "smite:255", "soul_speed:255", "sweeping:255", "swift_sneak:255",
+            "thorns:255", "unbreaking:255", "vanishing_curse:1"
+        };
 
         for (String enchant : enchants) {
             String[] parts = enchant.split(":");
@@ -59,16 +64,15 @@ public class Gibbon extends CreativePlusFeature {
             "generic.attack_knockback:10240:-12522:68915:53515:-137830",
             "generic.attack_speed:10240:-12522:69215:53515:-138430",
             "generic.knockback_resistance:10240:-12522:69515:53515:-139030",
-            "forge:reach_distance:10240:-12522:69815:53515:-139630",
-            "forge:attack_range:10240:-12522:70115:53515:-140230",
-            "forge:step_height:10240:-12522:70415:53515:-140830"
+            "forge:entity_reach:10240:-12522:69815:53515:-139630",
+            "forge:block_reach:10240:-12522:70115:53515:-140230",
+            "forge:nametag_distance:10240:-12522:70415:53515:-140830"
         };
 
         for (String attr : attrs) {
             String[] parts = attr.split(":");
             CompoundTag attrTag = new CompoundTag();
             
-            // 处理命名空间
             String attributeName;
             if (parts[0].equals("forge")) {
                 attributeName = "forge:" + parts[1];
@@ -80,7 +84,7 @@ public class Gibbon extends CreativePlusFeature {
             
             attrTag.putString("AttributeName", attributeName);
             attrTag.putDouble("Amount", Double.parseDouble(parts[0]));
-            int[] uuid = new int[] {
+            int[] uuid = {
                 Integer.parseInt(parts[1]),
                 Integer.parseInt(parts[2]),
                 Integer.parseInt(parts[3]),
@@ -88,7 +92,7 @@ public class Gibbon extends CreativePlusFeature {
             };
             attrTag.putIntArray("UUID", uuid);
             attrTag.putString("Name", "1740865094613");
-            attrTag.putString("Slot", "legs");  // 添加槽位信息
+            attrTag.putString("Slot", "legs");
             attributes.add(attrTag);
         }
         tag.put("AttributeModifiers", attributes);
@@ -96,7 +100,7 @@ public class Gibbon extends CreativePlusFeature {
         // 其他标签
         tag.putBoolean("Unbreakable", true);
         tag.putInt("HideFlags", 7);
-
+        
         leggings.setTag(tag);
         return leggings;
     }
@@ -105,11 +109,10 @@ public class Gibbon extends CreativePlusFeature {
     public void onEnable() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player != null) {
-            // 保存原有护腿
-            originalLeggings = mc.player.getInventory().armor.get(1).copy();
-            // 装备长臂猿护腿
+            // 保存原始装备并装备长臂猿裤子
+            this.originalLeggings = mc.player.getInventory().armor.get(1).copy();
             mc.player.getInventory().armor.set(1, GIBBON_LEGGINGS.copy());
-            mc.player.sendSystemMessage(Component.literal("§b长臂猿已启用"));
+            mc.player.displayClientMessage(Component.literal("已装备长臂猿裤衩子"), true);
         }
     }
 
@@ -117,9 +120,9 @@ public class Gibbon extends CreativePlusFeature {
     public void onDisable() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player != null) {
-            // 恢复原有护腿
-            mc.player.getInventory().armor.set(1, originalLeggings);
-            mc.player.sendSystemMessage(Component.literal("§7长臂猿已禁用"));
+            // 恢复原始装备
+            mc.player.getInventory().armor.set(1, this.originalLeggings);
+            mc.player.displayClientMessage(Component.literal("已卸下长臂猿裤衩子"), true);
         }
     }
 

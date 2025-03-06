@@ -8,18 +8,33 @@ import net.minecraft.world.entity.player.Abilities;
 import org.lwjgl.glfw.GLFW;
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.LivingEntity;
+import java.util.UUID;
 
 public class SpeedAdjust extends CreativePlusFeature implements SubHUDFeature {
     private final Map<SpeedType, Float> speedMultipliers = new HashMap<>();
     private SpeedType selectedType = SpeedType.WALK;
     private boolean showSubHUD = false;
+    private float spinBotSpeed = 1.0f;
+    private static final float MIN_SPINBOT_SPEED = 0.1f;
+    private static final float MAX_SPINBOT_SPEED = 10.0f;
+    private static final float SPINBOT_SPEED_STEP = 0.1f;
     
+    // 为每种速度类型创建唯一的UUID
+    private static final UUID SWIM_SPEED_UUID = UUID.fromString("9c33c313-0d71-4d44-b033-6c7fbaa5f034");
+    private static final UUID ELYTRA_SPEED_UUID = UUID.fromString("3b8c1e6e-32dd-4b51-a807-7c5c0a4485c5");
+    private static final UUID RIDE_SPEED_UUID = UUID.fromString("2c2d6933-3e3a-4b40-a923-b4906d7d2b5a");
+    private static final UUID SPINBOT_SPEED_UUID = UUID.fromString("1d2e3f4a-5b6c-7d8e-9f0a-1b2c3d4e5f6a");
+
     public enum SpeedType {
         WALK("行走速度", 0.1f, 10.0f, 1.0f),
         FLY("飞行速度", 0.1f, 10.0f, 1.0f),
         RIDE("骑乘速度", 0.1f, 10.0f, 1.0f),
         SWIM("游泳速度", 0.1f, 10.0f, 1.0f),
-        ELYTRA("鞘翅速度", 0.1f, 10.0f, 1.0f);
+        ELYTRA("鞘翅速度", 0.1f, 10.0f, 1.0f),
+        SPINBOT("陀螺速度", MIN_SPINBOT_SPEED, MAX_SPINBOT_SPEED, 1.0f);
 
         final String name;
         final float min;
@@ -205,7 +220,34 @@ public class SpeedAdjust extends CreativePlusFeature implements SubHUDFeature {
 
     @Override
     public void onTick() {
-        // 移除tick中的键盘检查，完全依赖handleKeyPress
+        if (!isEnabled()) return;
+
+        Minecraft mc = Minecraft.getInstance();
+        Player player = mc.player;
+        if (player == null) return;
+
+        // 检查并应用游泳速度
+        if (player.isSwimming() || player.isInWater()) {
+            float swimSpeed = speedMultipliers.getOrDefault(SpeedType.SWIM, 1.0f);
+            // 直接修改玩家速度向量
+            if (swimSpeed != 1.0f) {
+                player.setDeltaMovement(player.getDeltaMovement().multiply(swimSpeed, swimSpeed, swimSpeed));
+            }
+        }
+
+        // 检查并应用鞘翅速度
+        if (player.isFallFlying()) {
+            float elytraSpeed = speedMultipliers.getOrDefault(SpeedType.ELYTRA, 1.0f);
+            player.setDeltaMovement(player.getDeltaMovement().multiply(elytraSpeed, 1.0, elytraSpeed));
+        }
+
+        // 检查并应用骑乘速度
+        if (player.getVehicle() instanceof LivingEntity mount) {
+            float rideSpeed = speedMultipliers.getOrDefault(SpeedType.RIDE, 1.0f);
+            if (rideSpeed != 1.0f) {
+                mount.setDeltaMovement(mount.getDeltaMovement().multiply(rideSpeed, 1.0, rideSpeed));
+            }
+        }
     }
 
     /**
@@ -216,33 +258,56 @@ public class SpeedAdjust extends CreativePlusFeature implements SubHUDFeature {
     private void setSpeedMultiplier(SpeedType type, float multiplier) {
         // 确保倍率在有效范围内
         multiplier = Math.max(type.min, Math.min(type.max, multiplier));
+        // 保存速度值
         speedMultipliers.put(type, multiplier);
-        
+        // 应用速度
+        applySpeed(type, multiplier);
+    }
+
+    private void applySpeed(SpeedType type, float value) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player != null) {
-            Abilities abilities = mc.player.getAbilities();
-            switch (type) {
-                case WALK:
-                    abilities.setWalkingSpeed(0.1f * multiplier);
-                    mc.player.getAttribute(Attributes.MOVEMENT_SPEED)
-                        .setBaseValue(0.1 * multiplier);
-                    break;
-                case FLY:
-                    abilities.setFlyingSpeed(0.05f * multiplier);
-                    break;
-                case RIDE:
-                    // 骑乘速度调整暂未实现
-                    break;
-                case SWIM:
-                    // 游泳速度调整暂未实现
-                    break;
-                case ELYTRA:
-                    // 鞘翅速度调整暂未实现
-                    break;
-            }
-            
-            // 同步能力更新到客户端
-            mc.player.onUpdateAbilities();
+        Player player = mc.player;
+        if (player == null) return;
+
+        switch (type) {
+            case WALK:
+                player.getAbilities().setWalkingSpeed(0.1f * value);
+                player.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.1 * value);
+                break;
+
+            case FLY:
+                player.getAbilities().setFlyingSpeed(0.05f * value);
+                break;
+
+            case SWIM:
+                speedMultipliers.put(SpeedType.SWIM, value);
+                break;
+
+            case ELYTRA:
+                speedMultipliers.put(SpeedType.ELYTRA, value);
+                break;
+
+            case RIDE:
+                speedMultipliers.put(SpeedType.RIDE, value);
+                break;
+
+            case SPINBOT:
+                speedMultipliers.put(SpeedType.SPINBOT, value);
+                break;
         }
+
+        player.onUpdateAbilities();
+    }
+
+    public float getSpinBotSpeed() {
+        return speedMultipliers.getOrDefault(SpeedType.SPINBOT, 1.0f);
+    }
+
+    public float getSpeedValue(SpeedType type) {
+        return speedMultipliers.getOrDefault(type, type.defaultValue);
+    }
+
+    public void setSpeedValue(SpeedType type, float value) {
+        setSpeedMultiplier(type, value);
     }
 } 

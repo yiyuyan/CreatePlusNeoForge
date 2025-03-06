@@ -2,40 +2,42 @@ package org.xiyu.yee.createplus.features;
 
 import org.xiyu.yee.createplus.utils.ConfigManager;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FeatureManager {
-    private final List<CreativePlusFeature> features = new ArrayList<>();
+    private final Map<String, CreativePlusFeature> features = new HashMap<>();
+    private final List<CreativePlusFeature> featureList = new ArrayList<>();
 
     public FeatureManager() {
-        // 先注册功能
         registerFeatures();
-        // 在所有功能注册后再加载配置
-        // ConfigManager.loadConfig(); // 移除这行
+        ConfigManager.init(); // 初始化并加载配置
     }
 
     private void registerFeatures() {
         // 飞行增强
-        features.add(new ImprovedFlight());
+        featureList.add(new ImprovedFlight());
         // 无限放置
-        features.add(new InfinitePlacement());
+        featureList.add(new InfinitePlacement());
         // 快速建造
-        features.add(new SpeedBuild());
+        featureList.add(new SpeedBuild());
         // 区域复制
-        features.add(new AreaCopy());
+        featureList.add(new AreaCopy());
         // 镜像建造
-        features.add(new MirrorBuild());
-        features.add(new SpinBot());
-        features.add(new Nucker());
-        features.add(new AreaPlace());
-        features.add(new BlockColorSwap());
-        features.add(new BuildingExport());
-        features.add(new Scaffold());
-        features.add(new GammaOverride());
+        featureList.add(new MirrorBuild());
+        featureList.add(new SpinBot());
+        featureList.add(new Nucker());
+        featureList.add(new AreaPlace());
+        featureList.add(new BlockColorSwap());
+        featureList.add(new BuildingExport());
+        featureList.add(new Scaffold());
+        featureList.add(new GammaOverride());
+        registerFeature(new PingDisplay());
     }
 
     public void onTick() {
-        for (CreativePlusFeature feature : features) {
+        for (CreativePlusFeature feature : featureList) {
             if (feature.isEnabled()) {
                 feature.onTick();
             }
@@ -48,10 +50,25 @@ public class FeatureManager {
     }
 
     public List<CreativePlusFeature> getFeatures() {
-        return features;
+        return featureList;
     }
 
     public void registerFeature(CreativePlusFeature feature) {
-        features.add(feature);
+        features.put(feature.getName(), feature);
+        featureList.add(feature);
+    }
+
+    public CreativePlusFeature getFeature(String name) {
+        return features.get(name);
+    }
+
+    public void onEnable(CreativePlusFeature feature) {
+        feature.setEnabled(true);
+        feature.onEnable();
+    }
+
+    public void onDisable(CreativePlusFeature feature) {
+        feature.setEnabled(false);
+        feature.onDisable();
     }
 } 

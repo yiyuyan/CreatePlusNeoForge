@@ -12,6 +12,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.xiyu.yee.createplus.Createplus;
 import org.xiyu.yee.createplus.features.CreativePlusFeature;
+import org.xiyu.yee.createplus.utils.HelpManager;
 
 import java.util.stream.Collectors;
 
@@ -43,9 +44,16 @@ public class FeaturesCommand {
                 }))
             .then(Commands.literal("help")
                 .executes(context -> {
-                    showHelp(context.getSource());
+                    showHelp(context.getSource(), null);
                     return 1;
-                }))
+                })
+                .then(Commands.argument("feature", StringArgumentType.greedyString())
+                    .suggests(FEATURE_SUGGESTIONS)
+                    .executes(context -> {
+                        String featureName = StringArgumentType.getString(context, "feature");
+                        showHelp(context.getSource(), featureName);
+                        return 1;
+                    })))
             .executes(context -> listFeatures(context.getSource()))); // 不带参数时列出所有功能
     }
 
@@ -73,56 +81,18 @@ public class FeaturesCommand {
         for (CreativePlusFeature feature : features) {
             String status = feature.isEnabled() ? "§a[已启用]" : "§7[已禁用]";
             source.sendSuccess(() -> 
-                Component.literal(status + " §f" + feature.getName()), false);
+                Component.literal(status + " §f" + feature.getName() + " §7- " + feature.getDescription()), false);
         }
         
+        source.sendSuccess(() -> Component.literal("\n§e使用 §6/features help <功能名> §e查看详细帮助"), false);
         return 1;
     }
 
-    private static void showHelp(CommandSourceStack source) {
-        source.sendSuccess(() -> Component.literal("§6=== CreatePlus 功能帮助 ==="), false);
-        
-        // 作者信息
-        source.sendSuccess(() -> Component.literal("\n§d作者信息:"), false);
-        source.sendSuccess(() -> Component.literal("§7作者: §b饩雨(God_xiyu)"), false);
-        source.sendSuccess(() -> Component.literal("§7交流群: §b691870136"), false);
-        source.sendSuccess(() -> Component.literal("§c请勿使用本模组进行恶意破坏，违者将被云黑名单封禁！"), false);
-        
-        // 基础功能
-        source.sendSuccess(() -> Component.literal("\n§e基础功能:"), false);
-        source.sendSuccess(() -> Component.literal("§7/features <功能名> - 开启/关闭功能"), false);
-        source.sendSuccess(() -> Component.literal("§7/features list - 显示所有功能"), false);
-        
-        // 建筑导出导入
-        source.sendSuccess(() -> Component.literal("\n§e建筑导出导入:"), false);
-        source.sendSuccess(() -> Component.literal("§b1. 导出建筑:"), false);
-        source.sendSuccess(() -> Component.literal("§7- 使用木铲右键选择两个点"), false);
-        source.sendSuccess(() -> Component.literal("§7- 输入 /exportbuilding <名称>"), false);
-        source.sendSuccess(() -> Component.literal("§7- 建筑会保存到 buildings/<名称>.mcfunction"), false);
-        
-        source.sendSuccess(() -> Component.literal("\n§b2. 导入建筑:"), false);
-        source.sendSuccess(() -> Component.literal("§7- 输入 /importbuilding <名称>"), false);
-        source.sendSuccess(() -> Component.literal("§7- 会显示绿色预览框"), false);
-        source.sendSuccess(() -> Component.literal("§7- 输入 /confirmimport 确认导入"), false);
-        source.sendSuccess(() -> Component.literal("§7- 输入 /cancelimport 取消导入"), false);
-        source.sendSuccess(() -> Component.literal("§c注意: 需要OP权限(2级)才能导入"), false);
-        
-        // 其他功能说明
-        source.sendSuccess(() -> Component.literal("\n§e其他功能:"), false);
-        source.sendSuccess(() -> Component.literal("§b范围放置:"), false);
-        source.sendSuccess(() -> Component.literal("§7- 副手持方块时自动生效"), false);
-        source.sendSuccess(() -> Component.literal("§7- 在目标位置周围形成球形放置区域"), false);
-        
-        source.sendSuccess(() -> Component.literal("\n§b方块变色:"), false);
-        source.sendSuccess(() -> Component.literal("§7- 按住左CTRL并滚动鼠标滚轮"), false);
-        source.sendSuccess(() -> Component.literal("§7- 可切换同类方块的颜色/材质"), false);
-        source.sendSuccess(() -> Component.literal("§7- 支持: 羊毛、玻璃、地毯、陶瓦等"), false);
-        
-        source.sendSuccess(() -> Component.literal("\n§b镜像建造:"), false);
-        source.sendSuccess(() -> Component.literal("§7- 使用木剑右键选择镜像点"), false);
-        source.sendSuccess(() -> Component.literal("§7- Shift+右键切换镜像轴"), false);
-        source.sendSuccess(() -> Component.literal("§7- 放置方块时会自动在对称位置放置"), false);
-        
-        source.sendSuccess(() -> Component.literal("\n§6=== 更多信息请你自己探索 ==="), false);
+    private static void showHelp(CommandSourceStack source, String featureName) {
+        if (featureName == null) {
+            HelpManager.showGeneralHelp(source);
+        } else {
+            HelpManager.showFeatureHelp(source, featureName);
+        }
     }
 } 

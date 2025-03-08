@@ -8,7 +8,7 @@ import net.neoforged.neoforge.common.NeoForge;
 public class Gibbon extends CreativePlusFeature {
 
     public Gibbon() {
-        super("长臂猿", "增加交互距离");
+        super("长臂猿", "通过修改玩家属性增加交互距离");
     }
     @Override
     public void onEnable() {

@@ -4,6 +4,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.xiyu.yee.createplus.Createplus;
@@ -30,7 +31,11 @@ public class SpawnEggsTab {
                 }
 
                 // 添加到创造标签页
-                event.accept(spawnEgg);
+                try {
+                    event.accept(spawnEgg);
+                } catch (Exception e) {
+                    if(!e.getMessage().contains("already exists in the tab's list")) e.printStackTrace();
+                }
             }
         }
     }
@@ -52,7 +57,7 @@ public class SpawnEggsTab {
         // 遍历所有物品查找对应的刷怪蛋
         for (var item : BuiltInRegistries.ITEM) {
             if (item instanceof net.minecraft.world.item.SpawnEggItem spawnEgg) {
-                if (spawnEgg.getType(null) == entityType) {
+                if (spawnEgg.getType(new ItemStack(spawnEgg)) == entityType) {
                     return new ItemStack(item);
                 }
             }
@@ -61,6 +66,10 @@ public class SpawnEggsTab {
     }
 
     private static ItemStack createCustomSpawnEgg(String entityId) {
-        return new ItemStack(Objects.requireNonNull(SpawnEggItem.byId(BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(entityId)))),1);
+        try {
+            return new ItemStack(Objects.requireNonNull(SpawnEggItem.byId(BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(entityId)))),1);
+        } catch (Exception e) {
+            return new ItemStack(Items.ALLAY_SPAWN_EGG);
+        }
     }
 } 

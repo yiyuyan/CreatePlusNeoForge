@@ -1,40 +1,42 @@
 package org.xiyu.yee.createplus.tabs;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.entity.EntityType;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraft.world.item.SpawnEggItem;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.xiyu.yee.createplus.Createplus;
+
+import java.util.Objects;
 
 public class SpawnEggsTab {
     public static void buildContents(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == Createplus.SPAWN_EGGS_TAB.getKey()) {
-            // éå†æ‰€æœ‰æ³¨å†Œçš„å®ä½“ç±»å‹
+            // ±éÀúËùÓĞ×¢²áµÄÊµÌåÀàĞÍ
             for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
-                // è·³è¿‡ä¸€äº›ç‰¹æ®Šå®ä½“
+                // Ìø¹ıÒ»Ğ©ÌØÊâÊµÌå
                 if (shouldSkipEntity(entityType)) continue;
 
-                // è·å–å®ä½“ID
+                // »ñÈ¡ÊµÌåID
                 String entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entityType).toString();
                 
-                // æ£€æŸ¥æ˜¯å¦æœ‰åŸç‰ˆåˆ·æ€ªè›‹
+                // ¼ì²éÊÇ·ñÓĞÔ­°æË¢¹Öµ°
                 ItemStack spawnEgg = getVanillaSpawnEgg(entityType);
                 
                 if (spawnEgg == null) {
-                    // å¦‚æœæ²¡æœ‰åŸç‰ˆåˆ·æ€ªè›‹ï¼Œåˆ›å»ºè‡ªå®šä¹‰çš„
+                    // Èç¹ûÃ»ÓĞÔ­°æË¢¹Öµ°£¬´´½¨×Ô¶¨ÒåµÄ
                     spawnEgg = createCustomSpawnEgg(entityId);
                 }
 
-                // æ·»åŠ åˆ°åˆ›é€ æ ‡ç­¾é¡µ
+                // Ìí¼Óµ½´´Ôì±êÇ©Ò³
                 event.accept(spawnEgg);
             }
         }
     }
 
     private static boolean shouldSkipEntity(EntityType<?> entityType) {
-        // è·³è¿‡ä¸€äº›ä¸åº”è¯¥æœ‰åˆ·æ€ªè›‹çš„å®ä½“
+        // Ìø¹ıÒ»Ğ©²»Ó¦¸ÃÓĞË¢¹Öµ°µÄÊµÌå
         return entityType == EntityType.PLAYER || 
                entityType == EntityType.FISHING_BOBBER ||
                entityType == EntityType.LIGHTNING_BOLT ||
@@ -47,7 +49,7 @@ public class SpawnEggsTab {
     }
 
     private static ItemStack getVanillaSpawnEgg(EntityType<?> entityType) {
-        // éå†æ‰€æœ‰ç‰©å“æŸ¥æ‰¾å¯¹åº”çš„åˆ·æ€ªè›‹
+        // ±éÀúËùÓĞÎïÆ·²éÕÒ¶ÔÓ¦µÄË¢¹Öµ°
         for (var item : BuiltInRegistries.ITEM) {
             if (item instanceof net.minecraft.world.item.SpawnEggItem spawnEgg) {
                 if (spawnEgg.getType(null) == entityType) {
@@ -59,22 +61,6 @@ public class SpawnEggsTab {
     }
 
     private static ItemStack createCustomSpawnEgg(String entityId) {
-        // åˆ›å»ºæ™®é€šåˆ·æ€ªè›‹å¹¶æ·»åŠ å®ä½“NBT
-        ItemStack spawnEgg = new ItemStack(Items.SKELETON_HORSE_SPAWN_EGG);
-        CompoundTag tag = new CompoundTag();
-        tag.putString("entity_type", entityId);
-        
-        // æ·»åŠ æ˜¾ç¤ºåç§°
-        CompoundTag display = new CompoundTag();
-        display.putString("Name", "{\"text\":\"" + entityId + " Spawn Egg\"}");
-        tag.put("display", display);
-        
-        // æ·»åŠ å®ä½“æ•°æ®
-        CompoundTag entityTag = new CompoundTag();
-        entityTag.putString("id", entityId);
-        tag.put("EntityTag", entityTag);
-        
-        spawnEgg.setTag(tag);
-        return spawnEgg;
+        return new ItemStack(Objects.requireNonNull(SpawnEggItem.byId(BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(entityId)))),1);
     }
 } 

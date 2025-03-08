@@ -30,14 +30,14 @@ public class ConfigManager {
             File configFile = new File(CONFIG_FILE);
             if (!configFile.exists()) {
                 configFile.getParentFile().mkdirs();
-                saveConfig(); // åˆ›å»ºé»˜è®¤é…ç½®
+                saveConfig(); // ´´½¨Ä¬ÈÏÅäÖÃ
                 return;
             }
 
             String jsonStr = new String(Files.readAllBytes(configFile.toPath()));
             config = GSON.fromJson(jsonStr, JsonObject.class);
 
-            // åŠ è½½æ‰€æœ‰åŠŸèƒ½çš„é…ç½®
+            // ¼ÓÔØËùÓĞ¹¦ÄÜµÄÅäÖÃ
             for (CreativePlusFeature feature : Createplus.FEATURE_MANAGER.getFeatures()) {
                 loadFeatureConfig(feature);
             }
@@ -53,7 +53,7 @@ public class ConfigManager {
                 config = new JsonObject();
             }
 
-            // ä¿å­˜æ‰€æœ‰åŠŸèƒ½çš„é…ç½®
+            // ±£´æËùÓĞ¹¦ÄÜµÄÅäÖÃ
         for (CreativePlusFeature feature : Createplus.FEATURE_MANAGER.getFeatures()) {
                 saveFeatureConfig(feature);
             }
@@ -71,13 +71,13 @@ public class ConfigManager {
 
         JsonObject featureConfig = config.getAsJsonObject(featureName);
         
-        // åŠ è½½åŠŸèƒ½å¯ç”¨çŠ¶æ€
+        // ¼ÓÔØ¹¦ÄÜÆôÓÃ×´Ì¬
         if (featureConfig.has("enabled")) {
             boolean enabled = featureConfig.get("enabled").getAsBoolean();
             feature.setEnabled(enabled);
         }
 
-        // åŠ è½½ç‰¹å®šåŠŸèƒ½çš„é…ç½®
+        // ¼ÓÔØÌØ¶¨¹¦ÄÜµÄÅäÖÃ
         if (feature instanceof SpeedAdjust) {
             loadSpeedAdjustConfig((SpeedAdjust) feature, featureConfig);
         } else if (feature instanceof Performance) {
@@ -95,10 +95,10 @@ public class ConfigManager {
         String featureName = feature.getName();
         JsonObject featureConfig = new JsonObject();
         
-        // ä¿å­˜åŠŸèƒ½å¯ç”¨çŠ¶æ€
+        // ±£´æ¹¦ÄÜÆôÓÃ×´Ì¬
         featureConfig.addProperty("enabled", feature.isEnabled());
 
-        // ä¿å­˜ç‰¹å®šåŠŸèƒ½çš„é…ç½®
+        // ±£´æÌØ¶¨¹¦ÄÜµÄÅäÖÃ
         if (feature instanceof SpeedAdjust) {
             saveSpeedAdjustConfig((SpeedAdjust) feature, featureConfig);
         } else if (feature instanceof Performance) {
@@ -135,54 +135,54 @@ public class ConfigManager {
     }
 
     private static void loadPerformanceConfig(Performance performance, JsonObject config) {
-        // ç²’å­æ•ˆæœ
+        // Á£×ÓĞ§¹û
         if (config.has("disableParticles")) {
             performance.setDisableParticles(config.get("disableParticles").getAsBoolean());
         }
         
-        // æ–¹å—ç ´åç²’å­
+        // ·½¿éÆÆ»µÁ£×Ó
         if (config.has("disableBlockBreakingParticles")) {
             performance.setDisableBlockBreakingParticles(config.get("disableBlockBreakingParticles").getAsBoolean());
         }
         
-        // æ­»äº¡ç”Ÿç‰©æ¸²æŸ“
+        // ËÀÍöÉúÎïäÖÈ¾
         if (config.has("disableDeadMobRendering")) {
             performance.setDisableDeadMobRendering(config.get("disableDeadMobRendering").getAsBoolean());
         }
         
-        // å®ä½“æ¸²æŸ“
+        // ÊµÌåäÖÈ¾
         if (config.has("disableEntityRendering")) {
             performance.setDisableEntityRendering(config.get("disableEntityRendering").getAsBoolean());
         }
         
-        // æ‰è½æ–¹å—æ¸²æŸ“
+        // µôÂä·½¿éäÖÈ¾
         if (config.has("disableFallingBlockEntityRendering")) {
             performance.setDisableFallingBlockEntityRendering(config.get("disableFallingBlockEntityRendering").getAsBoolean());
         }
         
-        // ä¼ é€é—¨GUIå…³é—­
+        // ´«ËÍÃÅGUI¹Ø±Õ
         if (config.has("disablePortalGuiClosing")) {
             performance.setDisablePortalGuiClosing(config.get("disablePortalGuiClosing").getAsBoolean());
         }
     }
 
     private static void savePerformanceConfig(Performance performance, JsonObject config) {
-        // ç²’å­æ•ˆæœ
+        // Á£×ÓĞ§¹û
         config.addProperty("disableParticles", performance.isDisableParticles());
         
-        // æ–¹å—ç ´åç²’å­
+        // ·½¿éÆÆ»µÁ£×Ó
         config.addProperty("disableBlockBreakingParticles", performance.isDisableBlockBreakingParticles());
         
-        // æ­»äº¡ç”Ÿç‰©æ¸²æŸ“
+        // ËÀÍöÉúÎïäÖÈ¾
         config.addProperty("disableDeadMobRendering", performance.isDisableDeadMobRendering());
         
-        // å®ä½“æ¸²æŸ“
+        // ÊµÌåäÖÈ¾
         config.addProperty("disableEntityRendering", performance.isDisableEntityRendering());
         
-        // æ‰è½æ–¹å—æ¸²æŸ“
+        // µôÂä·½¿éäÖÈ¾
         config.addProperty("disableFallingBlockEntityRendering", performance.isDisableFallingBlockEntityRendering());
         
-        // ä¼ é€é—¨GUIå…³é—­
+        // ´«ËÍÃÅGUI¹Ø±Õ
         config.addProperty("disablePortalGuiClosing", performance.isDisablePortalGuiClosing());
     }
 
@@ -215,7 +215,7 @@ public class ConfigManager {
     }
 
     private static void loadMiniHUDConfig(MiniHUD miniHUD, JsonObject config) {
-        // åŠ è½½æ–‡æœ¬é¢œè‰²
+        // ¼ÓÔØÎÄ±¾ÑÕÉ«
         if (config.has("textColors")) {
             JsonObject textColors = config.getAsJsonObject("textColors");
             for (String element : new String[]{"fps", "time", "pos", "biome", "localtime"}) {
@@ -225,7 +225,7 @@ public class ConfigManager {
             }
         }
 
-        // åŠ è½½æ•°å€¼é¢œè‰²
+        // ¼ÓÔØÊıÖµÑÕÉ«
         if (config.has("valueColors")) {
             JsonObject valueColors = config.getAsJsonObject("valueColors");
             for (String element : new String[]{"fps", "time", "pos", "biome", "localtime"}) {
@@ -237,14 +237,14 @@ public class ConfigManager {
     }
 
     private static void saveMiniHUDConfig(MiniHUD miniHUD, JsonObject config) {
-        // ä¿å­˜æ–‡æœ¬é¢œè‰²
+        // ±£´æÎÄ±¾ÑÕÉ«
         JsonObject textColors = new JsonObject();
         for (String element : new String[]{"fps", "time", "pos", "biome", "localtime"}) {
             textColors.addProperty(element, miniHUD.getTextColor(element));
         }
         config.add("textColors", textColors);
 
-        // ä¿å­˜æ•°å€¼é¢œè‰²
+        // ±£´æÊıÖµÑÕÉ«
         JsonObject valueColors = new JsonObject();
         for (String element : new String[]{"fps", "time", "pos", "biome", "localtime"}) {
             valueColors.addProperty(element, miniHUD.getValueColor(element));

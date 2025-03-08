@@ -5,24 +5,23 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
 
 public class MirrorBuild extends CreativePlusFeature {
     private BlockPos mirrorPoint = null;
-    private Direction.Axis mirrorAxis = Direction.Axis.X; // é»˜è®¤Xè½´é•œåƒ
+    private Direction.Axis mirrorAxis = Direction.Axis.X; // Ä¬ÈÏXÖá¾µÏñ
 
     public MirrorBuild() {
-        super("é•œåƒå»ºé€ ", "åŒæ—¶åœ¨å¯¹ç§°ä½ç½®æ”¾ç½®æ–¹å—");
+        super("¾µÏñ½¨Ôì", "Í¬Ê±ÔÚ¶Ô³ÆÎ»ÖÃ·ÅÖÃ·½¿é");
     }
 
     @Override
     public void onEnable() {
         mirrorPoint = null;
         Minecraft.getInstance().player.sendSystemMessage(
-            Component.literal("Â§bè¯·ä½¿ç”¨æœ¨å‰‘: å³é”®é€‰æ‹©é•œåƒç‚¹ï¼ŒShift+å³é”®åˆ‡æ¢é•œåƒè½´(å½“å‰: " + getMirrorAxisName() + ")")
+            Component.literal("¡ìbÇëÊ¹ÓÃÄ¾½£: ÓÒ¼üÑ¡Ôñ¾µÏñµã£¬Shift+ÓÒ¼üÇĞ»»¾µÏñÖá(µ±Ç°: " + getMirrorAxisName() + ")")
         );
     }
 
@@ -33,16 +32,16 @@ public class MirrorBuild extends CreativePlusFeature {
 
     private String getMirrorAxisName() {
         return switch (mirrorAxis) {
-            case X -> "Xè½´(ä¸œè¥¿)";
-            case Z -> "Zè½´(å—åŒ—)";
-            default -> "æœªçŸ¥";
+            case X -> "XÖá(¶«Î÷)";
+            case Z -> "ZÖá(ÄÏ±±)";
+            default -> "Î´Öª";
         };
     }
 
     public void toggleMirrorAxis() {
         mirrorAxis = (mirrorAxis == Direction.Axis.X) ? Direction.Axis.Z : Direction.Axis.X;
         Minecraft.getInstance().player.sendSystemMessage(
-            Component.literal("Â§bå·²åˆ‡æ¢é•œåƒè½´: " + getMirrorAxisName())
+            Component.literal("¡ìbÒÑÇĞ»»¾µÏñÖá: " + getMirrorAxisName())
         );
     }
 
@@ -51,7 +50,7 @@ public class MirrorBuild extends CreativePlusFeature {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || !mc.player.isCreative()) return;
 
-        // æ£€æŸ¥ç©å®¶æ˜¯å¦æ‰‹æŒæœ¨å‰‘
+        // ¼ì²éÍæ¼ÒÊÇ·ñÊÖ³ÖÄ¾½£
         if (!mc.player.getMainHandItem().is(net.minecraft.world.item.Items.WOODEN_SWORD)) {
             return;
         }
@@ -61,21 +60,21 @@ public class MirrorBuild extends CreativePlusFeature {
 
         if (isRightClick) {
             if (mc.player.isShiftKeyDown()) {
-                // Shift+å³é”®ï¼šåˆ‡æ¢é•œåƒè½´
+                // Shift+ÓÒ¼ü£ºÇĞ»»¾µÏñÖá
                 toggleMirrorAxis();
             } else {
-                // æ™®é€šå³é”®ï¼šè®¾ç½®é•œåƒç‚¹
+                // ÆÕÍ¨ÓÒ¼ü£ºÉèÖÃ¾µÏñµã
                 if (mirrorPoint == null) {
                     mirrorPoint = blockHit.getBlockPos();
                     mc.player.sendSystemMessage(
-                        Component.literal("Â§aå·²è®¾ç½®é•œåƒç‚¹: " + mirrorPoint.toShortString())
+                        Component.literal("¡ìaÒÑÉèÖÃ¾µÏñµã: " + mirrorPoint.toShortString())
                     );
                 }
             }
         } else {
-            // å·¦é”®ï¼šé‡ç½®é•œåƒç‚¹
+            // ×ó¼ü£ºÖØÖÃ¾µÏñµã
             mirrorPoint = null;
-            mc.player.sendSystemMessage(Component.literal("Â§cå·²é‡ç½®é•œåƒç‚¹"));
+            mc.player.sendSystemMessage(Component.literal("¡ìcÒÑÖØÖÃ¾µÏñµã"));
         }
     }
 
@@ -84,11 +83,11 @@ public class MirrorBuild extends CreativePlusFeature {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || !mc.player.isCreative()) return;
 
-        // ç›‘å¬æ–¹å—æ”¾ç½®
+        // ¼àÌı·½¿é·ÅÖÃ
         if (mc.hitResult != null && mc.hitResult.getType() == HitResult.Type.BLOCK) {
             BlockHitResult blockHit = (BlockHitResult) mc.hitResult;
             
-            // å¦‚æœæ­£åœ¨æ”¾ç½®æ–¹å—ä¸”æœ‰é•œåƒç‚¹ï¼Œåˆ™åœ¨é•œåƒä½ç½®ä¹Ÿæ”¾ç½®
+            // Èç¹ûÕıÔÚ·ÅÖÃ·½¿éÇÒÓĞ¾µÏñµã£¬ÔòÔÚ¾µÏñÎ»ÖÃÒ²·ÅÖÃ
             if (mc.options.keyUse.isDown() && mirrorPoint != null) {
                 handleBlockPlace((BlockHitResult) mc.hitResult);
             }
@@ -104,7 +103,7 @@ public class MirrorBuild extends CreativePlusFeature {
         BlockPos placePos = hitResult.getBlockPos();
         BlockPos mirroredPos = getMirroredPosition(placePos);
 
-        // å‘é€æ”¾ç½®æ–¹å—æ•°æ®åŒ…åˆ°é•œåƒä½ç½®
+        // ·¢ËÍ·ÅÖÃ·½¿éÊı¾İ°üµ½¾µÏñÎ»ÖÃ
         mc.player.connection.send(new ServerboundUseItemOnPacket(
             InteractionHand.MAIN_HAND,
             new BlockHitResult(mc.player.position(), hitResult.getDirection(), mirroredPos, false),
@@ -114,11 +113,11 @@ public class MirrorBuild extends CreativePlusFeature {
 
     private BlockPos getMirroredPosition(BlockPos pos) {
         if (mirrorAxis == Direction.Axis.X) {
-            // Xè½´é•œåƒï¼šé•œåƒç‚¹çš„Xåæ ‡ + (é•œåƒç‚¹çš„Xåæ ‡ - åŸå§‹ç‚¹çš„Xåæ ‡)
+            // XÖá¾µÏñ£º¾µÏñµãµÄX×ø±ê + (¾µÏñµãµÄX×ø±ê - Ô­Ê¼µãµÄX×ø±ê)
             int deltaX = mirrorPoint.getX() - pos.getX();
             return new BlockPos(mirrorPoint.getX() + deltaX, pos.getY(), pos.getZ());
         } else {
-            // Zè½´é•œåƒï¼šé•œåƒç‚¹çš„Zåæ ‡ + (é•œåƒç‚¹çš„Zåæ ‡ - åŸå§‹ç‚¹çš„Zåæ ‡)
+            // ZÖá¾µÏñ£º¾µÏñµãµÄZ×ø±ê + (¾µÏñµãµÄZ×ø±ê - Ô­Ê¼µãµÄZ×ø±ê)
             int deltaZ = mirrorPoint.getZ() - pos.getZ();
             return new BlockPos(pos.getX(), pos.getY(), mirrorPoint.getZ() + deltaZ);
         }

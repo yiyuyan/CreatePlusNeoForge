@@ -4,14 +4,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraft.client.player.LocalPlayer;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RenderPlayerEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 public class SpinBot extends CreativePlusFeature {
     private float currentRotation = 0f;
-    private static final float SPIN_SPEED = 20f; // æ¯tickæ—‹è½¬çš„åº¦æ•°
+    private static final float SPIN_SPEED = 20f; // Ã¿tickĞı×ªµÄ¶ÈÊı
     private float originalYaw = 0f;
     private boolean isSpinning = false;
 
@@ -21,7 +21,7 @@ public class SpinBot extends CreativePlusFeature {
 
     @Override
     public void onEnable() {
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
             originalYaw = player.getYRot();
@@ -32,14 +32,14 @@ public class SpinBot extends CreativePlusFeature {
 
     @Override
     public void onDisable() {
-        MinecraftForge.EVENT_BUS.unregister(this);
+        NeoForge.EVENT_BUS.unregister(this);
         isSpinning = false;
         currentRotation = 0f;
-        // æ¢å¤åŸå§‹è§†è§’
+        // »Ö¸´Ô­Ê¼ÊÓ½Ç
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
             player.setYRot(originalYaw);
-            // åŒæ­¥åˆ°æœåŠ¡å™¨
+            // Í¬²½µ½·şÎñÆ÷
             sendRotationPacket(player, originalYaw);
         }
     }
@@ -50,10 +50,10 @@ public class SpinBot extends CreativePlusFeature {
         LocalPlayer player = mc.player;
         if (player == null || !player.isCreative() || !isSpinning) return;
 
-        // æ›´æ–°æ—‹è½¬è§’åº¦
+        // ¸üĞÂĞı×ª½Ç¶È
         currentRotation = (currentRotation + SPIN_SPEED) % 360;
 
-        // åœ¨ç¬¬ä¸‰äººç§°æˆ–å…¶ä»–ç©å®¶è§†è§’æ—¶å‘é€æ—‹è½¬æ•°æ®åŒ…
+        // ÔÚµÚÈıÈË³Æ»òÆäËûÍæ¼ÒÊÓ½ÇÊ±·¢ËÍĞı×ªÊı¾İ°ü
         if (!mc.options.getCameraType().isFirstPerson()) {
             sendRotationPacket(player, currentRotation);
         }
@@ -73,7 +73,7 @@ public class SpinBot extends CreativePlusFeature {
     @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
         if (event.getEntity() == Minecraft.getInstance().player && isSpinning) {
-            // åœ¨æ¸²æŸ“æ—¶è®¾ç½®ç©å®¶æ¨¡å‹çš„æ—‹è½¬
+            // ÔÚäÖÈ¾Ê±ÉèÖÃÍæ¼ÒÄ£ĞÍµÄĞı×ª
             event.getPoseStack().mulPose(
                 com.mojang.math.Axis.YP.rotationDegrees(currentRotation)
             );

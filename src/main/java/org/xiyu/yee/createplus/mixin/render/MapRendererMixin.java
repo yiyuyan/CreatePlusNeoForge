@@ -1,4 +1,4 @@
-package org.xiyu.yee.createplus.mixin;
+package org.xiyu.yee.createplus.mixin.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -7,6 +7,7 @@ import net.minecraft.client.gui.MapRenderer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,22 +17,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MapRenderer.class)
 public class MapRendererMixin {
     private static final ResourceLocation[] LOADING_FRAMES = new ResourceLocation[6];
-    private static final int FRAME_TIME = 50; // è°ƒæ•´å¸§ç‡
+    private static final int FRAME_TIME = 50; // µ÷ÕûÖ¡ÂÊ
     private long startTime = -1;
     private int currentFrame = 0;
     private boolean isLoading = true;
     
     static {
-        // åˆå§‹åŒ–æ‰€æœ‰å¸§çš„èµ„æºä½ç½®
+        // ³õÊ¼»¯ËùÓĞÖ¡µÄ×ÊÔ´Î»ÖÃ
         for (int i = 0; i < LOADING_FRAMES.length; i++) {
-            LOADING_FRAMES[i] = new ResourceLocation("createplus", 
+            LOADING_FRAMES[i] = ResourceLocation.tryBuild("createplus",
                 String.format("textures/gui/loading/frame_%d.png", i));
         }
     }
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
-    private void onRender(PoseStack poseStack, MultiBufferSource buffer, int packedLight, 
-                         MapItemSavedData mapData, boolean isSecret, int decorations, CallbackInfo ci) {
+    private void onRender(PoseStack poseStack, MultiBufferSource p_168773_, MapId p_324127_, MapItemSavedData p_168775_, boolean p_168776_, int p_168774_, CallbackInfo ci) {
         if (!isLoading) {
             return;
         }
@@ -43,57 +43,56 @@ public class MapRendererMixin {
         long currentTime = System.currentTimeMillis();
         long elapsedTime = currentTime - startTime;
         
-        // è®¡ç®—å½“å‰å¸§
+        // ¼ÆËãµ±Ç°Ö¡
         currentFrame = (int)((elapsedTime / FRAME_TIME) % LOADING_FRAMES.length);
         
-        // æ¸²æŸ“åŠ è½½åŠ¨ç”»
+        // äÖÈ¾¼ÓÔØ¶¯»­
         renderLoadingFrame(poseStack);
         
-        // æ£€æŸ¥æ˜¯å¦åº”è¯¥ç»“æŸåŠ¨ç”»
-        if (elapsedTime > FRAME_TIME * LOADING_FRAMES.length * 2) { // æ’­æ”¾ä¸¤æ¬¡å¾ªç¯
+        // ¼ì²éÊÇ·ñÓ¦¸Ã½áÊø¶¯»­
+        if (elapsedTime > FRAME_TIME * LOADING_FRAMES.length * 2) { // ²¥·ÅÁ½´ÎÑ­»·
             isLoading = false;
             startTime = -1;
             return;
         }
         
-        // å–æ¶ˆåŸå§‹æ¸²æŸ“
+        // È¡ÏûÔ­Ê¼äÖÈ¾
         ci.cancel();
     }
 
     private void renderLoadingFrame(PoseStack poseStack) {
-        // ä¿å­˜å½“å‰çŸ©é˜µçŠ¶æ€
+        // ±£´æµ±Ç°¾ØÕó×´Ì¬
         poseStack.pushPose();
         
-        // è®¾ç½®æ¸²æŸ“çŠ¶æ€
+        // ÉèÖÃäÖÈ¾×´Ì¬
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, LOADING_FRAMES[currentFrame]);
 
-        // è·å–Minecraftå®ä¾‹å’Œçª—å£å°ºå¯¸
+        // »ñÈ¡MinecraftÊµÀıºÍ´°¿Ú³ß´ç
         Minecraft mc = Minecraft.getInstance();
         float scale = (float)mc.getWindow().getGuiScale();
         
-        // è®¡ç®—æ¸²æŸ“ä½ç½®(å±…ä¸­)
+        // ¼ÆËãäÖÈ¾Î»ÖÃ(¾ÓÖĞ)
         float mapSize = 128.0F;
         float x = (mc.getWindow().getGuiScaledWidth() - mapSize) / 2;
         float y = (mc.getWindow().getGuiScaledHeight() - mapSize) / 2;
         
-        // æ¸²æŸ“å½“å‰å¸§
-        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        // äÖÈ¾µ±Ç°Ö¡
+        BufferBuilder bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         
-        // ç»˜åˆ¶çº¹ç†å››è¾¹å½¢
-        bufferbuilder.vertex(poseStack.last().pose(), x, y + mapSize, 0).uv(0, 1).endVertex();
-        bufferbuilder.vertex(poseStack.last().pose(), x + mapSize, y + mapSize, 0).uv(1, 1).endVertex();
-        bufferbuilder.vertex(poseStack.last().pose(), x + mapSize, y, 0).uv(1, 0).endVertex();
-        bufferbuilder.vertex(poseStack.last().pose(), x, y, 0).uv(0, 0).endVertex();
+        // »æÖÆÎÆÀíËÄ±ßĞÎ
+        bufferbuilder.addVertex(poseStack.last().pose(), x, y + mapSize, 0).setUv(0, 1);
+        bufferbuilder.addVertex(poseStack.last().pose(), x + mapSize, y + mapSize, 0).setUv(1, 1);
+        bufferbuilder.addVertex(poseStack.last().pose(), x + mapSize, y, 0).setUv(1, 0);
+        bufferbuilder.addVertex(poseStack.last().pose(), x, y, 0).setUv(0, 0);
         
-        // å®Œæˆæ¸²æŸ“
-        BufferUploader.drawWithShader(bufferbuilder.end());
+        // Íê³ÉäÖÈ¾
+        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
         
-        // æ¢å¤æ¸²æŸ“çŠ¶æ€
+        // »Ö¸´äÖÈ¾×´Ì¬
         RenderSystem.disableBlend();
         poseStack.popPose();
     }

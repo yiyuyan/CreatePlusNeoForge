@@ -8,9 +8,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraftforge.client.event.RegisterClientCommandsEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import org.xiyu.yee.createplus.Createplus;
 import org.xiyu.yee.createplus.utils.BuildingManager;
 import org.xiyu.yee.createplus.utils.FileUtils;
@@ -21,14 +21,14 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.Map;
 
-@Mod.EventBusSubscriber(modid = Createplus.MODID)
+@EventBusSubscriber(modid = Createplus.MODID)
 public class BuildingCommand {
     
     @SubscribeEvent
     public static void register(RegisterClientCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
 
-        // å¯¼å‡ºå»ºç­‘å‘½ä»¤
+        // µ¼³ö½¨ÖşÃüÁî
         dispatcher.register(Commands.literal("exportbuilding")
             .then(Commands.argument("name", StringArgumentType.word())
                 .executes(context -> {
@@ -37,7 +37,7 @@ public class BuildingCommand {
                 }))
         );
 
-        // å¯¼å…¥å»ºç­‘å‘½ä»¤
+        // µ¼Èë½¨ÖşÃüÁî
         dispatcher.register(Commands.literal("importbuilding")
             .then(Commands.argument("name", StringArgumentType.word())
                 .executes(context -> {
@@ -46,13 +46,13 @@ public class BuildingCommand {
                 }))
         );
 
-        // ç¡®è®¤å¯¼å…¥å‘½ä»¤
+        // È·ÈÏµ¼ÈëÃüÁî
         dispatcher.register(Commands.literal("confirmimport")
             .requires(source -> source.hasPermission(2))
             .executes(context -> confirmImport(context.getSource()))
         );
 
-        // å–æ¶ˆå¯¼å…¥å‘½ä»¤
+        // È¡Ïûµ¼ÈëÃüÁî
         dispatcher.register(Commands.literal("cancelimport")
             .executes(context -> cancelImport(context.getSource()))
         );
@@ -61,7 +61,7 @@ public class BuildingCommand {
     private static int exportBuilding(CommandSourceStack source, String name) {
         BuildingExport exportFeature = null;
         
-        // æŸ¥æ‰¾BuildingExportåŠŸèƒ½
+        // ²éÕÒBuildingExport¹¦ÄÜ
         for (CreativePlusFeature feature : Createplus.FEATURE_MANAGER.getFeatures()) {
             if (feature instanceof BuildingExport) {
                 exportFeature = (BuildingExport) feature;
@@ -70,12 +70,12 @@ public class BuildingCommand {
         }
 
         if (exportFeature == null || !exportFeature.isEnabled()) {
-            source.sendFailure(Component.literal("Â§cè¯·å…ˆå¯ç”¨å»ºç­‘å¯¼å‡ºåŠŸèƒ½ï¼ä½¿ç”¨ /features å»ºç­‘å¯¼å‡º"));
+            source.sendFailure(Component.literal("¡ìcÇëÏÈÆôÓÃ½¨Öşµ¼³ö¹¦ÄÜ£¡Ê¹ÓÃ /features ½¨Öşµ¼³ö"));
             return 0;
         }
 
         if (!exportFeature.hasSelection()) {
-            source.sendFailure(Component.literal("Â§cè¯·å…ˆä½¿ç”¨æœ¨é“²é€‰æ‹©åŒºåŸŸï¼"));
+            source.sendFailure(Component.literal("¡ìcÇëÏÈÊ¹ÓÃÄ¾²ùÑ¡ÔñÇøÓò£¡"));
             return 0;
         }
 
@@ -91,7 +91,7 @@ public class BuildingCommand {
                     BlockPos relativePos = entry.getKey().subtract(reference);
                     BlockState state = entry.getValue();
                     
-                    // è·å–æ–¹å—çš„æ³¨å†Œåå’ŒçŠ¶æ€
+                    // »ñÈ¡·½¿éµÄ×¢²áÃûºÍ×´Ì¬
                     String blockId = BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString();
                     StringBuilder blockStateString = new StringBuilder();
                     
@@ -110,7 +110,7 @@ public class BuildingCommand {
                         blockStateString.append("]");
                     }
 
-                    // å†™å…¥setblockå‘½ä»¤
+                    // Ğ´ÈësetblockÃüÁî
                     writer.write(String.format("setblock ~%d ~%d ~%d %s%s\n",
                         relativePos.getX(), relativePos.getY(), relativePos.getZ(),
                         blockId, blockStateString.toString()));
@@ -118,10 +118,10 @@ public class BuildingCommand {
             }
 
             source.sendSuccess(() -> 
-                Component.literal("Â§aå·²å°†å»ºç­‘å¯¼å‡ºåˆ°: createplus/buildings/" + name + ".mcfunction"), false);
+                Component.literal("¡ìaÒÑ½«½¨Öşµ¼³öµ½: createplus/buildings/" + name + ".mcfunction"), false);
             return 1;
         } catch (IOException e) {
-            source.sendFailure(Component.literal("Â§cå¯¼å‡ºå¤±è´¥: " + e.getMessage()));
+            source.sendFailure(Component.literal("¡ìcµ¼³öÊ§°Ü: " + e.getMessage()));
             return 0;
         }
     }
@@ -130,23 +130,23 @@ public class BuildingCommand {
         try {
             Path filePath = FileUtils.getBuildingsDirectory().resolve(name + ".mcfunction");
             if (!Files.exists(filePath)) {
-                source.sendFailure(Component.literal("Â§cæ‰¾ä¸åˆ°å»ºç­‘æ–‡ä»¶: createplus/buildings/" + name + ".mcfunction"));
+                source.sendFailure(Component.literal("¡ìcÕÒ²»µ½½¨ÖşÎÄ¼ş: createplus/buildings/" + name + ".mcfunction"));
                 return 0;
             }
 
-            // æ£€æŸ¥æƒé™
+            // ¼ì²éÈ¨ÏŞ
             if (!source.hasPermission(2)) {
-                source.sendFailure(Component.literal("Â§céœ€è¦2çº§æƒé™æ‰èƒ½å¯¼å…¥å»ºç­‘"));
+                source.sendFailure(Component.literal("¡ìcĞèÒª2¼¶È¨ÏŞ²ÅÄÜµ¼Èë½¨Öş"));
                 return 0;
             }
 
-            // å¯åŠ¨é¢„è§ˆæ¸²æŸ“
+            // Æô¶¯Ô¤ÀÀäÖÈ¾
             BuildingManager.getInstance().startPreview(filePath, source);
             source.sendSuccess(() -> 
-                Component.literal("Â§aæ­£åœ¨é¢„è§ˆå»ºç­‘ï¼Œè¾“å…¥ /confirmimport ç¡®è®¤å¯¼å…¥ï¼Œè¾“å…¥ /cancelimport å–æ¶ˆ"), false);
+                Component.literal("¡ìaÕıÔÚÔ¤ÀÀ½¨Öş£¬ÊäÈë /confirmimport È·ÈÏµ¼Èë£¬ÊäÈë /cancelimport È¡Ïû"), false);
             return 1;
         } catch (IOException e) {
-            source.sendFailure(Component.literal("Â§cå¯¼å…¥å¤±è´¥: " + e.getMessage()));
+            source.sendFailure(Component.literal("¡ìcµ¼ÈëÊ§°Ü: " + e.getMessage()));
             return 0;
         }
     }
@@ -154,7 +154,7 @@ public class BuildingCommand {
     private static int confirmImport(CommandSourceStack source) {
         BuildingManager manager = BuildingManager.getInstance();
         if (!manager.isPreviewActive()) {
-            source.sendFailure(Component.literal("Â§cæ²¡æœ‰æ­£åœ¨é¢„è§ˆçš„å»ºç­‘ï¼è¯·å…ˆä½¿ç”¨ /importbuilding <åç§°> é€‰æ‹©å»ºç­‘"));
+            source.sendFailure(Component.literal("¡ìcÃ»ÓĞÕıÔÚÔ¤ÀÀµÄ½¨Öş£¡ÇëÏÈÊ¹ÓÃ /importbuilding <Ãû³Æ> Ñ¡Ôñ½¨Öş"));
             return 0;
         }
 
@@ -165,7 +165,7 @@ public class BuildingCommand {
     private static int cancelImport(CommandSourceStack source) {
         BuildingManager manager = BuildingManager.getInstance();
         if (!manager.isPreviewActive()) {
-            source.sendFailure(Component.literal("Â§cæ²¡æœ‰æ­£åœ¨é¢„è§ˆçš„å»ºç­‘ï¼"));
+            source.sendFailure(Component.literal("¡ìcÃ»ÓĞÕıÔÚÔ¤ÀÀµÄ½¨Öş£¡"));
             return 0;
         }
 

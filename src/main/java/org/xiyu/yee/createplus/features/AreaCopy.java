@@ -26,14 +26,14 @@ public class AreaCopy extends CreativePlusFeature {
     private int tickCounter = 0;
 
     public AreaCopy() {
-        super("åŒºåŸŸå¤åˆ¶", "å¤åˆ¶å’Œç²˜è´´é€‰å®šåŒºåŸŸçš„å»ºç­‘");
+        super("ÇøÓò¸´ÖÆ", "¸´ÖÆºÍÕ³ÌùÑ¡¶¨ÇøÓòµÄ½¨Öş");
     }
 
     @Override
     public void onEnable() {
         reset();
         Minecraft.getInstance().player.sendSystemMessage(
-            Component.literal("Â§bè¯·ä½¿ç”¨æœ¨é“²é€‰æ‹©åŒºåŸŸ: å³é”®é€‰æ‹©ç‚¹ï¼Œå·¦é”®é‡ç½®")
+            Component.literal("¡ìbÇëÊ¹ÓÃÄ¾²ùÑ¡ÔñÇøÓò: ÓÒ¼üÑ¡Ôñµã£¬×ó¼üÖØÖÃ")
         );
     }
 
@@ -56,7 +56,7 @@ public class AreaCopy extends CreativePlusFeature {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || !mc.player.isCreative()) return;
 
-        // å¤„ç†è‡ªåŠ¨æ”¾ç½®
+        // ´¦Àí×Ô¶¯·ÅÖÃ
         if (isPlacing && !placementQueue.isEmpty()) {
             tickCounter++;
             if (tickCounter >= PLACE_DELAY) {
@@ -71,7 +71,7 @@ public class AreaCopy extends CreativePlusFeature {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || !mc.player.isCreative()) return;
 
-        // æ£€æŸ¥ç©å®¶æ˜¯å¦æ‰‹æŒæœ¨é“²
+        // ¼ì²éÍæ¼ÒÊÇ·ñÊÖ³ÖÄ¾²ù
         if (!mc.player.getMainHandItem().is(net.minecraft.world.item.Items.WOODEN_SHOVEL)) {
             return;
         }
@@ -82,7 +82,7 @@ public class AreaCopy extends CreativePlusFeature {
         if (isRightClick) {
             if (firstPos == null) {
                 firstPos = blockHit.getBlockPos();
-                mc.player.sendSystemMessage(Component.literal("Â§aå·²è®¾ç½®ç¬¬ä¸€ä¸ªç‚¹"));
+                mc.player.sendSystemMessage(Component.literal("¡ìaÒÑÉèÖÃµÚÒ»¸öµã"));
             } else if (secondPos == null) {
                 secondPos = blockHit.getBlockPos();
                 copyArea(mc);
@@ -92,7 +92,7 @@ public class AreaCopy extends CreativePlusFeature {
             }
         } else {
             reset();
-            mc.player.sendSystemMessage(Component.literal("Â§cå·²é‡ç½®é€‰åŒº"));
+            mc.player.sendSystemMessage(Component.literal("¡ìcÒÑÖØÖÃÑ¡Çø"));
         }
     }
 
@@ -119,20 +119,20 @@ public class AreaCopy extends CreativePlusFeature {
             }
         }
 
-        mc.player.sendSystemMessage(Component.literal("Â§aå·²å¤åˆ¶ " + copiedBlocks.size() + " ä¸ªæ–¹å—"));
+        mc.player.sendSystemMessage(Component.literal("¡ìaÒÑ¸´ÖÆ " + copiedBlocks.size() + " ¸ö·½¿é"));
     }
 
     private void pasteArea(Minecraft mc) {
         if (copiedBlocks.isEmpty() || pasteReference == null || mc.player == null) return;
 
-        // æ£€æŸ¥æƒé™ç­‰çº§
+        // ¼ì²éÈ¨ÏŞµÈ¼¶
         boolean hasCommandPermission = mc.player.hasPermissions(2);
 
         if (hasCommandPermission) {
-            // ä½¿ç”¨å‘½ä»¤è¿›è¡Œç²˜è´´
+            // Ê¹ÓÃÃüÁî½øĞĞÕ³Ìù
             pasteUsingCommands(mc);
         } else {
-            // ä½¿ç”¨æ¨¡æ‹Ÿæ”¾ç½®è¿›è¡Œç²˜è´´
+            // Ê¹ÓÃÄ£Äâ·ÅÖÃ½øĞĞÕ³Ìù
             preparePlacementQueue();
             isPlacing = true;
         }
@@ -143,15 +143,15 @@ public class AreaCopy extends CreativePlusFeature {
             BlockPos targetPos = pasteReference.offset(entry.getKey());
             BlockState state = entry.getValue();
             
-            // è·å–æ–¹å—çš„æ³¨å†Œå
+            // »ñÈ¡·½¿éµÄ×¢²áÃû
             String blockId = net.minecraft.core.registries.BuiltInRegistries.BLOCK
                 .getKey(state.getBlock())
                 .toString();
             
-            // æ„å»ºæ–¹å—çŠ¶æ€
+            // ¹¹½¨·½¿é×´Ì¬
             StringBuilder blockStateString = new StringBuilder();
             
-            // æ”¶é›†æ‰€æœ‰æ–¹å—çŠ¶æ€å±æ€§
+            // ÊÕ¼¯ËùÓĞ·½¿é×´Ì¬ÊôĞÔ
             state.getProperties().forEach(property -> {
                 if (blockStateString.length() > 0) {
                     blockStateString.append(",");
@@ -168,22 +168,22 @@ public class AreaCopy extends CreativePlusFeature {
                 blockStateString.append("]");
             }
             
-            // æ„å»ºsetblockå‘½ä»¤ (1.20æ ¼å¼)
+            // ¹¹½¨setblockÃüÁî (1.20¸ñÊ½)
             String command = String.format("setblock %d %d %d %s%s",
                 targetPos.getX(), targetPos.getY(), targetPos.getZ(),
                 blockId,
                 blockStateString.toString()
             );
             
-            // å‘é€å‘½ä»¤
+            // ·¢ËÍÃüÁî
             mc.player.connection.sendCommand(command);
         }
-        mc.player.sendSystemMessage(Component.literal("Â§aå·²é€šè¿‡å‘½ä»¤ç²˜è´´ " + copiedBlocks.size() + " ä¸ªæ–¹å—"));
+        mc.player.sendSystemMessage(Component.literal("¡ìaÒÑÍ¨¹ıÃüÁîÕ³Ìù " + copiedBlocks.size() + " ¸ö·½¿é"));
     }
 
     private void preparePlacementQueue() {
         placementQueue.clear();
-        // æŒ‰ç…§ä»ä¸‹åˆ°ä¸Šçš„é¡ºåºæ·»åŠ æ–¹å—ä½ç½®
+        // °´ÕÕ´ÓÏÂµ½ÉÏµÄË³ĞòÌí¼Ó·½¿éÎ»ÖÃ
         copiedBlocks.entrySet().stream()
             .sorted((e1, e2) -> e1.getKey().getY() - e2.getKey().getY())
             .forEach(entry -> placementQueue.offer(pasteReference.offset(entry.getKey())));
@@ -199,15 +199,15 @@ public class AreaCopy extends CreativePlusFeature {
         BlockState state = copiedBlocks.get(pos.subtract(pasteReference));
         if (state == null) return;
 
-        // ç§»åŠ¨åˆ°ç›®æ ‡ä½ç½®
+        // ÒÆ¶¯µ½Ä¿±êÎ»ÖÃ
         double x = pos.getX() + 0.5;
         double y = pos.getY() - 0.5;
         double z = pos.getZ() + 0.5;
         
-        // å‘é€ç§»åŠ¨æ•°æ®åŒ…
+        // ·¢ËÍÒÆ¶¯Êı¾İ°ü
         mc.player.connection.send(new ServerboundMovePlayerPacket.Pos(x, y, z, true));
         
-        // å‘é€æ”¾ç½®æ–¹å—æ•°æ®åŒ…
+        // ·¢ËÍ·ÅÖÃ·½¿éÊı¾İ°ü
         mc.player.connection.send(new ServerboundUseItemOnPacket(
             InteractionHand.MAIN_HAND,
             new BlockHitResult(mc.player.position(), mc.player.getDirection(), pos, false),
@@ -216,7 +216,7 @@ public class AreaCopy extends CreativePlusFeature {
 
         if (placementQueue.isEmpty()) {
             isPlacing = false;
-            mc.player.sendSystemMessage(Component.literal("Â§aå·²å®Œæˆæ–¹å—æ”¾ç½®"));
+            mc.player.sendSystemMessage(Component.literal("¡ìaÒÑÍê³É·½¿é·ÅÖÃ"));
         }
     }
 } 

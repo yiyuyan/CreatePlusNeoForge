@@ -17,13 +17,13 @@ public class Nucker extends CreativePlusFeature {
     private int tickCounter = 0;
 
     public Nucker() {
-        super("èŒƒå›´ç ´å", "å¿«é€Ÿç ´åèŒƒå›´å†…çš„æ–¹å—");
+        super("·¶Î§ÆÆ»µ", "¿ìËÙÆÆ»µ·¶Î§ÄÚµÄ·½¿é");
     }
 
     @Override
     public void onEnable() {
         Minecraft.getInstance().player.sendSystemMessage(
-            Component.literal("Â§bèŒƒå›´ç ´åå·²å¯ç”¨")
+            Component.literal("¡ìb·¶Î§ÆÆ»µÒÑÆôÓÃ")
         );
     }
 
@@ -41,28 +41,28 @@ public class Nucker extends CreativePlusFeature {
         if (tickCounter < BREAK_DELAY) return;
         tickCounter = 0;
 
-        // è·å–ç©å®¶çš„è§¦åŠè·ç¦»
-        double reach = mc.player.getBlockReach();
+        // »ñÈ¡Íæ¼ÒµÄ´¥¼°¾àÀë
+        double reach = mc.player.blockInteractionRange();
         
-        // è·å–ç©å®¶è§†çº¿æ–¹å‘çš„æ–¹å—
+        // »ñÈ¡Íæ¼ÒÊÓÏß·½ÏòµÄ·½¿é
         if (mc.hitResult != null && mc.hitResult.getType() == HitResult.Type.BLOCK) {
             BlockHitResult blockHit = (BlockHitResult) mc.hitResult;
             BlockPos centerPos = blockHit.getBlockPos();
             
-            // å¦‚æœè¿™ä¸ªä½ç½®å·²ç»å¤„ç†è¿‡ï¼Œè·³è¿‡
+            // Èç¹ûÕâ¸öÎ»ÖÃÒÑ¾­´¦Àí¹ı£¬Ìø¹ı
             if (centerPos.equals(lastPos)) return;
             lastPos = centerPos;
 
-            // è·å–èŒƒå›´å†…çš„æ‰€æœ‰æ–¹å—
+            // »ñÈ¡·¶Î§ÄÚµÄËùÓĞ·½¿é
             List<BlockPos> blocksToBreak = new ArrayList<>();
-            int radius = 2; // ç ´ååŠå¾„
+            int radius = 2; // ÆÆ»µ°ë¾¶
 
             for (int x = -radius; x <= radius; x++) {
                 for (int y = -radius; y <= radius; y++) {
                     for (int z = -radius; z <= radius; z++) {
                         BlockPos pos = centerPos.offset(x, y, z);
                         
-                        // æ£€æŸ¥æ–¹å—æ˜¯å¦åœ¨ç©å®¶è§¦åŠèŒƒå›´å†…
+                        // ¼ì²é·½¿éÊÇ·ñÔÚÍæ¼Ò´¥¼°·¶Î§ÄÚ
                         if (mc.player.position().distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) > reach * reach) {
                             continue;
                         }
@@ -75,7 +75,7 @@ public class Nucker extends CreativePlusFeature {
                 }
             }
 
-            // å‘é€ç ´åæ•°æ®åŒ…
+            // ·¢ËÍÆÆ»µÊı¾İ°ü
             for (BlockPos pos : blocksToBreak) {
                 mc.player.connection.send(new ServerboundPlayerActionPacket(
                     ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK,

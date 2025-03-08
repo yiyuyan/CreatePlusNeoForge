@@ -4,11 +4,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.client.event.ClientChatEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.ClientChatEvent;
+import net.neoforged.neoforge.common.NeoForge;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,25 +18,25 @@ public class MiniHUD extends CreativePlusFeature {
     private static final int SHADOW_COLOR = 0x000000;
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
     
-    // é¢œè‰²é…ç½®
+    // ÑÕÉ«ÅäÖÃ
     private final Map<String, Integer> textColors = new HashMap<>();
     private final Map<String, Integer> valueColors = new HashMap<>();
     
     public MiniHUD() {
-        super("è¿·ä½ HUD", "åœ¨å·¦ä¸Šè§’æ˜¾ç¤ºæ¸¸æˆä¿¡æ¯");
-        MinecraftForge.EVENT_BUS.register(this);
+        super("ÃÔÄãHUD", "ÔÚ×óÉÏ½ÇÏÔÊ¾ÓÎÏ·ĞÅÏ¢");
+        NeoForge.EVENT_BUS.register(this);
         initDefaultColors();
     }
 
     private void initDefaultColors() {
-        // é»˜è®¤æ–‡æœ¬é¢œè‰²
+        // Ä¬ÈÏÎÄ±¾ÑÕÉ«
         textColors.put("fps", 0xFFFFFF);
         textColors.put("time", 0xFFFFFF);
         textColors.put("pos", 0xFFFFFF);
         textColors.put("biome", 0xFFFFFF);
         textColors.put("localtime", 0xFFFFFF);
 
-        // é»˜è®¤æ•°å€¼é¢œè‰²
+        // Ä¬ÈÏÊıÖµÑÕÉ«
         valueColors.put("fps", 0xFFFFFF);
         valueColors.put("time", 0xFFFFFF);
         valueColors.put("pos", 0xFFFFFF);
@@ -65,11 +65,11 @@ public class MiniHUD extends CreativePlusFeature {
         try {
             String element = parts[0].toLowerCase();
             String type = parts[1].toLowerCase();
-            int color = Integer.parseInt(parts[2], 16) | 0xFF000000; // ç¡®ä¿ alpha é€šé“ä¸º FF
+            int color = Integer.parseInt(parts[2], 16) | 0xFF000000; // È·±£ alpha Í¨µÀÎª FF
 
             if (!isValidElement(element)) {
                 mc.player.displayClientMessage(
-                    Component.literal("Â§cæ— æ•ˆçš„å…ƒç´ ã€‚å¯ç”¨å…ƒç´ : fps, time, pos, biome, localtime"), 
+                    Component.literal("¡ìcÎŞĞ§µÄÔªËØ¡£¿ÉÓÃÔªËØ: fps, time, pos, biome, localtime"), 
                     false
                 );
                 return;
@@ -80,7 +80,7 @@ public class MiniHUD extends CreativePlusFeature {
                 case "value" -> valueColors.put(element, color);
                 default -> {
                     mc.player.displayClientMessage(
-                        Component.literal("Â§cæ— æ•ˆçš„ç±»å‹ã€‚å¯ç”¨ç±»å‹: text, value"), 
+                        Component.literal("¡ìcÎŞĞ§µÄÀàĞÍ¡£¿ÉÓÃÀàĞÍ: text, value"), 
                         false
                     );
                     return;
@@ -88,26 +88,26 @@ public class MiniHUD extends CreativePlusFeature {
             }
 
             mc.player.displayClientMessage(
-                Component.literal(String.format("Â§aå·²è®¾ç½® %s çš„%sé¢œè‰²ä¸º: #%06X", 
-                    element, type.equals("text") ? "æ–‡æœ¬" : "æ•°å€¼", color & 0xFFFFFF)), 
+                Component.literal(String.format("¡ìaÒÑÉèÖÃ %s µÄ%sÑÕÉ«Îª: #%06X", 
+                    element, type.equals("text") ? "ÎÄ±¾" : "ÊıÖµ", color & 0xFFFFFF)), 
                 false
             );
 
         } catch (NumberFormatException e) {
             mc.player.displayClientMessage(
-                Component.literal("Â§cæ— æ•ˆçš„é¢œè‰²ä»£ç ã€‚è¯·ä½¿ç”¨åå…­è¿›åˆ¶æ ¼å¼ (ä¾‹å¦‚: FFFFFF)"), 
+                Component.literal("¡ìcÎŞĞ§µÄÑÕÉ«´úÂë¡£ÇëÊ¹ÓÃÊ®Áù½øÖÆ¸ñÊ½ (ÀıÈç: FFFFFF)"), 
                 false
             );
         }
     }
 
     private void sendHelp(Minecraft mc) {
-        mc.player.displayClientMessage(Component.literal("Â§6=== MiniHUD é¢œè‰²è®¾ç½®å¸®åŠ© ==="), false);
-        mc.player.displayClientMessage(Component.literal("Â§7ç”¨æ³•: .hudcolor <å…ƒç´ > <ç±»å‹> <é¢œè‰²>"), false);
-        mc.player.displayClientMessage(Component.literal("Â§7å…ƒç´ : fps, time, pos, biome, localtime"), false);
-        mc.player.displayClientMessage(Component.literal("Â§7ç±»å‹: text (æ–‡æœ¬), value (æ•°å€¼)"), false);
-        mc.player.displayClientMessage(Component.literal("Â§7é¢œè‰²: å…­ä½åå…­è¿›åˆ¶é¢œè‰²ä»£ç "), false);
-        mc.player.displayClientMessage(Component.literal("Â§7ç¤ºä¾‹: .hudcolor fps value FF0000"), false);
+        mc.player.displayClientMessage(Component.literal("¡ì6=== MiniHUD ÑÕÉ«ÉèÖÃ°ïÖú ==="), false);
+        mc.player.displayClientMessage(Component.literal("¡ì7ÓÃ·¨: .hudcolor <ÔªËØ> <ÀàĞÍ> <ÑÕÉ«>"), false);
+        mc.player.displayClientMessage(Component.literal("¡ì7ÔªËØ: fps, time, pos, biome, localtime"), false);
+        mc.player.displayClientMessage(Component.literal("¡ì7ÀàĞÍ: text (ÎÄ±¾), value (ÊıÖµ)"), false);
+        mc.player.displayClientMessage(Component.literal("¡ì7ÑÕÉ«: ÁùÎ»Ê®Áù½øÖÆÑÕÉ«´úÂë"), false);
+        mc.player.displayClientMessage(Component.literal("¡ì7Ê¾Àı: .hudcolor fps value FF0000"), false);
     }
 
     private boolean isValidElement(String element) {
@@ -116,17 +116,17 @@ public class MiniHUD extends CreativePlusFeature {
 
     @Override
     public void onEnable() {
-        // ä¸éœ€è¦ç‰¹æ®Šåˆå§‹åŒ–
+        // ²»ĞèÒªÌØÊâ³õÊ¼»¯
     }
 
     @Override
     public void onDisable() {
-        // ä¸éœ€è¦ç‰¹æ®Šæ¸…ç†
+        // ²»ĞèÒªÌØÊâÇåÀí
     }
 
     @Override
     public void onTick() {
-        // ä¸éœ€è¦tickæ›´æ–°
+        // ²»ĞèÒªtick¸üĞÂ
     }
 
     public void render(GuiGraphics graphics, float partialTicks) {
@@ -149,42 +149,42 @@ public class MiniHUD extends CreativePlusFeature {
             "fps", 5, y);
         y += lineHeight;
 
-        // æ¸¸æˆæ—¶é—´
-        renderSplitLine(graphics, "å¤©æ•°: ", String.valueOf(mc.level.getDayTime() / 24000L), 
+        // ÓÎÏ·Ê±¼ä
+        renderSplitLine(graphics, "ÌìÊı: ", String.valueOf(mc.level.getDayTime() / 24000L), 
             "time", 5, y);
-        renderSplitLine(graphics, " æ—¶é—´: ", formatGameTime(mc.level.getDayTime() % 24000L), 
-            "time", 5 + mc.font.width("å¤©æ•°: " + mc.level.getDayTime() / 24000L), y);
+        renderSplitLine(graphics, " Ê±¼ä: ", formatGameTime(mc.level.getDayTime() % 24000L), 
+            "time", 5 + mc.font.width("ÌìÊı: " + mc.level.getDayTime() / 24000L), y);
         y += lineHeight;
 
-        // åæ ‡
+        // ×ø±ê
         renderSplitLine(graphics, "XYZ: ", 
             String.format("%d %d %d", pos.getX(), pos.getY(), pos.getZ()),
             "pos", 5, y);
         y += lineHeight;
 
-        // ç”Ÿç‰©ç¾¤ç³»
-        renderSplitLine(graphics, "ç”Ÿç‰©ç¾¤ç³»: ", formatBiomeName(biome),
+        // ÉúÎïÈºÏµ
+        renderSplitLine(graphics, "ÉúÎïÈºÏµ: ", formatBiomeName(biome),
             "biome", 5, y);
         y += lineHeight;
 
-        // æœ¬åœ°æ—¶é—´
-        renderSplitLine(graphics, "æœ¬åœ°æ—¶é—´: ", TIME_FORMAT.format(new Date()),
+        // ±¾µØÊ±¼ä
+        renderSplitLine(graphics, "±¾µØÊ±¼ä: ", TIME_FORMAT.format(new Date()),
             "localtime", 5, y);
     }
 
     private void renderSplitLine(GuiGraphics graphics, String label, String value, 
                                String element, int x, int y) {
         Minecraft mc = Minecraft.getInstance();
-        // æ¸²æŸ“æ–‡æœ¬æ ‡ç­¾
+        // äÖÈ¾ÎÄ±¾±êÇ©
         renderText(graphics, label, x, y, textColors.get(element));
-        // æ¸²æŸ“æ•°å€¼
+        // äÖÈ¾ÊıÖµ
         renderText(graphics, value, x + mc.font.width(label), y, valueColors.get(element));
     }
 
     private void renderText(GuiGraphics graphics, String text, int x, int y, int color) {
-        // æ¸²æŸ“é˜´å½±
+        // äÖÈ¾ÒõÓ°
         graphics.drawString(Minecraft.getInstance().font, text, x + 1, y + 1, SHADOW_COLOR);
-        // æ¸²æŸ“æ–‡æœ¬
+        // äÖÈ¾ÎÄ±¾
         graphics.drawString(Minecraft.getInstance().font, text, x, y, color);
     }
 
@@ -195,24 +195,24 @@ public class MiniHUD extends CreativePlusFeature {
     }
 
     private String formatBiomeName(String biomeName) {
-        // å°†ç”Ÿç‰©ç¾¤ç³»åç§°è½¬æ¢ä¸ºæ›´å‹å¥½çš„æ˜¾ç¤ºæ ¼å¼
+        // ½«ÉúÎïÈºÏµÃû³Æ×ª»»Îª¸üÓÑºÃµÄÏÔÊ¾¸ñÊ½
         return biomeName.replace('_', ' ')
-                .replace("plains", "å¹³åŸ")
-                .replace("forest", "æ£®æ—")
-                .replace("desert", "æ²™æ¼ ")
-                .replace("ocean", "æµ·æ´‹")
-                .replace("mountain", "å±±è„‰")
-                .replace("river", "æ²³æµ")
-                .replace("beach", "æµ·æ»©")
-                .replace("jungle", "ä¸›æ—")
-                .replace("savanna", "çƒ­å¸¦è‰åŸ")
-                .replace("taiga", "é’ˆå¶æ—")
-                .replace("snowy", "é›ªåœ°")
-                .replace("frozen", "å†°å†»")
-                .replace("deep", "æ·±")
-                .replace("cold", "å¯’å†·")
-                .replace("warm", "æ¸©æš–")
-                .replace("lukewarm", "æ¸©å’Œ");
+                .replace("plains", "Æ½Ô­")
+                .replace("forest", "É­ÁÖ")
+                .replace("desert", "É³Ä®")
+                .replace("ocean", "º£Ñó")
+                .replace("mountain", "É½Âö")
+                .replace("river", "ºÓÁ÷")
+                .replace("beach", "º£Ì²")
+                .replace("jungle", "´ÔÁÖ")
+                .replace("savanna", "ÈÈ´ø²İÔ­")
+                .replace("taiga", "ÕëÒ¶ÁÖ")
+                .replace("snowy", "Ñ©µØ")
+                .replace("frozen", "±ù¶³")
+                .replace("deep", "Éî")
+                .replace("cold", "º®Àä")
+                .replace("warm", "ÎÂÅ¯")
+                .replace("lukewarm", "ÎÂºÍ");
     }
 
     public int getTextColor(String element) {

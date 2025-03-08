@@ -1,4 +1,4 @@
-package org.xiyu.yee.createplus.mixin;
+package org.xiyu.yee.createplus.mixin.chat;
 
 import net.minecraft.client.gui.screens.ChatScreen;
 import org.spongepowered.asm.mixin.Mixin;

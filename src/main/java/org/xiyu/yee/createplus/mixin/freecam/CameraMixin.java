@@ -1,4 +1,4 @@
-package org.xiyu.yee.createplus.mixin;
+package org.xiyu.yee.createplus.mixin.freecam;
 
 import net.minecraft.client.Camera;
 import net.minecraft.world.phys.Vec3;

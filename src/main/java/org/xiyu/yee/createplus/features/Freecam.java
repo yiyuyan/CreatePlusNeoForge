@@ -4,36 +4,31 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RenderPlayerEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import org.xiyu.yee.createplus.utils.KeyBindings;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.level.GameType;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraft.world.phys.AABB;
-import java.awt.Color;
 
-import net.minecraft.resources.ResourceLocation;
-import org.xiyu.yee.createplus.mixin.CameraMixin;
-import org.xiyu.yee.createplus.mixin.CameraAccessor;
 import org.xiyu.yee.createplus.api.FreecamAPI;
-import net.minecraft.client.Camera;
 
 public class Freecam extends CreativePlusFeature {
     private Vec3 originalPosition;
     private float originalYRot;
     private float originalXRot;
-    private GameType originalGameMode; // è®°å½•åŸå§‹æ¸¸æˆæ¨¡å¼
+    private float originalFlySpeed;
+    private GameType originalGameMode; // ¼ÇÂ¼Ô­Ê¼ÓÎÏ·Ä£Ê½
     private float flySpeed = 1.0f;
     private static final float MIN_SPEED = 0.1f;
     private static final float MAX_SPEED = 5.0f;
     private static final float SPEED_STEP = 0.1f;
 
     public Freecam() {
-        super("çµé­‚å‡ºçª", "å…è®¸ç©å®¶çµé­‚å‡ºçªè‡ªç”±è§‚å¯Ÿ");
-        MinecraftForge.EVENT_BUS.register(this);
+        super("Áé»ê³öÇÏ", "ÔÊĞíÍæ¼ÒÁé»ê³öÇÏ×ÔÓÉ¹Û²ì");
+        NeoForge.EVENT_BUS.register(this);
     }
 
     @Override
@@ -43,21 +38,22 @@ public class Freecam extends CreativePlusFeature {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
 
-        // æ£€æŸ¥æŒ‰é”®çŠ¶æ€
+        // ¼ì²é°´¼ü×´Ì¬
         if (KeyBindings.TOGGLE_FREECAM.consumeClick()) {
             toggleFreecam();
         }
 
-        // å¦‚æœå¤„äºçµé­‚å‡ºçªçŠ¶æ€ï¼Œæ›´æ–°ç›¸æœºä½ç½®
+        // Èç¹û´¦ÓÚÁé»ê³öÇÏ×´Ì¬£¬¸üĞÂÏà»úÎ»ÖÃ
         if (FreecamAPI.isFreecam()) {
             updateCamera();
         }
 
-        // å¤„ç†é¼ æ ‡æ»šè½®è°ƒèŠ‚é€Ÿåº¦
-        while (mc.mouseHandler.getXVelocity() != 0) {
+        // ´¦ÀíÊó±ê¹öÂÖµ÷½ÚËÙ¶È
+        //vanilla spectator game mode will instead these
+        /*while (mc.mouseHandler.getXVelocity() != 0) {
             float delta = (float) (Math.signum(mc.mouseHandler.getXVelocity()) * SPEED_STEP);
             flySpeed = Math.max(MIN_SPEED, Math.min(MAX_SPEED, flySpeed + delta));
-        }
+        }*/
     }
 
     private void toggleFreecam() {
@@ -65,30 +61,32 @@ public class Freecam extends CreativePlusFeature {
         if (mc.player == null || mc.gameMode == null) return;
 
         if (!FreecamAPI.isFreecam()) {
-            // ä¿å­˜åŸå§‹çŠ¶æ€
+            // ±£´æÔ­Ê¼×´Ì¬
             originalPosition = mc.player.position();
             originalYRot = mc.player.getYRot();
             originalXRot = mc.player.getXRot();
-            originalGameMode = mc.gameMode.getPlayerMode(); // ä¿å­˜åŸå§‹æ¸¸æˆæ¨¡å¼
+            originalFlySpeed = mc.player.getAbilities().getFlyingSpeed();
+            originalGameMode = mc.gameMode.getPlayerMode(); // ±£´æÔ­Ê¼ÓÎÏ·Ä£Ê½
 
-            // å¯ç”¨çµé­‚å‡ºçª
+            // ÆôÓÃÁé»ê³öÇÏ
             FreecamAPI.setFreecamEnabled(true);
             FreecamAPI.setFreecamPosition(originalPosition);
             FreecamAPI.setFreecamRotation(originalYRot, originalXRot);
             
-            // åˆ‡æ¢åˆ°æ—è§‚è€…æ¨¡å¼
+            // ÇĞ»»µ½ÅÔ¹ÛÕßÄ£Ê½
             mc.gameMode.setLocalMode(GameType.SPECTATOR);
             
         } else {
-            // æ¢å¤åŸå§‹çŠ¶æ€
+            // »Ö¸´Ô­Ê¼×´Ì¬
             mc.player.setPos(originalPosition.x, originalPosition.y, originalPosition.z);
             mc.player.setYRot(originalYRot);
             mc.player.setXRot(originalXRot);
+            mc.player.getAbilities().setFlyingSpeed(originalFlySpeed);
             
-            // ç¦ç”¨çµé­‚å‡ºçª
+            // ½ûÓÃÁé»ê³öÇÏ
             FreecamAPI.setFreecamEnabled(false);
             
-            // æ¢å¤åŸå§‹æ¸¸æˆæ¨¡å¼
+            // »Ö¸´Ô­Ê¼ÓÎÏ·Ä£Ê½
             mc.gameMode.setLocalMode(originalGameMode);
         }
     }
@@ -97,7 +95,7 @@ public class Freecam extends CreativePlusFeature {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
         
-        // è®¡ç®—ç§»åŠ¨æ–¹å‘
+        // ¼ÆËãÒÆ¶¯·½Ïò
         float yaw = mc.player.getYRot();
         float pitch = mc.player.getXRot();
         float forward = 0;
@@ -111,13 +109,13 @@ public class Freecam extends CreativePlusFeature {
         if (mc.options.keyJump.isDown()) up += 1;
         if (mc.options.keyShift.isDown()) up -= 1;
 
-        // è®¡ç®—ç§»åŠ¨å‘é‡
+        // ¼ÆËãÒÆ¶¯ÏòÁ¿
         double rad = Math.toRadians(yaw);
         double dx = (strafe * Math.cos(rad) - forward * Math.sin(rad)) * flySpeed;
         double dz = (forward * Math.cos(rad) + strafe * Math.sin(rad)) * flySpeed;
         double dy = up * flySpeed;
 
-        // æ›´æ–°ç›¸æœºä½ç½®
+        // ¸üĞÂÏà»úÎ»ÖÃ
         Vec3 pos = FreecamAPI.getFreecamPos();
         Vec3 newPos = new Vec3(pos.x + dx, pos.y + dy, pos.z + dz);
         FreecamAPI.setFreecamPosition(newPos);
@@ -128,45 +126,44 @@ public class Freecam extends CreativePlusFeature {
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
         if (!FreecamAPI.isFreecam() || !isEnabled()) return;
         
-        // å¦‚æœæ¸²æŸ“çš„æ˜¯æœ¬åœ°ç©å®¶ï¼Œä¸”å¤„äºçµé­‚å‡ºçªçŠ¶æ€
+        // Èç¹ûäÖÈ¾µÄÊÇ±¾µØÍæ¼Ò£¬ÇÒ´¦ÓÚÁé»ê³öÇÏ×´Ì¬
         if (event.getEntity() == Minecraft.getInstance().player) {
-            // æ¸²æŸ“ç©å®¶è½®å»“
+            // äÖÈ¾Íæ¼ÒÂÖÀª
             renderPlayerOutline(event.getPoseStack(), event.getEntity());
         }
     }
 
     private void renderPlayerOutline(PoseStack poseStack, Entity entity) {
-        // ä¿å­˜å½“å‰æ¸²æŸ“çŠ¶æ€
+        // ±£´æµ±Ç°äÖÈ¾×´Ì¬
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.disableDepthTest();
         
-        // è·å–ç©å®¶è¾¹ç•Œæ¡†
+        // »ñÈ¡Íæ¼Ò±ß½ç¿ò
         AABB box = entity.getBoundingBox();
         float r = 0.0f;
         float g = 1.0f;
         float b = 1.0f;
         float alpha = 0.4f;
         
-        // æ¸²æŸ“åŠé€æ˜è½®å»“
+        // äÖÈ¾°ëÍ¸Ã÷ÂÖÀª
         renderBox(poseStack, box, r, g, b, alpha);
         
-        // æ¢å¤æ¸²æŸ“çŠ¶æ€
+        // »Ö¸´äÖÈ¾×´Ì¬
         RenderSystem.enableDepthTest();
         RenderSystem.disableBlend();
     }
 
     private void renderBox(PoseStack poseStack, AABB box, float r, float g, float b, float alpha) {
-        // è·å–Tesselatorå’ŒBufferBuilder
+        // »ñÈ¡TesselatorºÍBufferBuilder
         Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder bufferBuilder = tesselator.getBuilder();
+        BufferBuilder bufferBuilder = tesselator.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
         
-        // å¼€å§‹ç»˜åˆ¶
-        bufferBuilder.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
+        // ¿ªÊ¼»æÖÆ
         
-        // ç»˜åˆ¶è¾¹ç•Œæ¡†çš„çº¿æ¡
-        // åº•éƒ¨çŸ©å½¢
+        // »æÖÆ±ß½ç¿òµÄÏßÌõ
+        // µ×²¿¾ØĞÎ
         vertex(bufferBuilder, poseStack, box.minX, box.minY, box.minZ, r, g, b, alpha);
         vertex(bufferBuilder, poseStack, box.maxX, box.minY, box.minZ, r, g, b, alpha);
         vertex(bufferBuilder, poseStack, box.maxX, box.minY, box.minZ, r, g, b, alpha);
@@ -176,7 +173,7 @@ public class Freecam extends CreativePlusFeature {
         vertex(bufferBuilder, poseStack, box.minX, box.minY, box.maxZ, r, g, b, alpha);
         vertex(bufferBuilder, poseStack, box.minX, box.minY, box.minZ, r, g, b, alpha);
         
-        // é¡¶éƒ¨çŸ©å½¢
+        // ¶¥²¿¾ØĞÎ
         vertex(bufferBuilder, poseStack, box.minX, box.maxY, box.minZ, r, g, b, alpha);
         vertex(bufferBuilder, poseStack, box.maxX, box.maxY, box.minZ, r, g, b, alpha);
         vertex(bufferBuilder, poseStack, box.maxX, box.maxY, box.minZ, r, g, b, alpha);
@@ -186,7 +183,7 @@ public class Freecam extends CreativePlusFeature {
         vertex(bufferBuilder, poseStack, box.minX, box.maxY, box.maxZ, r, g, b, alpha);
         vertex(bufferBuilder, poseStack, box.minX, box.maxY, box.minZ, r, g, b, alpha);
         
-        // è¿æ¥çº¿
+        // Á¬½ÓÏß
         vertex(bufferBuilder, poseStack, box.minX, box.minY, box.minZ, r, g, b, alpha);
         vertex(bufferBuilder, poseStack, box.minX, box.maxY, box.minZ, r, g, b, alpha);
         vertex(bufferBuilder, poseStack, box.maxX, box.minY, box.minZ, r, g, b, alpha);
@@ -196,14 +193,14 @@ public class Freecam extends CreativePlusFeature {
         vertex(bufferBuilder, poseStack, box.minX, box.minY, box.maxZ, r, g, b, alpha);
         vertex(bufferBuilder, poseStack, box.minX, box.maxY, box.maxZ, r, g, b, alpha);
         
-        // ç»“æŸç»˜åˆ¶
-        tesselator.end();
+        // ½áÊø»æÖÆ
+        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
     }
 
     private void vertex(BufferBuilder bufferBuilder, PoseStack poseStack, double x, double y, double z, float r, float g, float b, float alpha) {
-        bufferBuilder.vertex(poseStack.last().pose(), (float)x, (float)y, (float)z)
-            .color(r, g, b, alpha)
-            .endVertex();
+        bufferBuilder.addVertex(poseStack.last().pose(), (float)x, (float)y, (float)z)
+            .setColor(r, g, b, alpha)
+            ;
     }
 
     @Override
@@ -215,18 +212,18 @@ public class Freecam extends CreativePlusFeature {
 
     @Override
     public void onEnable() {
-        // ä¸éœ€è¦ç‰¹æ®Šåˆå§‹åŒ–
+        // ²»ĞèÒªÌØÊâ³õÊ¼»¯
     }
 
     @Override
     public String getDescription() {
         StringBuilder desc = new StringBuilder(super.getDescription());
         if (isEnabled()) {
-            desc.append("\nÂ§7æŒ‰ F6 å¼€å…³çµé­‚å‡ºçª");
+            desc.append("\n¡ì7°´ F6 ¿ª¹ØÁé»ê³öÇÏ");
             if (FreecamAPI.isFreecam()) {
-                desc.append("\nÂ§7å½“å‰é£è¡Œé€Ÿåº¦: Â§e").append(String.format("%.1f", flySpeed));
-                desc.append("\nÂ§7ä½¿ç”¨é¼ æ ‡æ»šè½®è°ƒèŠ‚é€Ÿåº¦");
-                desc.append("\nÂ§7åŸå§‹æ¨¡å¼: Â§e").append(originalGameMode.getName());
+                desc.append("\n¡ì7µ±Ç°·ÉĞĞËÙ¶È: ¡ìe").append(String.format("%.1f", flySpeed));
+                desc.append("\n¡ì7Ê¹ÓÃÊó±ê¹öÂÖµ÷½ÚËÙ¶È");
+                desc.append("\n¡ì7Ô­Ê¼Ä£Ê½: ¡ìe").append(originalGameMode.getName());
             }
         }
         return desc.toString();

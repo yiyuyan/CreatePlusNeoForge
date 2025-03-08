@@ -12,19 +12,19 @@ public class FeatureManager {
 
     public FeatureManager() {
         registerFeatures();
-        ConfigManager.init(); // åˆå§‹åŒ–å¹¶åŠ è½½é…ç½®
+        ConfigManager.init(); // ³õÊ¼»¯²¢¼ÓÔØÅäÖÃ
     }
 
     private void registerFeatures() {
-        // é£è¡Œå¢å¼º
+        // ·ÉĞĞÔöÇ¿
         featureList.add(new ImprovedFlight());
-        // æ— é™æ”¾ç½®
+        // ÎŞÏŞ·ÅÖÃ
         featureList.add(new InfinitePlacement());
-        // å¿«é€Ÿå»ºé€ 
+        // ¿ìËÙ½¨Ôì
         featureList.add(new SpeedBuild());
-        // åŒºåŸŸå¤åˆ¶
+        // ÇøÓò¸´ÖÆ
         featureList.add(new AreaCopy());
-        // é•œåƒå»ºé€ 
+        // ¾µÏñ½¨Ôì
         featureList.add(new MirrorBuild());
         featureList.add(new SpinBot());
         featureList.add(new Nucker());
@@ -44,7 +44,7 @@ public class FeatureManager {
         }
     }
 
-    // å½“åŠŸèƒ½çŠ¶æ€æ”¹å˜æ—¶ä¿å­˜é…ç½®
+    // µ±¹¦ÄÜ×´Ì¬¸Ä±äÊ±±£´æÅäÖÃ
     public void onFeatureToggle() {
         ConfigManager.saveConfig();
     }

@@ -1,4 +1,4 @@
-package org.xiyu.yee.createplus.mixin;
+package org.xiyu.yee.createplus.mixin.freecam;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;

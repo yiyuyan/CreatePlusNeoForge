@@ -5,7 +5,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class InfinitePlacement extends CreativePlusFeature {
     public InfinitePlacement() {
-        super("鏃犻檺鏀剧疆", "鍒涢�犳ā寮忎笅鐗╁搧鏃犻檺鏀剧疆");
+        super("无限放置", "创造模式下物品无限放置");
     }
 
     @Override

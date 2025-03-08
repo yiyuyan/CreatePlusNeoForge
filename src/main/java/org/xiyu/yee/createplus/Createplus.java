@@ -7,18 +7,22 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 import org.slf4j.Logger;
 import net.minecraft.network.chat.Component;
 import org.xiyu.yee.createplus.features.*;
@@ -28,13 +32,11 @@ import org.xiyu.yee.createplus.ui.FeatureScreen;
 import org.xiyu.yee.createplus.commands.FeaturesCommand;
 
 import org.xiyu.yee.createplus.utils.KeyBindings;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import org.xiyu.yee.createplus.tabs.SpawnEggsTab;
 import net.minecraft.core.registries.BuiltInRegistries;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import org.xiyu.yee.createplus.events.ChatSuggestionHandler;
 
 
@@ -50,16 +52,16 @@ public class Createplus {
 
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
-    // åˆ›å»ºåˆ›é€ æ¨¡å¼ç‰©å“æ 
-    public static final RegistryObject<CreativeModeTab> CREATEPLUS_TAB = CREATIVE_MODE_TABS.register("hidden_items", () ->
+    // ´´½¨´´ÔìÄ£Ê½ÎïÆ·À¸
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> CREATEPLUS_TAB = CREATIVE_MODE_TABS.register("hidden_items", () ->
         CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.createplus.hidden_items"))
             .icon(() -> new ItemStack(Items.BARRIER))
             .displayItems((parameters, output) -> {
-                // æ”¶é›†æ‰€æœ‰å·²æ˜¾ç¤ºçš„ç‰©å“
+                // ÊÕ¼¯ËùÓĞÒÑÏÔÊ¾µÄÎïÆ·
                 Set<Item> shownItems = new HashSet<>();
                 
-                // è·å–æ‰€æœ‰æ ‡å‡†æ ‡ç­¾é¡µ
+                // »ñÈ¡ËùÓĞ±ê×¼±êÇ©Ò³
                 CreativeModeTabs.tabs().forEach(tab -> {
                     String tabId = tab.getDisplayName().getString();
                     if (!tabId.contains("hidden_items")) {
@@ -67,17 +69,17 @@ public class Createplus {
                     }
                 });
 
-                // æ·»åŠ æœªæ˜¾ç¤ºçš„ç‰©å“
+                // Ìí¼ÓÎ´ÏÔÊ¾µÄÎïÆ·
                 for (Item item : BuiltInRegistries.ITEM) {
                     if (!shownItems.contains(item)) {
                         try {
                             ItemStack stack = new ItemStack(item);
                             if (!stack.isEmpty()) {
-                                stack.setCount(1); // ç¡®ä¿å †å æ•°é‡ä¸º1
+                                stack.setCount(1); // È·±£¶ÑµşÊıÁ¿Îª1
                                 output.accept(stack);
                             }
                         } catch (Exception ignored) {
-                            // å¿½ç•¥æ— æ³•åˆ›å»ºçš„ç‰©å“
+                            // ºöÂÔÎŞ·¨´´½¨µÄÎïÆ·
                         }
                     }
                 }
@@ -85,8 +87,8 @@ public class Createplus {
             .build()
     );
 
-    // åˆ›å»ºå®ä½“åˆ·æ€ªè›‹æ ‡ç­¾é¡µ
-    public static final RegistryObject<CreativeModeTab> SPAWN_EGGS_TAB = CREATIVE_MODE_TABS.register("spawn_eggs_tab",
+    // ´´½¨ÊµÌåË¢¹Öµ°±êÇ©Ò³
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> SPAWN_EGGS_TAB = CREATIVE_MODE_TABS.register("spawn_eggs_tab",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup." + MODID + ".spawn_eggs"))
                     .icon(() -> new ItemStack(Items.SPAWNER))
@@ -96,35 +98,34 @@ public class Createplus {
 
     public static FeatureScreen featureScreen;
 
-    public Createplus() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        IEventBus forgeBus = MinecraftForge.EVENT_BUS;
+    public Createplus(IEventBus modEventBus, ModContainer modContainer) {
+        IEventBus forgeBus = NeoForge.EVENT_BUS;
 
-        // åªæ³¨å†Œåˆ›é€ æ¨¡å¼æ ‡ç­¾é¡µ
+        // Ö»×¢²á´´ÔìÄ£Ê½±êÇ©Ò³
         CREATIVE_MODE_TABS.register(modEventBus);
 
-        // æ³¨å†Œå®¢æˆ·ç«¯äº‹ä»¶å¤„ç†å™¨
+        // ×¢²á¿Í»§¶ËÊÂ¼ş´¦ÀíÆ÷
         modEventBus.addListener(this::addCreative);
 
-        // æ³¨å†Œåˆ°Forgeäº‹ä»¶æ€»çº¿
+        // ×¢²áµ½ForgeÊÂ¼ş×ÜÏß
         forgeBus.register(this);
         
-        // æ³¨å†Œå®¢æˆ·ç«¯tickäº‹ä»¶
+        // ×¢²á¿Í»§¶ËtickÊÂ¼ş
         forgeBus.addListener(this::onClientTick);
 
-        // åˆå§‹åŒ–UI
+        // ³õÊ¼»¯UI
         featureScreen = new FeatureScreen();
         
-        // æ³¨å†ŒæŒ‰é”®äº‹ä»¶
+        // ×¢²á°´¼üÊÂ¼ş
         forgeBus.register(featureScreen);
 
-        // æ³¨å†Œå‘½ä»¤
+        // ×¢²áÃüÁî
         forgeBus.register(FeaturesCommand.class);
 
-        // åˆå§‹åŒ–FEATURE_MANAGER
+        // ³õÊ¼»¯FEATURE_MANAGER
         FEATURE_MANAGER = new FeatureManager();
 
-        // åœ¨FEATURE_MANAGERåˆå§‹åŒ–æ—¶æ·»åŠ æ–°åŠŸèƒ½
+        // ÔÚFEATURE_MANAGER³õÊ¼»¯Ê±Ìí¼ÓĞÂ¹¦ÄÜ
         FEATURE_MANAGER.registerFeature(new Gibbon());
         FEATURE_MANAGER.registerFeature(new SpeedAdjust());
         FEATURE_MANAGER.registerFeature(new Freecam());
@@ -133,8 +134,8 @@ public class Createplus {
         FEATURE_MANAGER.registerFeature(new TimeWeatherControl());
         FEATURE_MANAGER.registerFeature(new MiniHUD());
 
-        // æ³¨å†ŒèŠå¤©å»ºè®®å¤„ç†å™¨
-        MinecraftForge.EVENT_BUS.register(ChatSuggestionHandler.class);
+        // ×¢²áÁÄÌì½¨Òé´¦ÀíÆ÷
+        NeoForge.EVENT_BUS.register(ChatSuggestionHandler.class);
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
@@ -143,27 +144,25 @@ public class Createplus {
         }
     }
 
-    private void onClientTick(net.minecraftforge.event.TickEvent.ClientTickEvent event) {
-        if (event.phase == net.minecraftforge.event.TickEvent.Phase.END) {
-            FEATURE_MANAGER.onTick();
-        }
+    private void onClientTick(ClientTickEvent.Post event) {
+        FEATURE_MANAGER.onTick();
     }
 
     @SubscribeEvent
     public void onMouseInput(InputEvent.MouseButton.Post event) {
-        // åªå¤„ç†é¼ æ ‡æŒ‰ä¸‹äº‹ä»¶ (0æ˜¯é‡Šæ”¾ï¼Œ1æ˜¯æŒ‰ä¸‹)
+        // Ö»´¦ÀíÊó±ê°´ÏÂÊÂ¼ş (0ÊÇÊÍ·Å£¬1ÊÇ°´ÏÂ)
         if (event.getAction() != 1) return;
         
-        // éå†æ‰€æœ‰å¯ç”¨çš„åŠŸèƒ½
+        // ±éÀúËùÓĞÆôÓÃµÄ¹¦ÄÜ
         for (CreativePlusFeature feature : FEATURE_MANAGER.getFeatures()) {
             if (feature.isEnabled()) {
-                feature.handleClick(event.getButton() == 1); // 1æ˜¯å³é”®ï¼Œ0æ˜¯å·¦é”®
+                feature.handleClick(event.getButton() == 1); // 1ÊÇÓÒ¼ü£¬0ÊÇ×ó¼ü
             }
         }
     }
 
-    // å®¢æˆ·ç«¯ä¸“ç”¨çš„è®¾ç½®
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    // ¿Í»§¶Ë×¨ÓÃµÄÉèÖÃ
+    @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
@@ -178,21 +177,21 @@ public class Createplus {
         }
     }
 
-    // å°†æ¸²æŸ“äº‹ä»¶ç§»åˆ°å•ç‹¬çš„ç±»ä¸­
-    @Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
+    // ½«äÖÈ¾ÊÂ¼şÒÆµ½µ¥¶ÀµÄÀàÖĞ
+    @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
     public static class RenderEvents {
         @SubscribeEvent
-        public static void onRenderGui(RenderGuiOverlayEvent.Post event) {
+        public static void onRenderGui(RenderGuiLayerEvent.Post event) {
             if (featureScreen != null) {
-                featureScreen.render(event.getGuiGraphics(), 0, 0, event.getPartialTick());
+                featureScreen.render(event.getGuiGraphics(), 0, 0, event.getPartialTick().getGameTimeDeltaTicks());
             }
             
-            // æ¸²æŸ“MiniHUD
+            // äÖÈ¾MiniHUD
             FEATURE_MANAGER.getFeatures().stream()
                 .filter(feature -> feature instanceof MiniHUD)
                 .map(feature -> (MiniHUD) feature)
                 .findFirst()
-                .ifPresent(miniHUD -> miniHUD.render(event.getGuiGraphics(), event.getPartialTick()));
+                .ifPresent(miniHUD -> miniHUD.render(event.getGuiGraphics(), event.getPartialTick().getGameTimeDeltaTicks()));
         }
     }
 }

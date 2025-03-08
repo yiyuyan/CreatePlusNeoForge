@@ -6,10 +6,9 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.AABB;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -34,7 +33,7 @@ public class BuildingManager {
     }
 
     private BuildingManager() {
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
     }
 
     public void setFirstPos(BlockPos pos) {
@@ -94,7 +93,7 @@ public class BuildingManager {
             currentSource = source;
             isPreviewActive = true;
             
-            // è®¡ç®—é¢„è§ˆåŒºåŸŸ
+            // ¼ÆËãÔ¤ÀÀÇøÓò
             int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
             int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
             blockCount = 0;
@@ -116,7 +115,7 @@ public class BuildingManager {
                 }
             }
             
-            // è®¡ç®—ä½“ç§¯
+            // ¼ÆËãÌå»ı
             int width = maxX - minX + 1;
             int height = maxY - minY + 1;
             int depth = maxZ - minZ + 1;
@@ -129,43 +128,43 @@ public class BuildingManager {
                 playerPos.getX() + maxX + 1, playerPos.getY() + maxY + 1, playerPos.getZ() + maxZ + 1
             );
 
-            // æ˜¾ç¤ºå»ºç­‘ä¿¡æ¯
+            // ÏÔÊ¾½¨ÖşĞÅÏ¢
             source.sendSuccess(() -> 
                 Component.literal(String.format(
-                    "Â§aå»ºç­‘ä¿¡æ¯:\n" +
-                    "Â§7- å¤§å°: Â§f%dx%dx%d\n" +
-                    "Â§7- æ–¹å—æ•°: Â§f%d\n" +
-                    "Â§7- ä½“ç§¯: Â§f%.1f mÂ³",
+                    "¡ìa½¨ÖşĞÅÏ¢:\n" +
+                    "¡ì7- ´óĞ¡: ¡ìf%dx%dx%d\n" +
+                    "¡ì7- ·½¿éÊı: ¡ìf%d\n" +
+                    "¡ì7- Ìå»ı: ¡ìf%.1f m?",
                     width, height, depth,
                     blockCount,
                     volume
                 )), false);
             
             source.sendSuccess(() -> 
-                Component.literal("Â§aæ­£åœ¨é¢„è§ˆå»ºç­‘ï¼Œè¾“å…¥ /confirmimport ç¡®è®¤å¯¼å…¥ï¼ˆè®°å¾—åˆ‡æ¢æ—è§‚æ¨¡å¼ï¼‰ï¼Œè¾“å…¥ /cancelimport å–æ¶ˆ"), false);
+                Component.literal("¡ìaÕıÔÚÔ¤ÀÀ½¨Öş£¬ÊäÈë /confirmimport È·ÈÏµ¼Èë£¨¼ÇµÃÇĞ»»ÅÔ¹ÛÄ£Ê½£©£¬ÊäÈë /cancelimport È¡Ïû"), false);
             
         } catch (IOException e) {
-            source.sendFailure(Component.literal("Â§cæ— æ³•è¯»å–å»ºç­‘æ–‡ä»¶: " + e.getMessage()));
+            source.sendFailure(Component.literal("¡ìcÎŞ·¨¶ÁÈ¡½¨ÖşÎÄ¼ş: " + e.getMessage()));
         }
     }
 
     public void confirmImport() {
         if (!isPreviewActive || currentSource == null) return;
         
-        // å…³é—­é¢„è§ˆçŠ¶æ€
+        // ¹Ø±ÕÔ¤ÀÀ×´Ì¬
         isPreviewActive = false;
         
-        // å‘é€å¼€å§‹å¯¼å…¥æ¶ˆæ¯
+        // ·¢ËÍ¿ªÊ¼µ¼ÈëÏûÏ¢
         currentSource.sendSuccess(() -> 
-            Component.literal("Â§aå¼€å§‹å¯¼å…¥å»ºç­‘ï¼Œå…± " + pendingCommands.size() + " ä¸ªæ–¹å—"), false);
+            Component.literal("¡ìa¿ªÊ¼µ¼Èë½¨Öş£¬¹² " + pendingCommands.size() + " ¸ö·½¿é"), false);
 
-        // åˆ›å»ºæ–°çš„æ‰§è¡Œå™¨
+        // ´´½¨ĞÂµÄÖ´ĞĞÆ÷
         if (executor != null && !executor.isShutdown()) {
             executor.shutdown();
         }
         executor = Executors.newSingleThreadScheduledExecutor();
 
-        // æ¯tickæ‰§è¡Œä¸€æ¡å‘½ä»¤
+        // Ã¿tickÖ´ĞĞÒ»ÌõÃüÁî
         final Iterator<String> commandIterator = pendingCommands.iterator();
         final int[] blockCount = {0};
         
@@ -173,7 +172,7 @@ public class BuildingManager {
             try {
                 if (commandIterator.hasNext()) {
                     String command = commandIterator.next();
-                    // æ£€æŸ¥å¹¶ä¿®æ­£å‘½ä»¤æ ¼å¼
+                    // ¼ì²é²¢ĞŞÕıÃüÁî¸ñÊ½
                     if (command.startsWith("/")) {
                         command = command.substring(1);
                     }
@@ -181,39 +180,39 @@ public class BuildingManager {
                         command = "s" + command;
                     }
                     
-                    // å‘é€å‘½ä»¤åˆ°æœåŠ¡å™¨
+                    // ·¢ËÍÃüÁîµ½·şÎñÆ÷
                     Minecraft.getInstance().player.connection.sendCommand(command);
                     
                     blockCount[0]++;
                     
-                    // æ›´æ–°è¿›åº¦æ˜¾ç¤º
+                    // ¸üĞÂ½ø¶ÈÏÔÊ¾
                     float progress = (blockCount[0] * 100.0f) / pendingCommands.size();
                     
-                    // ä½¿ç”¨titleæ˜¾ç¤ºè¿›åº¦
+                    // Ê¹ÓÃtitleÏÔÊ¾½ø¶È
                     Minecraft.getInstance().player.connection.sendCommand(
-                        String.format("title @s actionbar {\"text\":\"å¯¼å…¥è¿›åº¦: %.1f%% (%d/%d)\",\"color\":\"green\"}",
+                        String.format("title @s actionbar {\"text\":\"µ¼Èë½ø¶È: %.1f%% (%d/%d)\",\"color\":\"green\"}",
                             progress, blockCount[0], pendingCommands.size())
                     );
                     
                 } else {
-                    // å®Œæˆå¯¼å…¥
+                    // Íê³Éµ¼Èë
                     executor.shutdown();
-                    // æ¸…é™¤è¿›åº¦æ˜¾ç¤º
+                    // Çå³ı½ø¶ÈÏÔÊ¾
                     Minecraft.getInstance().player.connection.sendCommand(
-                        "title @s actionbar {\"text\":\"å»ºç­‘å¯¼å…¥å®Œæˆï¼\",\"color\":\"green\"}"
+                        "title @s actionbar {\"text\":\"½¨Öşµ¼ÈëÍê³É£¡\",\"color\":\"green\"}"
                     );
                     currentSource.sendSuccess(() -> 
-                        Component.literal("Â§aå»ºç­‘å¯¼å…¥å®Œæˆï¼"), false);
+                        Component.literal("¡ìa½¨Öşµ¼ÈëÍê³É£¡"), false);
                     pendingCommands.clear();
                     previewBox = null;
                 }
             } catch (Exception e) {
                 currentSource.sendFailure(
-                    Component.literal("Â§cå¯¼å…¥è¿‡ç¨‹ä¸­å‡ºé”™: " + e.getMessage())
+                    Component.literal("¡ìcµ¼Èë¹ı³ÌÖĞ³ö´í: " + e.getMessage())
                 );
-                // æ¸…é™¤è¿›åº¦æ˜¾ç¤º
+                // Çå³ı½ø¶ÈÏÔÊ¾
                 Minecraft.getInstance().player.connection.sendCommand(
-                    "title @s actionbar {\"text\":\"å¯¼å…¥å¤±è´¥ï¼\",\"color\":\"red\"}"
+                    "title @s actionbar {\"text\":\"µ¼ÈëÊ§°Ü£¡\",\"color\":\"red\"}"
                 );
                 executor.shutdown();
                 pendingCommands.clear();
@@ -230,16 +229,16 @@ public class BuildingManager {
         pendingCommands.clear();
         previewBox = null;
         
-        // æ¸…é™¤è¿›åº¦æ˜¾ç¤ºå¹¶æ˜¾ç¤ºå–æ¶ˆæ¶ˆæ¯
+        // Çå³ı½ø¶ÈÏÔÊ¾²¢ÏÔÊ¾È¡ÏûÏûÏ¢
         if (Minecraft.getInstance().player != null) {
             Minecraft.getInstance().player.connection.sendCommand(
-                "title @s actionbar {\"text\":\"å·²å–æ¶ˆå¯¼å…¥\",\"color\":\"red\"}"
+                "title @s actionbar {\"text\":\"ÒÑÈ¡Ïûµ¼Èë\",\"color\":\"red\"}"
             );
         }
         
         if (currentSource != null) {
             currentSource.sendSuccess(() -> 
-                Component.literal("Â§cå·²å–æ¶ˆå¯¼å…¥"), false);
+                Component.literal("¡ìcÒÑÈ¡Ïûµ¼Èë"), false);
         }
     }
 
@@ -248,19 +247,19 @@ public class BuildingManager {
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return;
         
         if (isPreviewActive && previewBox != null) {
-            // è·å–æ¸²æŸ“ç¼“å†²
+            // »ñÈ¡äÖÈ¾»º³å
             var bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
             
-            // æ¸²æŸ“ä¸»è¾¹æ¡†
+            // äÖÈ¾Ö÷±ß¿ò
             RenderUtils.drawBox(event.getPoseStack(), previewBox, 0.0F, 1.0F, 0.0F, 0.4F);
             
-            // æ¸²æŸ“è¾¹ç•Œçº¿
+            // äÖÈ¾±ß½çÏß
             RenderUtils.drawEdgeLines(event.getPoseStack(), previewBox, 1.0F, 1.0F, 1.0F, 1.0F);
             
-            // æ¸²æŸ“è§’ç‚¹æ ‡è®°
+            // äÖÈ¾½Çµã±ê¼Ç
             RenderUtils.drawCornerMarkers(event.getPoseStack(), previewBox, 1.0F, 0.0F, 0.0F, 1.0F);
             
-            // æ¸²æŸ“ä¿¡æ¯æ–‡æœ¬
+            // äÖÈ¾ĞÅÏ¢ÎÄ±¾
             if (Minecraft.getInstance().player != null) {
                 double width = previewBox.maxX - previewBox.minX;
                 double height = previewBox.maxY - previewBox.minY;
@@ -268,24 +267,24 @@ public class BuildingManager {
                 
                 net.minecraft.world.phys.Vec3 center = previewBox.getCenter();
                 
-                // æ¸²æŸ“å°ºå¯¸ä¿¡æ¯
+                // äÖÈ¾³ß´çĞÅÏ¢
                 RenderUtils.renderText(
                     event.getPoseStack(),
-                    String.format("Â§e%.1fÃ—%.1fÃ—%.1f", width, height, depth),
+                    String.format("¡ìe%.1f¡Á%.1f¡Á%.1f", width, height, depth),
                     center.x, center.y + height/2 + 0.5, center.z,
                     0xFFFFFF
                 );
                 
-                // æ¸²æŸ“æ–¹å—æ•°é‡
+                // äÖÈ¾·½¿éÊıÁ¿
                 RenderUtils.renderText(
                     event.getPoseStack(),
-                    String.format("Â§a%dä¸ªæ–¹å—", blockCount),
+                    String.format("¡ìa%d¸ö·½¿é", blockCount),
                     center.x, center.y + height/2 + 0.2, center.z,
                     0xFFFFFF
                 );
             }
             
-            // ç»“æŸæ¸²æŸ“
+            // ½áÊøäÖÈ¾
             bufferSource.endBatch();
         }
     }

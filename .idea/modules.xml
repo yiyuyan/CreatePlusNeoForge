@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/createplus.main.iml" filepath="$PROJECT_DIR$/.idea/modules/createplus.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CreatePlusNeoForge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/CreatePlusNeoForge.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CreatePlusNeoForge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/CreatePlusNeoForge.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/createplus.test.iml" filepath="$PROJECT_DIR$/.idea/modules/createplus.test.iml" />
     </modules>
   </component>

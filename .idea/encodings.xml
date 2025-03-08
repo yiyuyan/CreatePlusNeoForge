@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" native2AsciiForPropertiesFiles="true" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/features/CreativePlusFeature.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/features/GammaOverride.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/features/Gibbon.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/features/ImprovedFlight.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/features/InfinitePlacement.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/features/MiniHUD.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/features/MirrorBuild.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/features/Nucker.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/features/Performance.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/features/PingDisplay.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/features/Scaffold.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/features/SpeedBuild.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/features/SpinBot.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/features/SubHUDFeature.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/features/TimeWeatherControl.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/features/Zoom.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/mixin/OptionsMixin.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/mixin/chat/ChatMixin.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/mixin/freecam/GameModeMixin.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/mixin/others/CommandSuggestionsMixin.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/mixin/render/ClientLevelMixin.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/mixin/render/EntityRendererMixin.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/mixin/render/MapRendererMixin.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/tabs/SpawnEggsTab.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/ui/FeatureScreen.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/ui/PerformanceSettingsScreen.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/utils/ConfigManager.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/xiyu/yee/createplus/utils/KeyBindings.java" charset="GBK" />
+    <file url="PROJECT" charset="GBK" />
+  </component>
+</project>

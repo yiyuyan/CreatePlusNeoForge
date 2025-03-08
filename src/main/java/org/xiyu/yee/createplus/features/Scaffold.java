@@ -17,7 +17,7 @@ public class Scaffold extends CreativePlusFeature {
     private int tickCounter = 0;
 
     public Scaffold() {
-        super("è„šæ‰‹æ¶", "è·³è·ƒæ—¶è‡ªåŠ¨åœ¨è„šä¸‹æ”¾ç½®æ–¹å—");
+        super("½ÅÊÖ¼Ü", "ÌøÔ¾Ê±×Ô¶¯ÔÚ½ÅÏÂ·ÅÖÃ·½¿é");
     }
 
     @Override
@@ -31,37 +31,37 @@ public class Scaffold extends CreativePlusFeature {
         if (tickCounter < PLACE_DELAY) return;
         tickCounter = 0;
 
-        // æ£€æŸ¥æ˜¯å¦åœ¨è·³è·ƒ
+        // ¼ì²éÊÇ·ñÔÚÌøÔ¾
         boolean isJumping = mc.player.input.jumping;
         
-        // å¦‚æœç©å®¶æ­£åœ¨è·³è·ƒ
+        // Èç¹ûÍæ¼ÒÕıÔÚÌøÔ¾
         if (isJumping && !wasJumping) {
-            // è·å–ç©å®¶æ‰‹ä¸­çš„ç‰©å“
+            // »ñÈ¡Íæ¼ÒÊÖÖĞµÄÎïÆ·
             ItemStack heldItem = mc.player.getMainHandItem();
             if (!(heldItem.getItem() instanceof BlockItem)) return;
 
-            // è·å–ç©å®¶è„šä¸‹çš„ä½ç½®
+            // »ñÈ¡Íæ¼Ò½ÅÏÂµÄÎ»ÖÃ
             BlockPos playerPos = mc.player.blockPosition();
             BlockPos placePos = playerPos.below();
             
-            // å¦‚æœè„šä¸‹æ˜¯ç©ºæ°”ï¼Œæ”¾ç½®æ–¹å—
+            // Èç¹û½ÅÏÂÊÇ¿ÕÆø£¬·ÅÖÃ·½¿é
             if (mc.level != null && mc.level.getBlockState(placePos).isAir()) {
-                // åˆ›å»ºæ–¹å—æ”¾ç½®ç»“æœ
+                // ´´½¨·½¿é·ÅÖÃ½á¹û
                 BlockHitResult hitResult = new BlockHitResult(
-                    Vec3.atBottomCenterOf(placePos.above()), // ç‚¹å‡»ä½ç½®
-                    Direction.DOWN, // ä»ä¸Šæ–¹æ”¾ç½®
-                    placePos, // ç›®æ ‡æ–¹å—ä½ç½®
+                    Vec3.atBottomCenterOf(placePos.above()), // µã»÷Î»ÖÃ
+                    Direction.DOWN, // ´ÓÉÏ·½·ÅÖÃ
+                    placePos, // Ä¿±ê·½¿éÎ»ÖÃ
                     false // inside
                 );
 
-                // å‘é€æ”¾ç½®æ•°æ®åŒ…
+                // ·¢ËÍ·ÅÖÃÊı¾İ°ü
                 mc.player.connection.send(new ServerboundUseItemOnPacket(
                     InteractionHand.MAIN_HAND,
                     hitResult,
                     0
                 ));
 
-                // æ’­æ”¾æ”¾ç½®éŸ³æ•ˆ
+                // ²¥·Å·ÅÖÃÒôĞ§
                 mc.player.playSound(
                     net.minecraft.sounds.SoundEvents.STONE_PLACE,
                     1.0F,
@@ -78,7 +78,7 @@ public class Scaffold extends CreativePlusFeature {
         wasJumping = false;
         tickCounter = 0;
         Minecraft.getInstance().player.sendSystemMessage(
-            Component.literal("Â§bè„šæ‰‹æ¶å·²å¯ç”¨")
+            Component.literal("¡ìb½ÅÊÖ¼ÜÒÑÆôÓÃ")
         );
     }
 
@@ -88,7 +88,7 @@ public class Scaffold extends CreativePlusFeature {
         tickCounter = 0;
         if (Minecraft.getInstance().player != null) {
             Minecraft.getInstance().player.sendSystemMessage(
-                Component.literal("Â§7è„šæ‰‹æ¶å·²ç¦ç”¨")
+                Component.literal("¡ì7½ÅÊÖ¼ÜÒÑ½ûÓÃ")
             );
         }
     }

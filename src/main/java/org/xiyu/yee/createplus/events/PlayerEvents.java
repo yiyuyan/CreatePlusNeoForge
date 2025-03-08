@@ -1,29 +1,27 @@
 package org.xiyu.yee.createplus.events;
 
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import org.xiyu.yee.createplus.Createplus;
-import net.minecraft.client.Minecraft;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.MutableComponent;
 
-@Mod.EventBusSubscriber(modid = Createplus.MODID)
+@EventBusSubscriber(modid = Createplus.MODID)
 public class PlayerEvents {
     @SubscribeEvent
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        event.getEntity().sendSystemMessage(Component.literal("=== CreatePlus æ¨¡ç»„å¸®åŠ© ===").withStyle(ChatFormatting.GOLD));
-        event.getEntity().sendSystemMessage(Component.literal("æŒ‰ F9 æ‰“å¼€åŠŸèƒ½èœå•").withStyle(ChatFormatting.YELLOW));
-        event.getEntity().sendSystemMessage(Component.literal("åŠŸèƒ½èœå•ä¸­:").withStyle(ChatFormatting.GRAY));
-        event.getEntity().sendSystemMessage(Component.literal("- ä¸Šä¸‹æ–¹å‘é”®é€‰æ‹©åŠŸèƒ½").withStyle(ChatFormatting.GRAY));
-        event.getEntity().sendSystemMessage(Component.literal("- å›è½¦é”®å¼€å¯/å…³é—­åŠŸèƒ½").withStyle(ChatFormatting.GRAY));
-        event.getEntity().sendSystemMessage(Component.literal("- å³æ–¹å‘é”®æ‰“å¼€å­èœå•(å¦‚æœæœ‰)").withStyle(ChatFormatting.GRAY));
-        event.getEntity().sendSystemMessage(Component.literal("å»ºç­‘ç›¸å…³åŠŸèƒ½:").withStyle(ChatFormatting.AQUA));
-        event.getEntity().sendSystemMessage(Component.literal("- ä½¿ç”¨æœ¨é“²é€‰æ‹©åŒºåŸŸ").withStyle(ChatFormatting.GRAY));
-        event.getEntity().sendSystemMessage(Component.literal("- /exportbuilding <åç§°> å¯¼å‡ºå»ºç­‘").withStyle(ChatFormatting.GRAY));
-        event.getEntity().sendSystemMessage(Component.literal("- /importbuilding <åç§°> å¯¼å…¥å»ºç­‘").withStyle(ChatFormatting.GRAY));
-        event.getEntity().sendSystemMessage(Component.literal("æ›´å¤šå¸®åŠ©è¯·ä½¿ç”¨ /features help").withStyle(ChatFormatting.GREEN));
+        event.getEntity().sendSystemMessage(Component.literal("=== CreatePlus Ä£×é°ïÖú ===").withStyle(ChatFormatting.GOLD));
+        event.getEntity().sendSystemMessage(Component.literal("°´ F9 ´ò¿ª¹¦ÄÜ²Ëµ¥").withStyle(ChatFormatting.YELLOW));
+        event.getEntity().sendSystemMessage(Component.literal("¹¦ÄÜ²Ëµ¥ÖĞ:").withStyle(ChatFormatting.GRAY));
+        event.getEntity().sendSystemMessage(Component.literal("- ÉÏÏÂ·½Ïò¼üÑ¡Ôñ¹¦ÄÜ").withStyle(ChatFormatting.GRAY));
+        event.getEntity().sendSystemMessage(Component.literal("- »Ø³µ¼ü¿ªÆô/¹Ø±Õ¹¦ÄÜ").withStyle(ChatFormatting.GRAY));
+        event.getEntity().sendSystemMessage(Component.literal("- ÓÒ·½Ïò¼ü´ò¿ª×Ó²Ëµ¥(Èç¹ûÓĞ)").withStyle(ChatFormatting.GRAY));
+        event.getEntity().sendSystemMessage(Component.literal("½¨ÖşÏà¹Ø¹¦ÄÜ:").withStyle(ChatFormatting.AQUA));
+        event.getEntity().sendSystemMessage(Component.literal("- Ê¹ÓÃÄ¾²ùÑ¡ÔñÇøÓò").withStyle(ChatFormatting.GRAY));
+        event.getEntity().sendSystemMessage(Component.literal("- /exportbuilding <Ãû³Æ> µ¼³ö½¨Öş").withStyle(ChatFormatting.GRAY));
+        event.getEntity().sendSystemMessage(Component.literal("- /importbuilding <Ãû³Æ> µ¼Èë½¨Öş").withStyle(ChatFormatting.GRAY));
+        event.getEntity().sendSystemMessage(Component.literal("¸ü¶à°ïÖúÇëÊ¹ÓÃ /features help").withStyle(ChatFormatting.GREEN));
         event.getEntity().sendSystemMessage(Component.literal("===================").withStyle(ChatFormatting.GOLD));
     }
 }

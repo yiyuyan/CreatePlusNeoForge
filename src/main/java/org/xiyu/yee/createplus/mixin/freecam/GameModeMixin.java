@@ -1,6 +1,5 @@
-package org.xiyu.yee.createplus.mixin;
+package org.xiyu.yee.createplus.mixin.freecam;
 
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.world.level.GameType;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,7 +21,7 @@ public class GameModeMixin {
     @Inject(method = "getPlayerMode", at = @At("RETURN"), cancellable = true)
     private void onGetPlayerMode(CallbackInfoReturnable<GameType> cir) {
         if (FreecamAPI.isFreecam() && cir.getReturnValue() == GameType.SPECTATOR) {
-            // åœ¨çµé­‚å‡ºçªçŠ¶æ€ä¸‹ï¼Œè®©æ—è§‚æ¨¡å¼è¡¨ç°å¾—åƒåˆ›é€ æ¨¡å¼ä¸€æ ·
+            // ÔÚÁé»ê³öÇÏ×´Ì¬ÏÂ£¬ÈÃÅÔ¹ÛÄ£Ê½±íÏÖµÃÏñ´´ÔìÄ£Ê½Ò»Ñù
             cir.setReturnValue(GameType.CREATIVE);
         }
     }

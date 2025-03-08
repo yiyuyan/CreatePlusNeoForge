@@ -14,12 +14,12 @@ public class Zoom extends CreativePlusFeature {
     private float currentZoom = 1.0f;
 
     public Zoom() {
-        super("è§†è§’ç¼©æ”¾", "å…è®¸ç©å®¶ç¼©æ”¾è§†è§’");
+        super("ÊÓ½ÇËõ·Å", "ÔÊĞíÍæ¼ÒËõ·ÅÊÓ½Ç");
     }
 
     @Override
     public void onEnable() {
-        // ä¸éœ€è¦ç‰¹æ®Šåˆå§‹åŒ–
+        // ²»ĞèÒªÌØÊâ³õÊ¼»¯
     }
 
     @Override
@@ -28,29 +28,29 @@ public class Zoom extends CreativePlusFeature {
         
         Minecraft mc = Minecraft.getInstance();
 
-        // å¤„ç†ç¼©æ”¾å¼€å…³
+        // ´¦ÀíËõ·Å¿ª¹Ø
         if (KeyBindings.TOGGLE_ZOOM.isDown()) {
             if (!isZooming) {
-                // å¼€å§‹ç¼©æ”¾
+                // ¿ªÊ¼Ëõ·Å
                 isZooming = true;
                 originalFov = mc.options.fov().get();
             }
             
-            // å¤„ç†é¼ æ ‡æ»šè½®
+            // ´¦ÀíÊó±ê¹öÂÖ
             double scroll = mc.mouseHandler.getXVelocity();
             if (scroll != 0) {
                 float delta = (float) (Math.signum(scroll) * ZOOM_STEP);
                 zoomLevel = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoomLevel + delta));
             }
             
-            // å¹³æ»‘è¿‡æ¸¡
+            // Æ½»¬¹ı¶É
             currentZoom += (zoomLevel - currentZoom) * SMOOTH_FACTOR;
-            // ç¡®ä¿FOVå€¼åœ¨æœ‰æ•ˆèŒƒå›´å†… (30-110)
+            // È·±£FOVÖµÔÚÓĞĞ§·¶Î§ÄÚ (30-110)
             int newFov = (int) Math.max(30, Math.min(110, originalFov / currentZoom));
             mc.options.fov().set(newFov);
             
         } else if (isZooming) {
-            // ç»“æŸç¼©æ”¾
+            // ½áÊøËõ·Å
             isZooming = false;
             currentZoom = 1.0f;
             mc.options.fov().set(originalFov);
@@ -71,10 +71,10 @@ public class Zoom extends CreativePlusFeature {
     public String getDescription() {
         StringBuilder desc = new StringBuilder(super.getDescription());
         if (isEnabled()) {
-            desc.append("\nÂ§7æŒ‰ä½ C è¿›è¡Œç¼©æ”¾");
+            desc.append("\n¡ì7°´×¡ C ½øĞĞËõ·Å");
             if (isZooming) {
-                desc.append("\nÂ§7å½“å‰ç¼©æ”¾: Â§e").append(String.format("%.1fx", zoomLevel));
-                desc.append("\nÂ§7ä½¿ç”¨é¼ æ ‡æ»šè½®è°ƒèŠ‚ç¼©æ”¾");
+                desc.append("\n¡ì7µ±Ç°Ëõ·Å: ¡ìe").append(String.format("%.1fx", zoomLevel));
+                desc.append("\n¡ì7Ê¹ÓÃÊó±ê¹öÂÖµ÷½ÚËõ·Å");
             }
         }
         return desc.toString();

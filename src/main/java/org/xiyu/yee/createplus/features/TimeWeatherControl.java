@@ -1,23 +1,22 @@
 package org.xiyu.yee.createplus.features;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.client.event.ClientChatEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.ClientChatEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TimeWeatherControl extends CreativePlusFeature {
-    private static final List<String> WEATHER_TYPES = Arrays.asList("æ™´å¤©", "é›¨å¤©", "é›·æš´");
-    private static final List<String> TIME_PRESETS = Arrays.asList("æ—¥å‡º", "ä¸­åˆ", "æ—¥è½", "å‰å¤œ", "åˆå¤œ");
+    private static final List<String> WEATHER_TYPES = Arrays.asList("ÇçÌì", "ÓêÌì", "À×±©");
+    private static final List<String> TIME_PRESETS = Arrays.asList("ÈÕ³ö", "ÖĞÎç", "ÈÕÂä", "Ç°Ò¹", "ÎçÒ¹");
     
     public TimeWeatherControl() {
-        super("æ—¶é—´å¤©æ°”", "æ§åˆ¶æœ¬åœ°æ—¶é—´å’Œå¤©æ°”");
-        MinecraftForge.EVENT_BUS.register(this);
+        super("Ê±¼äÌìÆø", "¿ØÖÆ±¾µØÊ±¼äºÍÌìÆø");
+        NeoForge.EVENT_BUS.register(this);
     }
 
     @SubscribeEvent
@@ -38,17 +37,17 @@ public class TimeWeatherControl extends CreativePlusFeature {
         if (mc.level == null) return;
 
         switch (type) {
-            case "æ™´å¤©" -> mc.level.setRainLevel(0);
-            case "é›¨å¤©" -> {
+            case "ÇçÌì" -> mc.level.setRainLevel(0);
+            case "ÓêÌì" -> {
                 mc.level.setRainLevel(1);
                 mc.level.setThunderLevel(0);
             }
-            case "é›·æš´" -> {
+            case "À×±©" -> {
                 mc.level.setRainLevel(1);
                 mc.level.setThunderLevel(1);
             }
             default -> mc.player.displayClientMessage(
-                Component.literal("Â§cæ— æ•ˆçš„å¤©æ°”ç±»å‹ã€‚å¯ç”¨ç±»å‹: æ™´å¤©, é›¨å¤©, é›·æš´"), 
+                Component.literal("¡ìcÎŞĞ§µÄÌìÆøÀàĞÍ¡£¿ÉÓÃÀàĞÍ: ÇçÌì, ÓêÌì, À×±©"), 
                 false
             );
         }
@@ -60,11 +59,11 @@ public class TimeWeatherControl extends CreativePlusFeature {
 
         try {
             long time = switch (timeStr) {
-                case "æ—¥å‡º" -> 0;
-                case "ä¸­åˆ" -> 6000;
-                case "æ—¥è½" -> 12000;
-                case "å‰å¤œ" -> 13000;
-                case "åˆå¤œ" -> 18000;
+                case "ÈÕ³ö" -> 0;
+                case "ÖĞÎç" -> 6000;
+                case "ÈÕÂä" -> 12000;
+                case "Ç°Ò¹" -> 13000;
+                case "ÎçÒ¹" -> 18000;
                 default -> Long.parseLong(timeStr);
             };
             
@@ -72,19 +71,19 @@ public class TimeWeatherControl extends CreativePlusFeature {
                 mc.level.setDayTime(time);
             } else {
                 mc.player.displayClientMessage(
-                    Component.literal("Â§cæ—¶é—´å¿…é¡»åœ¨ 0-24000 ä¹‹é—´"), 
+                    Component.literal("¡ìcÊ±¼ä±ØĞëÔÚ 0-24000 Ö®¼ä"), 
                     false
                 );
             }
         } catch (NumberFormatException e) {
             mc.player.displayClientMessage(
-                Component.literal("Â§cæ— æ•ˆçš„æ—¶é—´æ ¼å¼ã€‚å¯ç”¨é¢„è®¾: æ—¥å‡º, ä¸­åˆ, æ—¥è½, å‰å¤œ, åˆå¤œ"), 
+                Component.literal("¡ìcÎŞĞ§µÄÊ±¼ä¸ñÊ½¡£¿ÉÓÃÔ¤Éè: ÈÕ³ö, ÖĞÎç, ÈÕÂä, Ç°Ò¹, ÎçÒ¹"), 
                 false
             );
         }
     }
 
-    // TABè¡¥å…¨æ”¯æŒ
+    // TAB²¹È«Ö§³Ö
     public static List<String> getWeatherSuggestions(String input) {
         return WEATHER_TYPES.stream()
             .filter(type -> type.startsWith(input))
@@ -99,16 +98,16 @@ public class TimeWeatherControl extends CreativePlusFeature {
 
     @Override
     public void onEnable() {
-        // ä¸éœ€è¦ç‰¹æ®Šåˆå§‹åŒ–
+        // ²»ĞèÒªÌØÊâ³õÊ¼»¯
     }
 
     @Override
     public void onDisable() {
-        // ä¸éœ€è¦ç‰¹æ®Šæ¸…ç†
+        // ²»ĞèÒªÌØÊâÇåÀí
     }
 
     @Override
     public void onTick() {
-        // ä¸éœ€è¦tickæ›´æ–°
+        // ²»ĞèÒªtick¸üĞÂ
     }
 } 

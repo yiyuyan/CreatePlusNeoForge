@@ -7,27 +7,27 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.client.event.RegisterClientCommandsEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import org.xiyu.yee.createplus.Createplus;
 import org.xiyu.yee.createplus.features.CreativePlusFeature;
 import org.xiyu.yee.createplus.utils.HelpManager;
 
 import java.util.stream.Collectors;
 
-@Mod.EventBusSubscriber(modid = Createplus.MODID)
+@EventBusSubscriber(modid = Createplus.MODID)
 public class FeaturesCommand {
 
-    // åˆ›å»ºä¸€ä¸ªå‘½ä»¤è¡¥å…¨æä¾›å™¨
+    // ´´½¨Ò»¸öÃüÁî²¹È«Ìá¹©Æ÷
     private static final SuggestionProvider<CommandSourceStack> FEATURE_SUGGESTIONS = (context, builder) -> {
-        // è·å–æ‰€æœ‰åŠŸèƒ½åç§°
+        // »ñÈ¡ËùÓĞ¹¦ÄÜÃû³Æ
         var featureNames = Createplus.FEATURE_MANAGER.getFeatures()
             .stream()
             .map(CreativePlusFeature::getName)
             .collect(Collectors.toList());
         
-        // è¿”å›åŒ¹é…å½“å‰è¾“å…¥çš„å»ºè®®
+        // ·µ»ØÆ¥Åäµ±Ç°ÊäÈëµÄ½¨Òé
         return SharedSuggestionProvider.suggest(featureNames, builder);
     };
 
@@ -37,7 +37,7 @@ public class FeaturesCommand {
 
         dispatcher.register(Commands.literal("features")
             .then(Commands.argument("feature", StringArgumentType.greedyString())
-                .suggests(FEATURE_SUGGESTIONS) // æ·»åŠ è¡¥å…¨å»ºè®®
+                .suggests(FEATURE_SUGGESTIONS) // Ìí¼Ó²¹È«½¨Òé
                 .executes(context -> {
                     String featureName = StringArgumentType.getString(context, "feature");
                     return toggleFeature(context.getSource(), featureName);
@@ -54,7 +54,7 @@ public class FeaturesCommand {
                         showHelp(context.getSource(), featureName);
                         return 1;
                     })))
-            .executes(context -> listFeatures(context.getSource()))); // ä¸å¸¦å‚æ•°æ—¶åˆ—å‡ºæ‰€æœ‰åŠŸèƒ½
+            .executes(context -> listFeatures(context.getSource()))); // ²»´ø²ÎÊıÊ±ÁĞ³öËùÓĞ¹¦ÄÜ
     }
 
     private static int toggleFeature(CommandSourceStack source, String featureName) {
@@ -63,28 +63,28 @@ public class FeaturesCommand {
         for (CreativePlusFeature feature : features) {
             if (feature.getName().equals(featureName)) {
                 feature.toggle();
-                String status = feature.isEnabled() ? "å¯ç”¨" : "ç¦ç”¨";
+                String status = feature.isEnabled() ? "ÆôÓÃ" : "½ûÓÃ";
                 source.sendSuccess(() -> 
-                    Component.literal("Â§bå·²" + status + "åŠŸèƒ½: Â§f" + feature.getName()), false);
+                    Component.literal("¡ìbÒÑ" + status + "¹¦ÄÜ: ¡ìf" + feature.getName()), false);
                 return 1;
             }
         }
 
-        source.sendFailure(Component.literal("Â§cæœªæ‰¾åˆ°åŠŸèƒ½: Â§f" + featureName));
+        source.sendFailure(Component.literal("¡ìcÎ´ÕÒµ½¹¦ÄÜ: ¡ìf" + featureName));
         return 0;
     }
 
     private static int listFeatures(CommandSourceStack source) {
         var features = Createplus.FEATURE_MANAGER.getFeatures();
         
-        source.sendSuccess(() -> Component.literal("Â§bå¯ç”¨åŠŸèƒ½åˆ—è¡¨:"), false);
+        source.sendSuccess(() -> Component.literal("¡ìb¿ÉÓÃ¹¦ÄÜÁĞ±í:"), false);
         for (CreativePlusFeature feature : features) {
-            String status = feature.isEnabled() ? "Â§a[å·²å¯ç”¨]" : "Â§7[å·²ç¦ç”¨]";
+            String status = feature.isEnabled() ? "¡ìa[ÒÑÆôÓÃ]" : "¡ì7[ÒÑ½ûÓÃ]";
             source.sendSuccess(() -> 
-                Component.literal(status + " Â§f" + feature.getName() + " Â§7- " + feature.getDescription()), false);
+                Component.literal(status + " ¡ìf" + feature.getName() + " ¡ì7- " + feature.getDescription()), false);
         }
         
-        source.sendSuccess(() -> Component.literal("\nÂ§eä½¿ç”¨ Â§6/features help <åŠŸèƒ½å> Â§eæŸ¥çœ‹è¯¦ç»†å¸®åŠ©"), false);
+        source.sendSuccess(() -> Component.literal("\n¡ìeÊ¹ÓÃ ¡ì6/features help <¹¦ÄÜÃû> ¡ìe²é¿´ÏêÏ¸°ïÖú"), false);
         return 1;
     }
 

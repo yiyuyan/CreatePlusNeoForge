@@ -8,7 +8,7 @@ public class ImprovedFlight extends CreativePlusFeature {
     private float originalFlySpeed;
 
     public ImprovedFlight() {
-        super("æ”¹è¿›é£è¡Œ", "æä¾›æ›´å¿«çš„é£è¡Œé€Ÿåº¦å’Œæ›´ç²¾ç¡®çš„æ§åˆ¶");
+        super("¸Ä½ø·ÉĞĞ", "Ìá¹©¸ü¿ìµÄ·ÉĞĞËÙ¶ÈºÍ¸ü¾«È·µÄ¿ØÖÆ");
     }
 
     @Override

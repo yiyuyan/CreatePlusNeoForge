@@ -1,31 +1,28 @@
 package org.xiyu.yee.createplus.features;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.scores.PlayerTeam;
-import net.minecraftforge.client.event.RenderNameTagEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.common.MinecraftForge;
-import org.joml.Matrix4f;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RenderNameTagEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 public class PingDisplay extends CreativePlusFeature {
-    private int backgroundColor = 0x80000000; // é»˜è®¤åŠé€æ˜é»‘è‰²èƒŒæ™¯
-    private float backgroundOpacity = 0.5f;   // é»˜è®¤èƒŒæ™¯é€æ˜åº¦
+    private int backgroundColor = 0x80000000; // Ä¬ÈÏ°ëÍ¸Ã÷ºÚÉ«±³¾°
+    private float backgroundOpacity = 0.5f;   // Ä¬ÈÏ±³¾°Í¸Ã÷¶È
     
     public PingDisplay() {
-        super("å»¶è¿Ÿæ˜¾ç¤º", "åœ¨ç©å®¶åå­—æ—æ˜¾ç¤ºå»¶è¿Ÿ");
+        super("ÑÓ³ÙÏÔÊ¾", "ÔÚÍæ¼ÒÃû×ÖÅÔÏÔÊ¾ÑÓ³Ù");
     }
 
     @Override
     public void onEnable() {
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
     }
 
     @Override
     public void onDisable() {
-        MinecraftForge.EVENT_BUS.unregister(this);
+        NeoForge.EVENT_BUS.unregister(this);
     }
 
     @SubscribeEvent
@@ -37,54 +34,54 @@ public class PingDisplay extends CreativePlusFeature {
         Minecraft mc = Minecraft.getInstance();
         if (mc.getConnection() == null) return;
 
-        // è·å–ç©å®¶å»¶è¿Ÿ
+        // »ñÈ¡Íæ¼ÒÑÓ³Ù
         int ping = mc.getConnection().getPlayerInfo(player.getUUID()) != null ? 
                   mc.getConnection().getPlayerInfo(player.getUUID()).getLatency() : 0;
 
-        // æ ¹æ®å»¶è¿Ÿå€¼é€‰æ‹©é¢œè‰²
+        // ¸ù¾İÑÓ³ÙÖµÑ¡ÔñÑÕÉ«
         String pingColor = getPingColor(ping);
         
-        // è·å–åŸå§‹ç©å®¶å
+        // »ñÈ¡Ô­Ê¼Íæ¼ÒÃû
         String originalName = event.getContent().getString();
         
-        // æ„å»ºæ–°çš„æ˜¾ç¤ºæ–‡æœ¬
+        // ¹¹½¨ĞÂµÄÏÔÊ¾ÎÄ±¾
         Component newContent = Component.literal(originalName)
-            .append(Component.literal(" Â§8[Â§9Ping: " + pingColor + ping + "Â§8]"));
+            .append(Component.literal(" ¡ì8[¡ì9Ping: " + pingColor + ping + "¡ì8]"));
 
-        // è®¾ç½®æ–°çš„æ˜¾ç¤ºå†…å®¹
+        // ÉèÖÃĞÂµÄÏÔÊ¾ÄÚÈİ
         event.setContent(newContent);
 
-        // ä¸å†éœ€è¦æ‰‹åŠ¨æ¸²æŸ“ï¼Œè®©Minecraftå¤„ç†æ¸²æŸ“
-        // ç§»é™¤äº†è‡ªå®šä¹‰æ¸²æŸ“ä»£ç ï¼Œå› ä¸ºå®ƒå¯¼è‡´äº†é‡å¤æ¸²æŸ“
+        // ²»ÔÙĞèÒªÊÖ¶¯äÖÈ¾£¬ÈÃMinecraft´¦ÀíäÖÈ¾
+        // ÒÆ³ıÁË×Ô¶¨ÒåäÖÈ¾´úÂë£¬ÒòÎªËüµ¼ÖÂÁËÖØ¸´äÖÈ¾
     }
 
     private String getPingColor(int ping) {
-        if (ping < 50) return "Â§a"; // ç»¿è‰²
-        if (ping < 100) return "Â§e"; // é»„è‰²
-        if (ping < 200) return "Â§6"; // é‡‘è‰²
-        return "Â§c"; // çº¢è‰²
+        if (ping < 50) return "¡ìa"; // ÂÌÉ«
+        if (ping < 100) return "¡ìe"; // »ÆÉ«
+        if (ping < 200) return "¡ì6"; // ½ğÉ«
+        return "¡ìc"; // ºìÉ«
     }
 
     @Override
     public String getDescription() {
         StringBuilder desc = new StringBuilder(super.getDescription());
         if (isEnabled()) {
-            desc.append("\nÂ§7åœ¨ç©å®¶åå­—æ—æ˜¾ç¤ºç½‘ç»œå»¶è¿Ÿ");
-            desc.append("\nÂ§7å»¶è¿Ÿé¢œè‰²è¯´æ˜:");
-            desc.append("\nÂ§aç»¿è‰² Â§7- æä½³ (<50ms)");
-            desc.append("\nÂ§eé»„è‰² Â§7- è‰¯å¥½ (<100ms)");
-            desc.append("\nÂ§6é‡‘è‰² Â§7- ä¸€èˆ¬ (<200ms)");
-            desc.append("\nÂ§cçº¢è‰² Â§7- è¾ƒå·® (>200ms)");
+            desc.append("\n¡ì7ÔÚÍæ¼ÒÃû×ÖÅÔÏÔÊ¾ÍøÂçÑÓ³Ù");
+            desc.append("\n¡ì7ÑÓ³ÙÑÕÉ«ËµÃ÷:");
+            desc.append("\n¡ìaÂÌÉ« ¡ì7- ¼«¼Ñ (<50ms)");
+            desc.append("\n¡ìe»ÆÉ« ¡ì7- Á¼ºÃ (<100ms)");
+            desc.append("\n¡ì6½ğÉ« ¡ì7- Ò»°ã (<200ms)");
+            desc.append("\n¡ìcºìÉ« ¡ì7- ½Ï²î (>200ms)");
         }
         return desc.toString();
     }
 
     @Override
     public void onTick() {
-        // ä¸éœ€è¦tickæ›´æ–°
+        // ²»ĞèÒªtick¸üĞÂ
     }
 
-    // Getter å’Œ Setter æ–¹æ³•
+    // Getter ºÍ Setter ·½·¨
     public int getBackgroundColor() {
         return backgroundColor;
     }

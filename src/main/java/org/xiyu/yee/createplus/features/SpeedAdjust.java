@@ -2,13 +2,11 @@ package org.xiyu.yee.createplus.features;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Abilities;
 import org.lwjgl.glfw.GLFW;
 import java.util.HashMap;
 import java.util.Map;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.UUID;
@@ -22,19 +20,19 @@ public class SpeedAdjust extends CreativePlusFeature implements SubHUDFeature {
     private static final float MAX_SPINBOT_SPEED = 10.0f;
     private static final float SPINBOT_SPEED_STEP = 0.1f;
     
-    // ä¸ºæ¯ç§é€Ÿåº¦ç±»å‹åˆ›å»ºå”¯ä¸€çš„UUID
+    // ÎªÃ¿ÖÖËÙ¶ÈÀàĞÍ´´½¨Î¨Ò»µÄUUID
     private static final UUID SWIM_SPEED_UUID = UUID.fromString("9c33c313-0d71-4d44-b033-6c7fbaa5f034");
     private static final UUID ELYTRA_SPEED_UUID = UUID.fromString("3b8c1e6e-32dd-4b51-a807-7c5c0a4485c5");
     private static final UUID RIDE_SPEED_UUID = UUID.fromString("2c2d6933-3e3a-4b40-a923-b4906d7d2b5a");
     private static final UUID SPINBOT_SPEED_UUID = UUID.fromString("1d2e3f4a-5b6c-7d8e-9f0a-1b2c3d4e5f6a");
 
     public enum SpeedType {
-        WALK("è¡Œèµ°é€Ÿåº¦", 0.1f, 10.0f, 1.0f),
-        FLY("é£è¡Œé€Ÿåº¦", 0.1f, 10.0f, 1.0f),
-        RIDE("éª‘ä¹˜é€Ÿåº¦", 0.1f, 10.0f, 1.0f),
-        SWIM("æ¸¸æ³³é€Ÿåº¦", 0.1f, 10.0f, 1.0f),
-        ELYTRA("é˜ç¿…é€Ÿåº¦", 0.1f, 10.0f, 1.0f),
-        SPINBOT("é™€èºé€Ÿåº¦", MIN_SPINBOT_SPEED, MAX_SPINBOT_SPEED, 1.0f);
+        WALK("ĞĞ×ßËÙ¶È", 0.1f, 10.0f, 1.0f),
+        FLY("·ÉĞĞËÙ¶È", 0.1f, 10.0f, 1.0f),
+        RIDE("Æï³ËËÙ¶È", 0.1f, 10.0f, 1.0f),
+        SWIM("ÓÎÓ¾ËÙ¶È", 0.1f, 10.0f, 1.0f),
+        ELYTRA("ÇÊ³áËÙ¶È", 0.1f, 10.0f, 1.0f),
+        SPINBOT("ÍÓÂİËÙ¶È", MIN_SPINBOT_SPEED, MAX_SPINBOT_SPEED, 1.0f);
 
         final String name;
         final float min;
@@ -50,7 +48,7 @@ public class SpeedAdjust extends CreativePlusFeature implements SubHUDFeature {
     }
 
     public SpeedAdjust() {
-        super("é€Ÿåº¦è°ƒæ•´", "è°ƒæ•´å„ç§ç§»åŠ¨é€Ÿåº¦");
+        super("ËÙ¶Èµ÷Õû", "µ÷Õû¸÷ÖÖÒÆ¶¯ËÙ¶È");
         for (SpeedType type : SpeedType.values()) {
             speedMultipliers.put(type, type.defaultValue);
         }
@@ -58,21 +56,21 @@ public class SpeedAdjust extends CreativePlusFeature implements SubHUDFeature {
 
     @Override
     public void handleClick(boolean isRightClick) {
-        // ä¸éœ€è¦å¤„ç†ç‚¹å‡»äº‹ä»¶
+        // ²»ĞèÒª´¦Àíµã»÷ÊÂ¼ş
     }
 
     @Override
     public String getDescription() {
         StringBuilder desc = new StringBuilder(super.getDescription());
         if (isEnabled()) {
-            desc.append("\nÂ§7å½“å‰é€‰æ‹©: Â§e").append(selectedType.name);
+            desc.append("\n¡ì7µ±Ç°Ñ¡Ôñ: ¡ìe").append(selectedType.name);
             if (showSubHUD) {
-                desc.append("\nÂ§7â†‘â†“ é€‰æ‹©é€Ÿåº¦ç±»å‹");
-                desc.append("\nÂ§7+/- è°ƒæ•´é€Ÿåº¦å€¼");
-                desc.append("\nÂ§7â† è¿”å›");
+                desc.append("\n¡ì7¡ü¡ı Ñ¡ÔñËÙ¶ÈÀàĞÍ");
+                desc.append("\n¡ì7+/- µ÷ÕûËÙ¶ÈÖµ");
+                desc.append("\n¡ì7¡û ·µ»Ø");
             }
         } else {
-            desc.append("\nÂ§7å›è½¦é”®å¯ç”¨");
+            desc.append("\n¡ì7»Ø³µ¼üÆôÓÃ");
         }
         return desc.toString();
     }
@@ -84,33 +82,33 @@ public class SpeedAdjust extends CreativePlusFeature implements SubHUDFeature {
         if (showSubHUD) {
             switch (keyCode) {
                 case GLFW.GLFW_KEY_LEFT:
-                    // å·¦æ–¹å‘é”®é€€å‡ºå­HUD
+                    // ×ó·½Ïò¼üÍË³ö×ÓHUD
                     showSubHUD = false;
                     saveSettings();
                     return true;
                     
                 case GLFW.GLFW_KEY_UP:
-                    // ä¸Šæ–¹å‘é”®é€‰æ‹©ä¸Šä¸€ä¸ªé€‰é¡¹
+                    // ÉÏ·½Ïò¼üÑ¡ÔñÉÏÒ»¸öÑ¡Ïî
                     selectPreviousType();
                     return true;
                     
                 case GLFW.GLFW_KEY_DOWN:
-                    // ä¸‹æ–¹å‘é”®é€‰æ‹©ä¸‹ä¸€ä¸ªé€‰é¡¹
+                    // ÏÂ·½Ïò¼üÑ¡ÔñÏÂÒ»¸öÑ¡Ïî
                     selectNextType();
                     return true;
                     
-                case GLFW.GLFW_KEY_EQUAL:        // = é”®
-                case GLFW.GLFW_KEY_KP_ADD:       // å°é”®ç›˜ +
+                case GLFW.GLFW_KEY_EQUAL:        // = ¼ü
+                case GLFW.GLFW_KEY_KP_ADD:       // Ğ¡¼üÅÌ +
                     adjustCurrentSpeed(0.1f);
                     return true;
                     
-                case GLFW.GLFW_KEY_MINUS:        // - é”®
-                case GLFW.GLFW_KEY_KP_SUBTRACT:  // å°é”®ç›˜ -
+                case GLFW.GLFW_KEY_MINUS:        // - ¼ü
+                case GLFW.GLFW_KEY_KP_SUBTRACT:  // Ğ¡¼üÅÌ -
                     adjustCurrentSpeed(-0.1f);
                     return true;
             }
         } else if (keyCode == GLFW.GLFW_KEY_RIGHT) {
-            // å³æ–¹å‘é”®æ‰“å¼€å­HUD
+            // ÓÒ·½Ïò¼ü´ò¿ª×ÓHUD
             showSubHUD = true;
             return true;
         }
@@ -132,25 +130,25 @@ public class SpeedAdjust extends CreativePlusFeature implements SubHUDFeature {
     public void renderSubHUD(GuiGraphics graphics, int x, int y) {
         if (!isEnabled() || !showSubHUD) return;
 
-        // ç»˜åˆ¶èƒŒæ™¯
+        // »æÖÆ±³¾°
         int width = 150;
         int itemHeight = 20;
         int totalHeight = SpeedType.values().length * itemHeight;
         
-        // ä¸»é¢æ¿èƒŒæ™¯
+        // Ö÷Ãæ°å±³¾°
         graphics.fill(x, y, x + width, y + totalHeight + 25, 0x80000000);
         
-        // ç»˜åˆ¶æ¯ä¸ªé€Ÿåº¦ç±»å‹
+        // »æÖÆÃ¿¸öËÙ¶ÈÀàĞÍ
         for (int i = 0; i < SpeedType.values().length; i++) {
             SpeedType type = SpeedType.values()[i];
             int itemY = y + i * itemHeight;
             
-            // å½“å‰é€‰ä¸­é¡¹é«˜äº®
+            // µ±Ç°Ñ¡ÖĞÏî¸ßÁÁ
             if (type == selectedType) {
                 graphics.fill(x, itemY, x + width, itemY + itemHeight, 0x80FFFFFF);
             }
             
-            // ç»˜åˆ¶åç§°å’Œå€¼
+            // »æÖÆÃû³ÆºÍÖµ
             String text = String.format("%s: %.1fx", type.name, speedMultipliers.get(type));
             graphics.drawString(
                 Minecraft.getInstance().font,
@@ -161,8 +159,8 @@ public class SpeedAdjust extends CreativePlusFeature implements SubHUDFeature {
             );
         }
         
-        // ç»˜åˆ¶æ“ä½œæç¤º
-        String hint = "â†‘â†“ é€‰æ‹© | +/- è°ƒæ•´ | â† è¿”å›";
+        // »æÖÆ²Ù×÷ÌáÊ¾
+        String hint = "¡ü¡ı Ñ¡Ôñ | +/- µ÷Õû | ¡û ·µ»Ø";
         graphics.drawString(
             Minecraft.getInstance().font,
             hint,
@@ -190,15 +188,15 @@ public class SpeedAdjust extends CreativePlusFeature implements SubHUDFeature {
     }
 
     private void saveSettings() {
-        // è¿™é‡Œå¯ä»¥æ·»åŠ ä¿å­˜åˆ°é…ç½®æ–‡ä»¶çš„é€»è¾‘
-        // ç›®å‰åªæ˜¯ä¿å­˜åœ¨å†…å­˜ä¸­
+        // ÕâÀï¿ÉÒÔÌí¼Ó±£´æµ½ÅäÖÃÎÄ¼şµÄÂß¼­
+        // Ä¿Ç°Ö»ÊÇ±£´æÔÚÄÚ´æÖĞ
     }
 
     @Override
     public void onEnable() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player != null) {
-            showSubHUD = false;  // å¯ç”¨æ—¶ä¸æ˜¾ç¤ºé¢æ¿ï¼Œç­‰å¾…ç”¨æˆ·æŒ‰å³æ–¹å‘é”®æ‰“å¼€
+            showSubHUD = false;  // ÆôÓÃÊ±²»ÏÔÊ¾Ãæ°å£¬µÈ´ıÓÃ»§°´ÓÒ·½Ïò¼ü´ò¿ª
             for (SpeedType type : SpeedType.values()) {
                 setSpeedMultiplier(type, 2.0f);
             }
@@ -209,11 +207,11 @@ public class SpeedAdjust extends CreativePlusFeature implements SubHUDFeature {
     public void onDisable() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player != null) {
-            // æ¢å¤é»˜è®¤é€Ÿåº¦
+            // »Ö¸´Ä¬ÈÏËÙ¶È
             for (SpeedType type : SpeedType.values()) {
                 setSpeedMultiplier(type, type.defaultValue);
             }
-            // å…³é—­å­HUD
+            // ¹Ø±Õ×ÓHUD
             showSubHUD = false;
         }
     }
@@ -226,22 +224,22 @@ public class SpeedAdjust extends CreativePlusFeature implements SubHUDFeature {
         Player player = mc.player;
         if (player == null) return;
 
-        // æ£€æŸ¥å¹¶åº”ç”¨æ¸¸æ³³é€Ÿåº¦
+        // ¼ì²é²¢Ó¦ÓÃÓÎÓ¾ËÙ¶È
         if (player.isSwimming() || player.isInWater()) {
             float swimSpeed = speedMultipliers.getOrDefault(SpeedType.SWIM, 1.0f);
-            // ç›´æ¥ä¿®æ”¹ç©å®¶é€Ÿåº¦å‘é‡
+            // Ö±½ÓĞŞ¸ÄÍæ¼ÒËÙ¶ÈÏòÁ¿
             if (swimSpeed != 1.0f) {
                 player.setDeltaMovement(player.getDeltaMovement().multiply(swimSpeed, swimSpeed, swimSpeed));
             }
         }
 
-        // æ£€æŸ¥å¹¶åº”ç”¨é˜ç¿…é€Ÿåº¦
+        // ¼ì²é²¢Ó¦ÓÃÇÊ³áËÙ¶È
         if (player.isFallFlying()) {
             float elytraSpeed = speedMultipliers.getOrDefault(SpeedType.ELYTRA, 1.0f);
             player.setDeltaMovement(player.getDeltaMovement().multiply(elytraSpeed, 1.0, elytraSpeed));
         }
 
-        // æ£€æŸ¥å¹¶åº”ç”¨éª‘ä¹˜é€Ÿåº¦
+        // ¼ì²é²¢Ó¦ÓÃÆï³ËËÙ¶È
         if (player.getVehicle() instanceof LivingEntity mount) {
             float rideSpeed = speedMultipliers.getOrDefault(SpeedType.RIDE, 1.0f);
             if (rideSpeed != 1.0f) {
@@ -251,16 +249,16 @@ public class SpeedAdjust extends CreativePlusFeature implements SubHUDFeature {
     }
 
     /**
-     * è®¾ç½®æŒ‡å®šç±»å‹çš„é€Ÿåº¦å€ç‡
-     * @param type é€Ÿåº¦ç±»å‹
-     * @param multiplier é€Ÿåº¦å€ç‡
+     * ÉèÖÃÖ¸¶¨ÀàĞÍµÄËÙ¶È±¶ÂÊ
+     * @param type ËÙ¶ÈÀàĞÍ
+     * @param multiplier ËÙ¶È±¶ÂÊ
      */
     private void setSpeedMultiplier(SpeedType type, float multiplier) {
-        // ç¡®ä¿å€ç‡åœ¨æœ‰æ•ˆèŒƒå›´å†…
+        // È·±£±¶ÂÊÔÚÓĞĞ§·¶Î§ÄÚ
         multiplier = Math.max(type.min, Math.min(type.max, multiplier));
-        // ä¿å­˜é€Ÿåº¦å€¼
+        // ±£´æËÙ¶ÈÖµ
         speedMultipliers.put(type, multiplier);
-        // åº”ç”¨é€Ÿåº¦
+        // Ó¦ÓÃËÙ¶È
         applySpeed(type, multiplier);
     }
 

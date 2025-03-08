@@ -29,28 +29,28 @@ public class RenderUtils {
 
         poseStack.pushPose();
         
-        // è·å–ç©å®¶ç›¸æœºä½ç½®
+        // »ñÈ¡Íæ¼ÒÏà»úÎ»ÖÃ
         net.minecraft.world.phys.Vec3 camera = mc.gameRenderer.getMainCamera().getPosition();
         
-        // è®¡ç®—æ¸²æŸ“ä½ç½®
+        // ¼ÆËãäÖÈ¾Î»ÖÃ
         double dx = x - camera.x;
         double dy = y - camera.y;
         double dz = z - camera.z;
         
-        // è®¾ç½®æ¸²æŸ“ä½ç½®
+        // ÉèÖÃäÖÈ¾Î»ÖÃ
         poseStack.translate(dx, dy, dz);
         
-        // ä½¿æ–‡æœ¬å§‹ç»ˆé¢å‘ç©å®¶
+        // Ê¹ÎÄ±¾Ê¼ÖÕÃæÏòÍæ¼Ò
         poseStack.mulPose(mc.gameRenderer.getMainCamera().rotation());
         poseStack.scale(-0.025F, -0.025F, 0.025F);
 
-        // åˆ›å»ºComponent
+        // ´´½¨Component
         Component textComponent = Component.literal(text);
         
-        // è·å–æ¸²æŸ“ç¼“å†²
+        // »ñÈ¡äÖÈ¾»º³å
         var bufferSource = mc.renderBuffers().bufferSource();
         
-        // æ¸²æŸ“æ–‡æœ¬
+        // äÖÈ¾ÎÄ±¾
         mc.font.drawInBatch(
             textComponent,
             -mc.font.width(text) / 2.0F,
@@ -64,7 +64,7 @@ public class RenderUtils {
             15728880
         );
         
-        // ç¡®ä¿æ–‡æœ¬è¢«æ¸²æŸ“
+        // È·±£ÎÄ±¾±»äÖÈ¾
         bufferSource.endBatch();
         
         poseStack.popPose();
@@ -74,20 +74,20 @@ public class RenderUtils {
         VertexConsumer builder = Minecraft.getInstance().renderBuffers().bufferSource()
             .getBuffer(RenderType.lines());
         
-        // ç»˜åˆ¶12æ¡è¾¹
-        // åº•éƒ¨å››æ¡è¾¹
+        // »æÖÆ12Ìõ±ß
+        // µ×²¿ËÄÌõ±ß
         drawLine(poseStack, builder, box.minX, box.minY, box.minZ, box.maxX, box.minY, box.minZ, red, green, blue, alpha);
         drawLine(poseStack, builder, box.maxX, box.minY, box.minZ, box.maxX, box.minY, box.maxZ, red, green, blue, alpha);
         drawLine(poseStack, builder, box.maxX, box.minY, box.maxZ, box.minX, box.minY, box.maxZ, red, green, blue, alpha);
         drawLine(poseStack, builder, box.minX, box.minY, box.maxZ, box.minX, box.minY, box.minZ, red, green, blue, alpha);
         
-        // é¡¶éƒ¨å››æ¡è¾¹
+        // ¶¥²¿ËÄÌõ±ß
         drawLine(poseStack, builder, box.minX, box.maxY, box.minZ, box.maxX, box.maxY, box.minZ, red, green, blue, alpha);
         drawLine(poseStack, builder, box.maxX, box.maxY, box.minZ, box.maxX, box.maxY, box.maxZ, red, green, blue, alpha);
         drawLine(poseStack, builder, box.maxX, box.maxY, box.maxZ, box.minX, box.maxY, box.maxZ, red, green, blue, alpha);
         drawLine(poseStack, builder, box.minX, box.maxY, box.maxZ, box.minX, box.maxY, box.minZ, red, green, blue, alpha);
         
-        // ç«–ç›´å››æ¡è¾¹
+        // ÊúÖ±ËÄÌõ±ß
         drawLine(poseStack, builder, box.minX, box.minY, box.minZ, box.minX, box.maxY, box.minZ, red, green, blue, alpha);
         drawLine(poseStack, builder, box.maxX, box.minY, box.minZ, box.maxX, box.maxY, box.minZ, red, green, blue, alpha);
         drawLine(poseStack, builder, box.maxX, box.minY, box.maxZ, box.maxX, box.maxY, box.maxZ, red, green, blue, alpha);
@@ -100,7 +100,7 @@ public class RenderUtils {
         
         float markerSize = 0.3f;
         
-        // ç»˜åˆ¶8ä¸ªè§’ç‚¹æ ‡è®°
+        // »æÖÆ8¸ö½Çµã±ê¼Ç
         drawCornerMarker(poseStack, builder, box.minX, box.minY, box.minZ, markerSize, red, green, blue, alpha);
         drawCornerMarker(poseStack, builder, box.maxX, box.minY, box.minZ, markerSize, red, green, blue, alpha);
         drawCornerMarker(poseStack, builder, box.maxX, box.minY, box.maxZ, markerSize, red, green, blue, alpha);
@@ -116,24 +116,24 @@ public class RenderUtils {
             double x2, double y2, double z2, 
             float red, float green, float blue, float alpha) {
         Matrix4f matrix = poseStack.last().pose();
-        builder.vertex(matrix, (float)x1, (float)y1, (float)z1)
-            .color(red, green, blue, alpha)
-            .normal(1, 0, 0)
-            .endVertex();
-        builder.vertex(matrix, (float)x2, (float)y2, (float)z2)
-            .color(red, green, blue, alpha)
-            .normal(1, 0, 0)
-            .endVertex();
+        builder.addVertex(matrix, (float)x1, (float)y1, (float)z1)
+            .setColor(red, green, blue, alpha)
+            .setNormal(1, 0, 0)
+            ;
+        builder.addVertex(matrix, (float)x2, (float)y2, (float)z2)
+            .setColor(red, green, blue, alpha)
+            .setNormal(1, 0, 0)
+            ;
     }
 
     private static void drawCornerMarker(PoseStack poseStack, VertexConsumer builder, 
             double x, double y, double z, float size,
             float red, float green, float blue, float alpha) {
-        // Xè½´æ ‡è®°
+        // XÖá±ê¼Ç
         drawLine(poseStack, builder, x-size, y, z, x+size, y, z, red, green, blue, alpha);
-        // Yè½´æ ‡è®°
+        // YÖá±ê¼Ç
         drawLine(poseStack, builder, x, y-size, z, x, y+size, z, red, green, blue, alpha);
-        // Zè½´æ ‡è®°
+        // ZÖá±ê¼Ç
         drawLine(poseStack, builder, x, y, z-size, x, y, z+size, red, green, blue, alpha);
     }
 } 

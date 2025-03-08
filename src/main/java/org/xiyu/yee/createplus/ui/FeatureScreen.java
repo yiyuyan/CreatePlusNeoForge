@@ -4,27 +4,24 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RenderGuiEvent;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import org.xiyu.yee.createplus.Createplus;
 import org.xiyu.yee.createplus.features.CreativePlusFeature;
-import org.xiyu.yee.createplus.features.SpeedAdjust;
 import org.xiyu.yee.createplus.features.SubHUDFeature;
 
 import java.awt.*;
-import org.lwjgl.glfw.GLFW;
 
 public class FeatureScreen extends Screen {
     private static boolean visible = false;
     private int selectedIndex = 0;
     private long lastKeyPressTime = 0;
-    private static final long KEY_COOLDOWN = 150; // 150æ¯«ç§’çš„å†·å´æ—¶é—´
+    private static final long KEY_COOLDOWN = 150; // 150ºÁÃëµÄÀäÈ´Ê±¼ä
     
-    // UIé¢œè‰²å¸¸é‡
+    // UIÑÕÉ«³£Á¿
     private static final int BACKGROUND_COLOR = new Color(0, 0, 0, 180).getRGB();
     private static final int HEADER_COLOR = new Color(0, 111, 255).getRGB();
     private static final int SELECTED_COLOR = new Color(0, 111, 255, 100).getRGB();
@@ -37,8 +34,8 @@ public class FeatureScreen extends Screen {
     private static final int COLUMNS = 2;
     
     public FeatureScreen() {
-        super(Component.literal("CreatePlusåŠŸèƒ½èœå•"));
-        MinecraftForge.EVENT_BUS.register(this);
+        super(Component.literal("CreatePlus¹¦ÄÜ²Ëµ¥"));
+        NeoForge.EVENT_BUS.register(this);
     }
 
     public static void toggleVisibility() {
@@ -50,29 +47,29 @@ public class FeatureScreen extends Screen {
 
         var features = Createplus.FEATURE_MANAGER.getFeatures();
         
-        // åœ¨å·¦ä¸Šè§’ç»˜åˆ¶UI
+        // ÔÚ×óÉÏ½Ç»æÖÆUI
         int startX = 5;
         int startY = 5;
         int width = 120;
         
-        // ç»˜åˆ¶åŠé€æ˜èƒŒæ™¯
+        // »æÖÆ°ëÍ¸Ã÷±³¾°
         graphics.fill(startX, startY, startX + width, startY + 17 + features.size() * 12, BACKGROUND_COLOR);
         
-        // ç»˜åˆ¶æ ‡é¢˜
+        // »æÖÆ±êÌâ
         graphics.drawString(Minecraft.getInstance().font, 
             "CreatePlus", startX + 4, startY + 5, HEADER_COLOR, true);
 
-        // ç»˜åˆ¶åŠŸèƒ½åˆ—è¡¨
+        // »æÖÆ¹¦ÄÜÁĞ±í
         for (int i = 0; i < features.size(); i++) {
             CreativePlusFeature feature = features.get(i);
             int y = startY + 19 + i * 12;
             
-            // ç»˜åˆ¶é€‰ä¸­èƒŒæ™¯
+            // »æÖÆÑ¡ÖĞ±³¾°
             if (i == selectedIndex) {
                 graphics.fill(startX, y - 1, startX + width, y + 11, SELECTED_COLOR);
             }
 
-            // ç»˜åˆ¶åŠŸèƒ½åç§°
+            // »æÖÆ¹¦ÄÜÃû³Æ
             int textColor = feature.isEnabled() ? ENABLED_COLOR : DISABLED_COLOR;
             graphics.drawString(Minecraft.getInstance().font,
                 feature.getName(), startX + 4, y, textColor, true);
@@ -83,30 +80,30 @@ public class FeatureScreen extends Screen {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         if (!visible || Minecraft.getInstance().options.hideGui) return;
 
-        // æ¸²æŸ“ä¸»ç•Œé¢
+        // äÖÈ¾Ö÷½çÃæ
         renderFeatures(graphics);
         
-        // è·å–å½“å‰é€‰ä¸­çš„åŠŸèƒ½
+        // »ñÈ¡µ±Ç°Ñ¡ÖĞµÄ¹¦ÄÜ
         CreativePlusFeature selectedFeature = null;
         var features = Createplus.FEATURE_MANAGER.getFeatures();
         if (selectedIndex >= 0 && selectedIndex < features.size()) {
             selectedFeature = features.get(selectedIndex);
         }
 
-        // å¦‚æœæ˜¯å¸¦å­HUDçš„åŠŸèƒ½ä¸”å·²å¯ç”¨ä¸”å­HUDå¯è§ï¼Œæ¸²æŸ“å…¶å­HUD
+        // Èç¹ûÊÇ´ø×ÓHUDµÄ¹¦ÄÜÇÒÒÑÆôÓÃÇÒ×ÓHUD¿É¼û£¬äÖÈ¾Æä×ÓHUD
         if (selectedFeature instanceof SubHUDFeature subHUDFeature && 
             selectedFeature.isEnabled() && 
             subHUDFeature.isSubHUDVisible()) {
-            // åœ¨ä¸»ç•Œé¢å³ä¾§æ¸²æŸ“å­HUD
-            int subHudX = 130; // è°ƒæ•´ä½ç½®ï¼Œé¿å…ä¸ä¸»HUDé‡å 
-            int subHudY = 5;   // ä¸ä¸»HUDå¯¹é½
+            // ÔÚÖ÷½çÃæÓÒ²àäÖÈ¾×ÓHUD
+            int subHudX = 130; // µ÷ÕûÎ»ÖÃ£¬±ÜÃâÓëÖ÷HUDÖØµş
+            int subHudY = 5;   // ÓëÖ÷HUD¶ÔÆë
             subHUDFeature.renderSubHUD(graphics, subHudX, subHudY);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onKeyInput(InputEvent.Key event) {
-        // æ£€æŸ¥å†·å´æ—¶é—´
+        // ¼ì²éÀäÈ´Ê±¼ä
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastKeyPressTime < KEY_COOLDOWN) {
             return;
@@ -115,16 +112,16 @@ public class FeatureScreen extends Screen {
         boolean keyHandled = false;
         int keyCode = event.getKey();
         
-        // åªåœ¨UIå¯è§æ—¶å¤„ç†æŒ‰é”®
+        // Ö»ÔÚUI¿É¼ûÊ±´¦Àí°´¼ü
         if (visible) {
-            // è·å–å½“å‰é€‰ä¸­çš„åŠŸèƒ½
+            // »ñÈ¡µ±Ç°Ñ¡ÖĞµÄ¹¦ÄÜ
             CreativePlusFeature selectedFeature = null;
             var features = Createplus.FEATURE_MANAGER.getFeatures();
             if (selectedIndex >= 0 && selectedIndex < features.size()) {
                 selectedFeature = features.get(selectedIndex);
             }
 
-            // å¦‚æœæ˜¯å¸¦å­HUDçš„åŠŸèƒ½ä¸”å·²å¯ç”¨ä¸”å­HUDå¯è§ï¼Œä¼˜å…ˆå¤„ç†å…¶é”®ç›˜è¾“å…¥
+            // Èç¹ûÊÇ´ø×ÓHUDµÄ¹¦ÄÜÇÒÒÑÆôÓÃÇÒ×ÓHUD¿É¼û£¬ÓÅÏÈ´¦ÀíÆä¼üÅÌÊäÈë
             if (selectedFeature instanceof SubHUDFeature subHUDFeature && 
                 selectedFeature.isEnabled() && 
                 subHUDFeature.isSubHUDVisible()) {
@@ -132,23 +129,23 @@ public class FeatureScreen extends Screen {
                     keyHandled = true;
                 }
             } else {
-                // å¦åˆ™å¤„ç†ä¸»HUDçš„å¯¼èˆª
+                // ·ñÔò´¦ÀíÖ÷HUDµÄµ¼º½
                 switch (keyCode) {
-                    case 265: // ä¸Šç®­å¤´
+                    case 265: // ÉÏ¼ıÍ·
                         selectedIndex = Math.max(0, selectedIndex - 1);
                         keyHandled = true;
                         break;
-                    case 264: // ä¸‹ç®­å¤´
+                    case 264: // ÏÂ¼ıÍ·
                         selectedIndex = Math.min(features.size() - 1, selectedIndex + 1);
                         keyHandled = true;
                         break;
-                    case 257: // å›è½¦
+                    case 257: // »Ø³µ
                         if (selectedFeature != null) {
                             selectedFeature.toggle();
                             keyHandled = true;
                         }
                         break;
-                    case 262: // å³ç®­å¤´
+                    case 262: // ÓÒ¼ıÍ·
                         if (selectedFeature instanceof SubHUDFeature subHUDFeature) {
                             subHUDFeature.toggleSubHUD();
                             keyHandled = true;
@@ -158,20 +155,20 @@ public class FeatureScreen extends Screen {
             }
         }
 
-        // F9åˆ‡æ¢UIæ˜¾ç¤º
+        // F9ÇĞ»»UIÏÔÊ¾
         if (keyCode == 36) {  // F9
             toggleVisibility();
             keyHandled = true;
         }
 
-        // å¦‚æœæŒ‰é”®è¢«å¤„ç†äº†ï¼Œæ›´æ–°æœ€åæŒ‰é”®æ—¶é—´
+        // Èç¹û°´¼ü±»´¦ÀíÁË£¬¸üĞÂ×îºó°´¼üÊ±¼ä
         if (keyHandled) {
             lastKeyPressTime = currentTime;
         }
     }
 
     @SubscribeEvent
-    public void onRenderGameOverlay(RenderGuiOverlayEvent.Post event) {
-        // ç§»é™¤è¿™ä¸ªæ–¹æ³•ï¼Œå› ä¸ºæˆ‘ä»¬å·²ç»åœ¨renderæ–¹æ³•ä¸­å¤„ç†äº†æ¸²æŸ“
+    public void onRenderGameOverlay(RenderGuiLayerEvent.Post event) {
+        // ÒÆ³ıÕâ¸ö·½·¨£¬ÒòÎªÎÒÃÇÒÑ¾­ÔÚrender·½·¨ÖĞ´¦ÀíÁËäÖÈ¾
     }
 } 

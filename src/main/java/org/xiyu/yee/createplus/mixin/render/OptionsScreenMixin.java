@@ -1,8 +1,8 @@
-package org.xiyu.yee.createplus.mixin;
+package org.xiyu.yee.createplus.mixin.render;
 
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.OptionsScreen;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.options.OptionsScreen;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,15 +19,15 @@ public class OptionsScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("RETURN"))
     private void addPerformanceButton(CallbackInfo ci) {
-        Performance performance = (Performance) Createplus.FEATURE_MANAGER.getFeature("æ€§èƒ½ä¼˜åŒ–");
+        Performance performance = (Performance) Createplus.FEATURE_MANAGER.getFeature("ĞÔÄÜÓÅ»¯");
         if (performance != null && performance.isEnabled()) {
-            // è·å–æŒ‰é’®çš„ä½ç½® - æ”¾åœ¨éŸ³ä¹å’Œå£°éŸ³æŒ‰é’®çš„å³è¾¹
+            // »ñÈ¡°´Å¥µÄÎ»ÖÃ - ·ÅÔÚÒôÀÖºÍÉùÒô°´Å¥µÄÓÒ±ß
             int buttonY = this.height / 6 + 24 - 6;
             
-            // æ·»åŠ æ€§èƒ½ä¼˜åŒ–æŒ‰é’®
+            // Ìí¼ÓĞÔÄÜÓÅ»¯°´Å¥
             Button perfButton = performance.createSettingsButton((Screen)(Object)this);
             perfButton.setPosition(this.width / 2 + 5, buttonY);
-            perfButton.setWidth(150); // è®¾ç½®ä¸ºåŠå®½æŒ‰é’®
+            perfButton.setWidth(150); // ÉèÖÃÎª°ë¿í°´Å¥
             this.addRenderableWidget(perfButton);
         }
     }

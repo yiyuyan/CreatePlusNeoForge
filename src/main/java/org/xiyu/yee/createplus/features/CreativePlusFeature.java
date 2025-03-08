@@ -24,7 +24,7 @@ public abstract class CreativePlusFeature {
         } else {
             onDisable();
         }
-        // 閫氱煡FeatureManager淇濆瓨閰嶇疆
+        // 通知FeatureManager保存配置
         Createplus.FEATURE_MANAGER.onFeatureToggle();
     }
 
@@ -51,7 +51,7 @@ public abstract class CreativePlusFeature {
     }
 
     public void handleClick(boolean isRightClick) {
-        // 榛樿绌哄疄鐜帮紝瀛愮被鍙互閲嶅啓
+        // 默认空实现，子类可以重写
     }
 
     public void setEnabled(boolean enabled) {

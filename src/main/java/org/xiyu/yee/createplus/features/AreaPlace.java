@@ -19,13 +19,13 @@ public class AreaPlace extends CreativePlusFeature {
     private BlockPos lastPos = null;
 
     public AreaPlace() {
-        super("èŒƒå›´æ”¾ç½®", "ä½¿ç”¨å‰¯æ‰‹ç‰©å“è¿›è¡ŒèŒƒå›´æ”¾ç½®");
+        super("·¶Î§·ÅÖÃ", "Ê¹ÓÃ¸±ÊÖÎïÆ·½øĞĞ·¶Î§·ÅÖÃ");
     }
 
     @Override
     public void onEnable() {
         Minecraft.getInstance().player.sendSystemMessage(
-            Component.literal("Â§bèŒƒå›´æ”¾ç½®å·²å¯ç”¨ï¼Œå‰¯æ‰‹æŒæ–¹å—å³å¯ç”Ÿæ•ˆ")
+            Component.literal("¡ìb·¶Î§·ÅÖÃÒÑÆôÓÃ£¬¸±ÊÖ³Ö·½¿é¼´¿ÉÉúĞ§")
         );
     }
 
@@ -39,7 +39,7 @@ public class AreaPlace extends CreativePlusFeature {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || !mc.player.isCreative()) return;
 
-        // æ£€æŸ¥å‰¯æ‰‹æ˜¯å¦æŒæœ‰æ–¹å—
+        // ¼ì²é¸±ÊÖÊÇ·ñ³ÖÓĞ·½¿é
         ItemStack offhandItem = mc.player.getOffhandItem();
         if (!(offhandItem.getItem() instanceof BlockItem)) return;
 
@@ -47,18 +47,18 @@ public class AreaPlace extends CreativePlusFeature {
         if (tickCounter < PLACE_DELAY) return;
         tickCounter = 0;
 
-        // è·å–ç©å®¶çš„è§¦åŠè·ç¦»
-        double reach = mc.player.getBlockReach();
+        // »ñÈ¡Íæ¼ÒµÄ´¥¼°¾àÀë
+        double reach = mc.player.blockInteractionRange();
         
         if (mc.hitResult != null && mc.hitResult.getType() == HitResult.Type.BLOCK) {
             BlockHitResult blockHit = (BlockHitResult) mc.hitResult;
             BlockPos centerPos = blockHit.getBlockPos().relative(blockHit.getDirection());
             
-            // å¦‚æœè¿™ä¸ªä½ç½®å·²ç»å¤„ç†è¿‡ï¼Œè·³è¿‡
+            // Èç¹ûÕâ¸öÎ»ÖÃÒÑ¾­´¦Àí¹ı£¬Ìø¹ı
             if (centerPos.equals(lastPos)) return;
             lastPos = centerPos;
 
-            // è·å–èŒƒå›´å†…çš„æ‰€æœ‰ä½ç½®
+            // »ñÈ¡·¶Î§ÄÚµÄËùÓĞÎ»ÖÃ
             List<BlockPos> placementPositions = new ArrayList<>();
             int radius = 2;
 
@@ -67,12 +67,12 @@ public class AreaPlace extends CreativePlusFeature {
                     for (int z = -radius; z <= radius; z++) {
                         BlockPos pos = centerPos.offset(x, y, z);
                         
-                        // æ£€æŸ¥ä½ç½®æ˜¯å¦åœ¨ç©å®¶è§¦åŠèŒƒå›´å†…
+                        // ¼ì²éÎ»ÖÃÊÇ·ñÔÚÍæ¼Ò´¥¼°·¶Î§ÄÚ
                         if (mc.player.position().distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) > reach * reach) {
                             continue;
                         }
 
-                        // æ£€æŸ¥ä½ç½®æ˜¯å¦å¯ä»¥æ”¾ç½®æ–¹å—
+                        // ¼ì²éÎ»ÖÃÊÇ·ñ¿ÉÒÔ·ÅÖÃ·½¿é
                         if (mc.level.getBlockState(pos).isAir()) {
                             placementPositions.add(pos);
                         }
@@ -80,7 +80,7 @@ public class AreaPlace extends CreativePlusFeature {
                 }
             }
 
-            // å‘é€æ”¾ç½®æ•°æ®åŒ…
+            // ·¢ËÍ·ÅÖÃÊı¾İ°ü
             for (BlockPos pos : placementPositions) {
                 mc.player.connection.send(new ServerboundUseItemOnPacket(
                     InteractionHand.OFF_HAND,

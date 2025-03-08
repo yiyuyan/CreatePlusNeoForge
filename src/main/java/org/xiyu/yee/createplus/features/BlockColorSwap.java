@@ -5,22 +5,22 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 
 public class BlockColorSwap extends CreativePlusFeature {
-    private static final int CHANGE_COOLDOWN = 2; // æ·»åŠ å†·å´æ—¶é—´é¿å…è¿‡å¿«å˜åŒ–
+    private static final int CHANGE_COOLDOWN = 2; // Ìí¼ÓÀäÈ´Ê±¼ä±ÜÃâ¹ı¿ì±ä»¯
     private long lastChangeTime = 0;
 
-    // å®šä¹‰å¯åˆ‡æ¢é¢œè‰²çš„æ–¹å—ç»„
+    // ¶¨Òå¿ÉÇĞ»»ÑÕÉ«µÄ·½¿é×é
     private static final Map<Item, List<Item>> COLOR_GROUPS = new HashMap<>();
     
     static {
-        // ç¾Šæ¯›ç»„
+        // ÑòÃ«×é
         List<Item> wools = Arrays.asList(
             Items.WHITE_WOOL, Items.ORANGE_WOOL, Items.MAGENTA_WOOL,
             Items.LIGHT_BLUE_WOOL, Items.YELLOW_WOOL, Items.LIME_WOOL,
@@ -30,7 +30,7 @@ public class BlockColorSwap extends CreativePlusFeature {
             Items.BLACK_WOOL
         );
         
-        // ç»ç’ƒç»„
+        // ²£Á§×é
         List<Item> glass = Arrays.asList(
             Items.GLASS, Items.WHITE_STAINED_GLASS, Items.ORANGE_STAINED_GLASS,
             Items.MAGENTA_STAINED_GLASS, Items.LIGHT_BLUE_STAINED_GLASS,
@@ -42,7 +42,7 @@ public class BlockColorSwap extends CreativePlusFeature {
             Items.RED_STAINED_GLASS, Items.BLACK_STAINED_GLASS
         );
 
-        // åœ°æ¯¯ç»„
+        // µØÌº×é
         List<Item> carpets = Arrays.asList(
             Items.WHITE_CARPET, Items.ORANGE_CARPET, Items.MAGENTA_CARPET,
             Items.LIGHT_BLUE_CARPET, Items.YELLOW_CARPET, Items.LIME_CARPET,
@@ -52,7 +52,7 @@ public class BlockColorSwap extends CreativePlusFeature {
             Items.BLACK_CARPET
         );
 
-        // é™¶ç“¦ç»„
+        // ÌÕÍß×é
         List<Item> terracottas = Arrays.asList(
             Items.TERRACOTTA, Items.WHITE_TERRACOTTA, Items.ORANGE_TERRACOTTA,
             Items.MAGENTA_TERRACOTTA, Items.LIGHT_BLUE_TERRACOTTA,
@@ -64,7 +64,7 @@ public class BlockColorSwap extends CreativePlusFeature {
             Items.RED_TERRACOTTA, Items.BLACK_TERRACOTTA
         );
 
-        // æ··å‡åœŸç»„
+        // »ìÄıÍÁ×é
         List<Item> concretes = Arrays.asList(
             Items.WHITE_CONCRETE, Items.ORANGE_CONCRETE, Items.MAGENTA_CONCRETE,
             Items.LIGHT_BLUE_CONCRETE, Items.YELLOW_CONCRETE, Items.LIME_CONCRETE,
@@ -74,7 +74,7 @@ public class BlockColorSwap extends CreativePlusFeature {
             Items.BLACK_CONCRETE
         );
 
-        // æ··å‡åœŸç²‰æœ«ç»„
+        // »ìÄıÍÁ·ÛÄ©×é
         List<Item> concretePowders = Arrays.asList(
             Items.WHITE_CONCRETE_POWDER, Items.ORANGE_CONCRETE_POWDER,
             Items.MAGENTA_CONCRETE_POWDER, Items.LIGHT_BLUE_CONCRETE_POWDER,
@@ -86,7 +86,7 @@ public class BlockColorSwap extends CreativePlusFeature {
             Items.RED_CONCRETE_POWDER, Items.BLACK_CONCRETE_POWDER
         );
 
-        // å¸¦é‡‰é™¶ç“¦ç»„
+        // ´øÓÔÌÕÍß×é
         List<Item> glazedTerracottas = Arrays.asList(
             Items.WHITE_GLAZED_TERRACOTTA, Items.ORANGE_GLAZED_TERRACOTTA,
             Items.MAGENTA_GLAZED_TERRACOTTA, Items.LIGHT_BLUE_GLAZED_TERRACOTTA,
@@ -98,7 +98,7 @@ public class BlockColorSwap extends CreativePlusFeature {
             Items.RED_GLAZED_TERRACOTTA, Items.BLACK_GLAZED_TERRACOTTA
         );
 
-        // ç»ç’ƒæ¿ç»„
+        // ²£Á§°å×é
         List<Item> glassPane = Arrays.asList(
             Items.GLASS_PANE, Items.WHITE_STAINED_GLASS_PANE,
             Items.ORANGE_STAINED_GLASS_PANE, Items.MAGENTA_STAINED_GLASS_PANE,
@@ -111,7 +111,7 @@ public class BlockColorSwap extends CreativePlusFeature {
             Items.BLACK_STAINED_GLASS_PANE
         );
 
-        // æ½œå½±ç›’ç»„
+        // Ç±Ó°ºĞ×é
         List<Item> shulkerBoxes = Arrays.asList(
             Items.SHULKER_BOX, Items.WHITE_SHULKER_BOX, Items.ORANGE_SHULKER_BOX,
             Items.MAGENTA_SHULKER_BOX, Items.LIGHT_BLUE_SHULKER_BOX,
@@ -123,7 +123,7 @@ public class BlockColorSwap extends CreativePlusFeature {
             Items.RED_SHULKER_BOX, Items.BLACK_SHULKER_BOX
         );
 
-        // èœ¡çƒ›ç»„
+        // À¯Öò×é
         List<Item> candles = Arrays.asList(
             Items.CANDLE, Items.WHITE_CANDLE, Items.ORANGE_CANDLE,
             Items.MAGENTA_CANDLE, Items.LIGHT_BLUE_CANDLE,
@@ -135,7 +135,7 @@ public class BlockColorSwap extends CreativePlusFeature {
             Items.RED_CANDLE, Items.BLACK_CANDLE
         );
 
-        // æ——å¸œç»„
+        // ÆìÖÄ×é
         List<Item> banners = Arrays.asList(
             Items.WHITE_BANNER, Items.ORANGE_BANNER, Items.MAGENTA_BANNER,
             Items.LIGHT_BLUE_BANNER, Items.YELLOW_BANNER, Items.LIME_BANNER,
@@ -145,7 +145,7 @@ public class BlockColorSwap extends CreativePlusFeature {
             Items.BLACK_BANNER
         );
 
-        // åºŠç»„
+        // ´²×é
         List<Item> beds = Arrays.asList(
             Items.WHITE_BED, Items.ORANGE_BED, Items.MAGENTA_BED,
             Items.LIGHT_BLUE_BED, Items.YELLOW_BED, Items.LIME_BED,
@@ -155,7 +155,7 @@ public class BlockColorSwap extends CreativePlusFeature {
             Items.BLACK_BED
         );
 
-        // æœ¨å¤´ç»„
+        // Ä¾Í·×é
         List<Item> logs = Arrays.asList(
             Items.OAK_LOG, Items.SPRUCE_LOG, Items.BIRCH_LOG,
             Items.JUNGLE_LOG, Items.ACACIA_LOG, Items.DARK_OAK_LOG,
@@ -167,21 +167,21 @@ public class BlockColorSwap extends CreativePlusFeature {
             Items.STRIPPED_BAMBOO_BLOCK
         );
 
-        // æœ¨æ¿ç»„
+        // Ä¾°å×é
         List<Item> planks = Arrays.asList(
             Items.OAK_PLANKS, Items.SPRUCE_PLANKS, Items.BIRCH_PLANKS,
             Items.JUNGLE_PLANKS, Items.ACACIA_PLANKS, Items.DARK_OAK_PLANKS,
             Items.MANGROVE_PLANKS, Items.CHERRY_PLANKS, Items.BAMBOO_PLANKS
         );
 
-        // æ …æ ç»„
+        // Õ¤À¸×é
         List<Item> fences = Arrays.asList(
             Items.OAK_FENCE, Items.SPRUCE_FENCE, Items.BIRCH_FENCE,
             Items.JUNGLE_FENCE, Items.ACACIA_FENCE, Items.DARK_OAK_FENCE,
             Items.MANGROVE_FENCE, Items.CHERRY_FENCE, Items.BAMBOO_FENCE
         );
 
-        // å°†æ‰€æœ‰ç»„æ·»åŠ åˆ°æ˜ å°„ä¸­
+        // ½«ËùÓĞ×éÌí¼Óµ½Ó³ÉäÖĞ
         for (Item item : wools) COLOR_GROUPS.put(item, wools);
         for (Item item : glass) COLOR_GROUPS.put(item, glass);
         for (Item item : carpets) COLOR_GROUPS.put(item, carpets);
@@ -200,8 +200,8 @@ public class BlockColorSwap extends CreativePlusFeature {
     }
 
     public BlockColorSwap() {
-        super("æ–¹å—å˜è‰²", "æŒ‰ä½å·¦CTRLå¹¶æ»šåŠ¨é¼ æ ‡æ»šè½®åˆ‡æ¢åŒç±»æ–¹å—é¢œè‰²");
-        MinecraftForge.EVENT_BUS.register(this);
+        super("·½¿é±äÉ«", "°´×¡×óCTRL²¢¹ö¶¯Êó±ê¹öÂÖÇĞ»»Í¬Àà·½¿éÑÕÉ«");
+        NeoForge.EVENT_BUS.register(this);
     }
 
     @SubscribeEvent
@@ -211,62 +211,63 @@ public class BlockColorSwap extends CreativePlusFeature {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || !mc.player.isCreative()) return;
 
-        // æ£€æŸ¥æ˜¯å¦æŒ‰ä½å·¦CTRL
+        // ¼ì²éÊÇ·ñ°´×¡×óCTRL
         if (!InputConstants.isKeyDown(mc.getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_CONTROL)) return;
 
-        // æ£€æŸ¥å†·å´æ—¶é—´
+        // ¼ì²éÀäÈ´Ê±¼ä
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastChangeTime < CHANGE_COOLDOWN) {
             event.setCanceled(true);
             return;
         }
 
-        // è·å–ç©å®¶æ‰‹ä¸­çš„ç‰©å“
+        // »ñÈ¡Íæ¼ÒÊÖÖĞµÄÎïÆ·
         ItemStack mainHand = mc.player.getMainHandItem();
         if (mainHand.isEmpty()) return;
 
-        // æ£€æŸ¥æ˜¯å¦æ˜¯å¯å˜è‰²ç‰©å“
+        // ¼ì²éÊÇ·ñÊÇ¿É±äÉ«ÎïÆ·
         List<Item> group = COLOR_GROUPS.get(mainHand.getItem());
         if (group != null) {
             int currentIndex = group.indexOf(mainHand.getItem());
             if (currentIndex != -1) {
-                // è®¡ç®—æ–°çš„ç´¢å¼•
+                // ¼ÆËãĞÂµÄË÷Òı
                 int newIndex;
-                if (event.getScrollDelta() > 0) {
+                if (event.getScrollDeltaY() > 0) {
                     newIndex = (currentIndex + 1) % group.size();
                 } else {
                     newIndex = (currentIndex - 1 + group.size()) % group.size();
                 }
 
-                // åˆ›å»ºæ–°çš„ç‰©å“å †å¹¶ä¿æŒæ•°é‡
+                // ´´½¨ĞÂµÄÎïÆ·¶Ñ²¢±£³ÖÊıÁ¿
                 ItemStack newStack = new ItemStack(group.get(newIndex), mainHand.getCount());
                 
-                // å¦‚æœåŸç‰©å“æœ‰NBTï¼Œå¤åˆ¶NBT
-                if (mainHand.hasTag()) {
+                // Èç¹ûÔ­ÎïÆ·ÓĞNBT£¬¸´ÖÆNBT
+                /*if (mainHand.hasTag()) {
                     newStack.setTag(mainHand.getTag().copy());
-                }
+                }*/
+                //not already
 
-                // æ›´æ–°å®¢æˆ·ç«¯ç‰©å“æ 
+                // ¸üĞÂ¿Í»§¶ËÎïÆ·À¸
                 int slot = mc.player.getInventory().selected;
                 mc.player.getInventory().items.set(slot, newStack);
 
-                // åŒæ­¥åˆ°æœåŠ¡ç«¯
-                mc.gameMode.handleCreativeModeItemAdd(newStack.copy(), 36 + slot); // 36æ˜¯å¿«æ·æ çš„èµ·å§‹ç´¢å¼•
+                // Í¬²½µ½·şÎñ¶Ë
+                mc.gameMode.handleCreativeModeItemAdd(newStack.copy(), 36 + slot); // 36ÊÇ¿ì½İÀ¸µÄÆğÊ¼Ë÷Òı
 
-                // æ’­æ”¾éŸ³æ•ˆå’Œæ›´æ–°å†·å´æ—¶é—´
+                // ²¥·ÅÒôĞ§ºÍ¸üĞÂÀäÈ´Ê±¼ä
                 mc.player.playSound(net.minecraft.sounds.SoundEvents.UI_BUTTON_CLICK.value(), 0.2F, 1.0F);
                 lastChangeTime = currentTime;
             }
         }
 
-        // å–æ¶ˆæ»šåŠ¨äº‹ä»¶
+        // È¡Ïû¹ö¶¯ÊÂ¼ş
         event.setCanceled(true);
     }
 
     private net.minecraft.world.level.block.state.BlockState copyBlockProperties(
         net.minecraft.world.level.block.state.BlockState from, 
         net.minecraft.world.level.block.state.BlockState to) {
-        // å¤åˆ¶æ–¹å—çš„æœå‘ç­‰å±æ€§
+        // ¸´ÖÆ·½¿éµÄ³¯ÏòµÈÊôĞÔ
         for (net.minecraft.world.level.block.state.properties.Property<?> prop : from.getProperties()) {
             if (to.hasProperty(prop)) {
                 to = copyProperty(from, to, prop);

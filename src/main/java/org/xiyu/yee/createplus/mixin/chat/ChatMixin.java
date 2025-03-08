@@ -1,10 +1,9 @@
-package org.xiyu.yee.createplus.mixin;
+package org.xiyu.yee.createplus.mixin.chat;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -23,68 +22,68 @@ public class ChatMixin {
             Minecraft mc = Minecraft.getInstance();
             if (mc.player == null) return;
 
-            // æ£€æŸ¥æ˜¯å¦åœ¨åˆ›é€ æ¨¡å¼
+            // ¼ì²éÊÇ·ñÔÚ´´ÔìÄ£Ê½
             if (!mc.player.isCreative()) {
-                mc.player.displayClientMessage(Component.literal("Â§cä½ å¿…é¡»åœ¨åˆ›é€ æ¨¡å¼ä¸‹æ‰èƒ½ä½¿ç”¨æ­¤å‘½ä»¤"), false);
+                mc.player.displayClientMessage(Component.literal("¡ìcÄã±ØĞëÔÚ´´ÔìÄ£Ê½ÏÂ²ÅÄÜÊ¹ÓÃ´ËÃüÁî"), false);
                 ci.cancel();
                 return;
             }
 
-            // è§£æå‘½ä»¤å‚æ•°
+            // ½âÎöÃüÁî²ÎÊı
             String fullCommand = message.substring(6).trim();
             String[] args = parseCommand(fullCommand);
             if (args == null || args.length < 2) {
-                mc.player.displayClientMessage(Component.literal("Â§cç”¨æ³•: .give <ç©å®¶> <ç‰©å“>[{nbt}] [æ•°é‡]"), false);
+                mc.player.displayClientMessage(Component.literal("¡ìcÓÃ·¨: .give <Íæ¼Ò> <ÎïÆ·>[{nbt}] [ÊıÁ¿]"), false);
                 ci.cancel();
                 return;
             }
 
             try {
-                // è·å–ç©å®¶ã€ç‰©å“å’Œæ•°é‡
+                // »ñÈ¡Íæ¼Ò¡¢ÎïÆ·ºÍÊıÁ¿
                 String targetPlayer = args[0];
                 String itemWithNbt = args[1];
                 int count = args.length > 2 ? Integer.parseInt(args[2]) : 1;
 
-                // æ£€æŸ¥æ˜¯å¦æœ‰åŸç‰ˆæƒé™
+                // ¼ì²éÊÇ·ñÓĞÔ­°æÈ¨ÏŞ
                 boolean hasPermission = mc.player.hasPermissions(2);
 
                 if (hasPermission) {
-                    // æœ‰æƒé™ï¼Œä½¿ç”¨åŸç‰ˆgiveå‘½ä»¤
+                    // ÓĞÈ¨ÏŞ£¬Ê¹ÓÃÔ­°ægiveÃüÁî
                     String vanillaCommand = String.format("give %s %s %d", targetPlayer, itemWithNbt, count);
                     mc.player.connection.sendCommand(vanillaCommand);
                 } else {
-                    // æ— æƒé™ï¼Œåªå…è®¸ç»™è‡ªå·±ç‰©å“
+                    // ÎŞÈ¨ÏŞ£¬Ö»ÔÊĞí¸ø×Ô¼ºÎïÆ·
                     if (!targetPlayer.equals(mc.player.getName().getString()) && !targetPlayer.equals("@s")) {
-                        mc.player.displayClientMessage(Component.literal("Â§cæ— æƒé™ç»™äºˆå…¶ä»–ç©å®¶ç‰©å“"), false);
+                        mc.player.displayClientMessage(Component.literal("¡ìcÎŞÈ¨ÏŞ¸øÓèÆäËûÍæ¼ÒÎïÆ·"), false);
                         ci.cancel();
                         return;
                     }
 
-                    // ä½¿ç”¨NBTæ–¹å¼ç»™äºˆç‰©å“
+                    // Ê¹ÓÃNBT·½Ê½¸øÓèÎïÆ·
                     ItemStack stack = createItemWithNBT(itemWithNbt, count);
                     if (stack != null) {
                         boolean success = mc.player.getInventory().add(stack);
                         if (success) {
                             mc.player.displayClientMessage(Component.literal(
-                                String.format("Â§aå·²ç»™äºˆ %s %d ä¸ª %s", 
+                                String.format("¡ìaÒÑ¸øÓè %s %d ¸ö %s", 
                                     mc.player.getName().getString(),
                                     count, 
                                     stack.getDisplayName().getString())
                             ), false);
                         } else {
-                            mc.player.displayClientMessage(Component.literal("Â§cç‰©å“æ å·²æ»¡"), false);
+                            mc.player.displayClientMessage(Component.literal("¡ìcÎïÆ·À¸ÒÑÂú"), false);
                         }
                     } else {
-                        mc.player.displayClientMessage(Component.literal("Â§cæ— æ•ˆçš„ç‰©å“IDæˆ–NBT"), false);
+                        mc.player.displayClientMessage(Component.literal("¡ìcÎŞĞ§µÄÎïÆ·ID»òNBT"), false);
                     }
                 }
             } catch (NumberFormatException e) {
-                mc.player.displayClientMessage(Component.literal("Â§cæ— æ•ˆçš„æ•°é‡"), false);
+                mc.player.displayClientMessage(Component.literal("¡ìcÎŞĞ§µÄÊıÁ¿"), false);
             } catch (Exception e) {
-                mc.player.displayClientMessage(Component.literal("Â§cå‘½ä»¤æ‰§è¡Œå¤±è´¥: " + e.getMessage()), false);
+                mc.player.displayClientMessage(Component.literal("¡ìcÃüÁîÖ´ĞĞÊ§°Ü: " + e.getMessage()), false);
             }
 
-            // å–æ¶ˆåŸå§‹æ¶ˆæ¯å‘é€
+            // È¡ÏûÔ­Ê¼ÏûÏ¢·¢ËÍ
             ci.cancel();
         }
     }
@@ -133,7 +132,7 @@ public class ChatMixin {
 
     private ItemStack createItemWithNBT(String itemWithNbt, int count) {
         try {
-            // åˆ†ç¦»ç‰©å“IDå’ŒNBT
+            // ·ÖÀëÎïÆ·IDºÍNBT
             String itemId;
             CompoundTag nbt = null;
 
@@ -146,13 +145,13 @@ public class ChatMixin {
                 itemId = itemWithNbt;
             }
 
-            // åˆ›å»ºç‰©å“
-            var item = BuiltInRegistries.ITEM.get(new ResourceLocation(itemId));
+            // ´´½¨ÎïÆ·
+            var item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemId));
             if (item == null) return null;
 
             ItemStack stack = new ItemStack(item, count);
             if (nbt != null) {
-                stack.setTag(nbt);
+                //stack.setTag(nbt);
             }
 
             return stack;

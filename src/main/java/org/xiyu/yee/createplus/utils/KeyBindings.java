@@ -2,20 +2,20 @@ package org.xiyu.yee.createplus.utils;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.client.settings.KeyConflictContext;
+import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import org.xiyu.yee.createplus.Createplus;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyBindings {
     public static final KeyMapping TOGGLE_HUD = new KeyMapping(
-        "key." + Createplus.MODID + ".toggle_hud", // ç¿»è¯‘é”®
-        KeyConflictContext.IN_GAME,  // åªåœ¨æ¸¸æˆä¸­ç”Ÿæ•ˆ
-        InputConstants.Type.KEYSYM,   // é”®ç›˜æŒ‰é”®
-        InputConstants.KEY_F9,        // é»˜è®¤F9
-        "key.categories." + Createplus.MODID  // æŒ‰é”®åˆ†ç±»
+        "key." + Createplus.MODID + ".toggle_hud", // ·­Òë¼ü
+        KeyConflictContext.IN_GAME,  // Ö»ÔÚÓÎÏ·ÖĞÉúĞ§
+        InputConstants.Type.KEYSYM,   // ¼üÅÌ°´¼ü
+        InputConstants.KEY_F9,        // Ä¬ÈÏF9
+        "key.categories." + Createplus.MODID  // °´¼ü·ÖÀà
     );
 
-    // æ·»åŠ æ–°çš„æŒ‰é”®ç»‘å®š
+    // Ìí¼ÓĞÂµÄ°´¼ü°ó¶¨
     public static final KeyMapping TOGGLE_FREECAM = new KeyMapping(
             "key.createplus.toggle_freecam",
             GLFW.GLFW_KEY_F6,

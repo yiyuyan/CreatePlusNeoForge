@@ -4,21 +4,21 @@ import net.minecraft.client.Minecraft;
 
 public class SpeedBuild extends CreativePlusFeature {
     public SpeedBuild() {
-        super("å¿«é€Ÿå»ºé€ ", "ç§»é™¤æ”¾ç½®å†·å´");
+        super("¿ìËÙ½¨Ôì", "ÒÆ³ı·ÅÖÃÀäÈ´");
     }
 
     @Override
     public void onTick() {
-        // ä¸éœ€è¦åœ¨è¿™é‡Œåšä»»ä½•äº‹æƒ…ï¼ŒMixinä¼šå¤„ç†
+        Minecraft.getInstance().rightClickDelay = 0;
     }
 
     @Override
     public void onEnable() {
-        // ä¸éœ€è¦ç‰¹æ®Šåˆå§‹åŒ–
+        // ²»ĞèÒªÌØÊâ³õÊ¼»¯
     }
 
     @Override
     public void onDisable() {
-        // ä¸éœ€è¦ç‰¹æ®Šæ¸…ç†
+        // ²»ĞèÒªÌØÊâÇåÀí
     }
 } 

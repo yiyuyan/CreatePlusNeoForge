@@ -1,4 +1,4 @@
-package org.xiyu.yee.createplus.mixin;
+package org.xiyu.yee.createplus.mixin.render;
 
         import com.mojang.blaze3d.vertex.PoseStack;
         import net.minecraft.client.renderer.MultiBufferSource;
@@ -18,7 +18,7 @@ package org.xiyu.yee.createplus.mixin;
         public class EntityRendererMixin<T extends Entity> {
             @Inject(method = "render", at = @At("HEAD"), cancellable = true)
             private void onRender(T p_114485_, float p_114486_, float p_114487_, PoseStack p_114488_, MultiBufferSource p_114489_, int p_114490_, CallbackInfo ci) {
-                Performance performance = (Performance) Createplus.FEATURE_MANAGER.getFeature("鎬ц兘浼樺寲");
+                Performance performance = (Performance) Createplus.FEATURE_MANAGER.getFeature("性能优化");
                 if (performance != null && performance.isEnabled()) {
                     if ((performance.isDisableEntityRendering() && !(p_114485_ instanceof Player)) ||
                         (performance.isDisableDeadMobRendering() && p_114485_ instanceof LivingEntity && ((LivingEntity)p_114485_).isDeadOrDying()) ||

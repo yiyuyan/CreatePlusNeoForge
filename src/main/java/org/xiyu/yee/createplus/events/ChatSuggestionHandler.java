@@ -1,29 +1,28 @@
 package org.xiyu.yee.createplus.events;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraftforge.client.event.RegisterClientCommandsEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import org.xiyu.yee.createplus.Createplus;
 
-@Mod.EventBusSubscriber(modid = Createplus.MODID)
+@EventBusSubscriber(modid = Createplus.MODID)
 public class ChatSuggestionHandler {
 
     @SubscribeEvent
     public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
         
-        // æ³¨å†ŒåŸºç¡€å‘½ä»¤
+        // ×¢²á»ù´¡ÃüÁî
         registerCommand(dispatcher, "hudcolor", "fps", "time", "pos", "biome", "localtime");
-        registerCommand(dispatcher, "weather", "æ™´å¤©", "é›¨å¤©", "é›·æš´");
-        registerCommand(dispatcher, "time", "æ—¥å‡º", "ä¸­åˆ", "æ—¥è½", "å‰å¤œ", "åˆå¤œ");
+        registerCommand(dispatcher, "weather", "ÇçÌì", "ÓêÌì", "À×±©");
+        registerCommand(dispatcher, "time", "ÈÕ³ö", "ÖĞÎç", "ÈÕÂä", "Ç°Ò¹", "ÎçÒ¹");
         registerCommand(dispatcher, "give", "@s", "@p", "@a");
         
-        // æ³¨å†Œå­å‘½ä»¤
+        // ×¢²á×ÓÃüÁî
         registerSubCommand(dispatcher, "hudcolor fps", "text", "value");
         registerSubCommand(dispatcher, "hudcolor time", "text", "value");
         registerSubCommand(dispatcher, "hudcolor pos", "text", "value");
@@ -32,9 +31,9 @@ public class ChatSuggestionHandler {
     }
 
     private static void registerCommand(CommandDispatcher<CommandSourceStack> dispatcher, String command, String... subCommands) {
-        // æ³¨å†Œå¸¦æ–œæ çš„å‘½ä»¤
+        // ×¢²á´øĞ±¸ÜµÄÃüÁî
         var slashBuilder = Commands.literal(command);
-        // æ³¨å†Œå¸¦ç‚¹å·çš„å‘½ä»¤
+        // ×¢²á´øµãºÅµÄÃüÁî
         var dotBuilder = Commands.literal("." + command);
         
         for (String sub : subCommands) {
@@ -51,7 +50,7 @@ public class ChatSuggestionHandler {
     private static void registerSubCommand(CommandDispatcher<CommandSourceStack> dispatcher, String parentCommand, String... subCommands) {
         String[] parts = parentCommand.split(" ");
         
-        // ä¸ºå¸¦æ–œæ å’Œç‚¹å·çš„çˆ¶å‘½ä»¤åˆ†åˆ«æ³¨å†Œå­å‘½ä»¤
+        // Îª´øĞ±¸ÜºÍµãºÅµÄ¸¸ÃüÁî·Ö±ğ×¢²á×ÓÃüÁî
         for (String prefix : new String[]{"", "."}) {
             String fullCommand = prefix + parentCommand;
             LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal(prefix + parts[0]);
@@ -67,12 +66,12 @@ public class ChatSuggestionHandler {
     }
 
     private static int handleCommand(String command, String subCommand) {
-        // å¤„ç†å‘½ä»¤é€»è¾‘
+        // ´¦ÀíÃüÁîÂß¼­
         return 1;
     }
 
     private static int handleSubCommand(String parentCommand, String subCommand) {
-        // å¤„ç†å­å‘½ä»¤é€»è¾‘
+        // ´¦Àí×ÓÃüÁîÂß¼­
         return 1;
     }
 } 

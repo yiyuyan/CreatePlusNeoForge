@@ -15,7 +15,7 @@ public class Performance extends CreativePlusFeature {
     private boolean disablePortalGuiClosing = false;
 
     public Performance() {
-        super("æ€§èƒ½ä¼˜åŒ–", "æä¾›å¤šç§æ€§èƒ½ä¼˜åŒ–é€‰é¡¹");
+        super("ĞÔÄÜÓÅ»¯", "Ìá¹©¶àÖÖĞÔÄÜÓÅ»¯Ñ¡Ïî");
     }
 
     public void openSettings(Screen parent) {
@@ -24,7 +24,7 @@ public class Performance extends CreativePlusFeature {
 
     public Button createSettingsButton(Screen parent) {
         return Button.builder(
-            Component.literal("æ€§èƒ½ä¼˜åŒ–..."),
+            Component.literal("ĞÔÄÜÓÅ»¯..."),
             button -> Minecraft.getInstance().setScreen(new PerformanceSettingsScreen(parent, this))
         ).bounds(0, 0, 200, 20).build();
     }
@@ -80,27 +80,27 @@ public class Performance extends CreativePlusFeature {
 
     @Override
     public String getDescription() {
-        return super.getDescription() + "\nÂ§7åœ¨é€‰é¡¹ä¸­å¯ä»¥æ‰¾åˆ°æ€§èƒ½ä¼˜åŒ–è®¾ç½®";
+        return super.getDescription() + "\n¡ì7ÔÚÑ¡ÏîÖĞ¿ÉÒÔÕÒµ½ĞÔÄÜÓÅ»¯ÉèÖÃ";
     }
 
     @Override
     public void handleClick(boolean isRightClick) {
-        // ç§»é™¤å·¦é”®æ‰“å¼€è®¾ç½®ç•Œé¢çš„åŠŸèƒ½
-        // ç°åœ¨åªèƒ½é€šè¿‡é€‰é¡¹èœå•ä¸­çš„æŒ‰é’®æ‰“å¼€è®¾ç½®ç•Œé¢
+        // ÒÆ³ı×ó¼ü´ò¿ªÉèÖÃ½çÃæµÄ¹¦ÄÜ
+        // ÏÖÔÚÖ»ÄÜÍ¨¹ıÑ¡Ïî²Ëµ¥ÖĞµÄ°´Å¥´ò¿ªÉèÖÃ½çÃæ
     }
 
     @Override
     public void onTick() {
-        // ä¸éœ€è¦tickæ›´æ–°
+        // ²»ĞèÒªtick¸üĞÂ
     }
 
     @Override
     public void onEnable() {
-        // ä¸éœ€è¦ç‰¹æ®Šåˆå§‹åŒ–
+        // ²»ĞèÒªÌØÊâ³õÊ¼»¯
     }
 
     @Override
     public void onDisable() {
-        // ä¸éœ€è¦ç‰¹æ®Šæ¸…ç†
+        // ²»ĞèÒªÌØÊâÇåÀí
     }
 } 

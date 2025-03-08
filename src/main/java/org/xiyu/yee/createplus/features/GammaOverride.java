@@ -1,10 +1,12 @@
 package org.xiyu.yee.createplus.features;
 
+import cn.ksmcbrigade.el.events.misc.GetOptionValueEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import org.xiyu.yee.createplus.utils.GammaOption;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 public class GammaOverride extends CreativePlusFeature {
     private double originalGamma;
@@ -14,40 +16,32 @@ public class GammaOverride extends CreativePlusFeature {
     private MobEffectInstance nightVisionEffect;
     private boolean wasEnabled = false;
     private double nightVisionGamma = 240.0D;
+    private double gamma = 15d;
 
     public GammaOverride() {
-        super("å¤œè§†", "æä¾›æ›´å¥½çš„å¤œè§†æ•ˆæœ");
-        initGammaOption();
-        // åˆ›å»ºä¸€ä¸ªæŒç»­æ—¶é—´å¾ˆé•¿ä¸”æ— ç²’å­æ•ˆæœçš„å¤œè§†æ•ˆæœ
+        super("Ò¹ÊÓ", "Ìá¹©¸üºÃµÄÒ¹ÊÓĞ§¹û");
+        // ´´½¨Ò»¸ö³ÖĞøÊ±¼äºÜ³¤ÇÒÎŞÁ£×ÓĞ§¹ûµÄÒ¹ÊÓĞ§¹û
         nightVisionEffect = new MobEffectInstance(
             MobEffects.NIGHT_VISION,
             Integer.MAX_VALUE,
             0,
-            false,  // æ˜¯å¦æ˜¾ç¤ºç²’å­
-            false,  // æ˜¯å¦æ˜¾ç¤ºå›¾æ ‡
-            false    // æ˜¯å¦æ˜¾ç¤ºåœ¨èƒŒæ™¯
+            false,  // ÊÇ·ñÏÔÊ¾Á£×Ó
+            false,  // ÊÇ·ñÏÔÊ¾Í¼±ê
+            false    // ÊÇ·ñÏÔÊ¾ÔÚ±³¾°
         );
-    }
-
-    private void initGammaOption() {
-        if (Minecraft.getInstance().options != null) {
-            gammaOption = GammaOption.createGammaOption(Minecraft.getInstance().options);
-        }
     }
 
     @Override
     public void onEnable() {
-        if (gammaOption == null) {
-            initGammaOption();
-        }
+        NeoForge.EVENT_BUS.register(this);
         
         Minecraft mc = Minecraft.getInstance();
         if (mc.player != null) {
-            // ä¿å­˜åŸå§‹äº®åº¦å€¼
+            // ±£´æÔ­Ê¼ÁÁ¶ÈÖµ
             originalGamma = mc.options.gamma().get();
-            // è®¾ç½®æœ€å¤§äº®åº¦
+            // ÉèÖÃ×î´óÁÁ¶È
             setGamma(NIGHT_VISION_GAMMA);
-            // æ·»åŠ å¤œè§†æ•ˆæœ
+            // Ìí¼ÓÒ¹ÊÓĞ§¹û
             mc.player.addEffect(new MobEffectInstance(nightVisionEffect));
             isFirstTick = true;
             wasEnabled = true;
@@ -58,38 +52,39 @@ public class GammaOverride extends CreativePlusFeature {
     public void onDisable() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.options != null) {
-            // æ¢å¤åŸå§‹äº®åº¦å€¼
+            // »Ö¸´Ô­Ê¼ÁÁ¶ÈÖµ
             setGamma(originalGamma);
         }
         if (mc.player != null && wasEnabled) {
-            // ç§»é™¤å¤œè§†æ•ˆæœ
+            // ÒÆ³ıÒ¹ÊÓĞ§¹û
             mc.player.removeEffect(MobEffects.NIGHT_VISION);
             wasEnabled = false;
         }
     }
 
     private void setGamma(double value) {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.options != null) {
-            // ç›´æ¥ä¿®æ”¹äº®åº¦å€¼
-            mc.options.gamma().set(value);
-            // ä¿å­˜è®¾ç½®
-            mc.options.save();
-        }
+        gamma = value;
     }
 
     @Override
     public String getDescription() {
         StringBuilder desc = new StringBuilder(super.getDescription());
         if (isEnabled()) {
-            desc.append("\nÂ§7å½“å‰äº®åº¦: Â§e").append(String.format("%.1f", NIGHT_VISION_GAMMA));
-            desc.append("\nÂ§7åŸå§‹äº®åº¦: Â§7").append(String.format("%.1f", originalGamma));
+            desc.append("\n¡ì7µ±Ç°ÁÁ¶È: ¡ìe").append(String.format("%.1f", NIGHT_VISION_GAMMA));
+            desc.append("\n¡ì7Ô­Ê¼ÁÁ¶È: ¡ì7").append(String.format("%.1f", originalGamma));
             if (Minecraft.getInstance().player != null && 
                 Minecraft.getInstance().player.hasEffect(MobEffects.NIGHT_VISION)) {
-                desc.append("\nÂ§aå¤œè§†æ•ˆæœ: Â§aå·²æ¿€æ´»");
+                desc.append("\n¡ìaÒ¹ÊÓĞ§¹û: ¡ìaÒÑ¼¤»î");
             }
         }
         return desc.toString();
+    }
+
+    @SubscribeEvent
+    public void applyGamma(GetOptionValueEvent event){
+        if(event.cap.equals(Minecraft.getInstance().options.gamma().toString())){
+            event.value = gamma;
+        }
     }
 
     @Override
@@ -98,21 +93,21 @@ public class GammaOverride extends CreativePlusFeature {
         
         Minecraft mc = Minecraft.getInstance();
         if (mc.player != null) {
-            // ç¡®ä¿äº®åº¦ä¿æŒåœ¨æœ€å¤§å€¼
+            // È·±£ÁÁ¶È±£³ÖÔÚ×î´óÖµ
             double currentGamma = mc.options.gamma().get();
             if (currentGamma != NIGHT_VISION_GAMMA || isFirstTick) {
                 setGamma(NIGHT_VISION_GAMMA);
                 isFirstTick = false;
             }
             
-            // ç¡®ä¿å¤œè§†æ•ˆæœæŒç»­å­˜åœ¨
+            // È·±£Ò¹ÊÓĞ§¹û³ÖĞø´æÔÚ
             if (!mc.player.hasEffect(MobEffects.NIGHT_VISION)) {
                 mc.player.addEffect(new MobEffectInstance(nightVisionEffect));
             }
         }
     }
 
-    // Getter å’Œ Setter æ–¹æ³•
+    // Getter ºÍ Setter ·½·¨
     public double getOriginalGamma() {
         return originalGamma;
     }

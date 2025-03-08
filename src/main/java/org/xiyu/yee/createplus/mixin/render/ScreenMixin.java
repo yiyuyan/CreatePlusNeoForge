@@ -1,4 +1,4 @@
-package org.xiyu.yee.createplus.mixin;
+package org.xiyu.yee.createplus.mixin.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -14,7 +14,7 @@ import org.xiyu.yee.createplus.features.Performance;
     public class ScreenMixin {
     @Inject(method = "onClose", at = @At("HEAD"), cancellable = true)
             private void onClose(CallbackInfo ci) {
-            Performance performance = (Performance) Createplus.FEATURE_MANAGER.getFeature("鎬ц兘浼樺寲");
+            Performance performance = (Performance) Createplus.FEATURE_MANAGER.getFeature("性能优化");
                 if (performance != null && performance.isEnabled() && performance.isDisablePortalGuiClosing() &&
                     Minecraft.getInstance().player != null &&
                     Minecraft.getInstance().player.hasEffect(MobEffects.CONFUSION)) {

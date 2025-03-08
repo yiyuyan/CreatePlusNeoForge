@@ -3,31 +3,31 @@ package org.xiyu.yee.createplus.features;
 import net.minecraft.client.gui.GuiGraphics;
 
 /**
- * å¸¦æœ‰å­HUDçš„åŠŸèƒ½æ¥å£
+ * ´øÓĞ×ÓHUDµÄ¹¦ÄÜ½Ó¿Ú
  */
 public interface SubHUDFeature {
     /**
-     * å¤„ç†é”®ç›˜è¾“å…¥
-     * @param keyCode æŒ‰é”®ä»£ç 
-     * @return æ˜¯å¦å¤„ç†äº†è¯¥æŒ‰é”®
+     * ´¦Àí¼üÅÌÊäÈë
+     * @param keyCode °´¼ü´úÂë
+     * @return ÊÇ·ñ´¦ÀíÁË¸Ã°´¼ü
      */
     boolean handleKeyPress(int keyCode);
 
     /**
-     * æ£€æŸ¥å­HUDæ˜¯å¦å¯è§
+     * ¼ì²é×ÓHUDÊÇ·ñ¿É¼û
      */
     boolean isSubHUDVisible();
 
     /**
-     * åˆ‡æ¢å­HUDçš„æ˜¾ç¤ºçŠ¶æ€
+     * ÇĞ»»×ÓHUDµÄÏÔÊ¾×´Ì¬
      */
     void toggleSubHUD();
 
     /**
-     * æ¸²æŸ“å­HUD
-     * @param graphics GuiGraphicså®ä¾‹
-     * @param x æ¸²æŸ“ä½ç½®X
-     * @param y æ¸²æŸ“ä½ç½®Y
+     * äÖÈ¾×ÓHUD
+     * @param graphics GuiGraphicsÊµÀı
+     * @param x äÖÈ¾Î»ÖÃX
+     * @param y äÖÈ¾Î»ÖÃY
      */
     void renderSubHUD(GuiGraphics graphics, int x, int y);
 }

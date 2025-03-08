@@ -1,7 +1,8 @@
-package org.xiyu.yee.createplus.mixin;
+package org.xiyu.yee.createplus.mixin.others;
 
 import net.minecraft.client.gui.components.CommandSuggestions;
 import net.minecraft.client.gui.components.EditBox;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -10,12 +11,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CommandSuggestions.class)
 public abstract class CommandSuggestionsMixin {
-    @Shadow private EditBox input;
+    @Final
+    @Shadow
+    EditBox input;
     @Shadow public abstract void setAllowSuggestions(boolean allowSuggestions);
 
     @Inject(method = "keyPressed", at = @At("HEAD"))
     private void onKeyPressed(int p_93889_, int p_93890_, int p_93891_, CallbackInfoReturnable<Boolean> cir) {
-        // å…è®¸ç‚¹å·å‘½ä»¤çš„è¡¥å…¨
+        // ÔÊĞíµãºÅÃüÁîµÄ²¹È«
         if (input.getValue().startsWith(".")) {
             setAllowSuggestions(true);
         }

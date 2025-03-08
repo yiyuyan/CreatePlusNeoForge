@@ -6,7 +6,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.client.gui.components.OptionsList;
 import net.minecraft.client.gui.components.CycleButton;
 import org.xiyu.yee.createplus.features.Performance;
 
@@ -21,7 +20,7 @@ public class PerformanceSettingsScreen extends Screen {
     private final List<CycleButton<Boolean>> buttons = new ArrayList<>();
 
     public PerformanceSettingsScreen(Screen lastScreen, Performance performance) {
-        super(Component.translatable("æ€§èƒ½ä¼˜åŒ–è®¾ç½®"));
+        super(Component.translatable("ÐÔÄÜÓÅ»¯ÉèÖÃ"));
         this.lastScreen = lastScreen;
         this.performance = performance;
     }
@@ -32,56 +31,56 @@ public class PerformanceSettingsScreen extends Screen {
         int spacing = 25;
 
         addBooleanOption("disableBlockBreakingParticles", 
-            "å…³é—­æ–¹å—ç ´åç²’å­",
-            "ç ´åæ–¹å—ä¸ä¼šæ˜¾ç¤ºç²’å­æ•ˆæžœï¼ˆå¯¹fpsæå‡æœ‰å¥‡æ•ˆï¼‰",
+            "¹Ø±Õ·½¿éÆÆ»µÁ£×Ó",
+            "ÆÆ»µ·½¿é²»»áÏÔÊ¾Á£×ÓÐ§¹û£¨¶ÔfpsÌáÉýÓÐÆæÐ§£©",
             performance::isDisableBlockBreakingParticles,
             performance::setDisableBlockBreakingParticles,
             y);
         y += spacing;
 
         addBooleanOption("disableDeadMobRendering",
-            "å…³é—­æ­»äº¡ç”Ÿç‰©æ¸²æŸ“",
-            "ä¸æ¸²æŸ“å·²æ­»äº¡çš„ç”Ÿç‰©",
+            "¹Ø±ÕËÀÍöÉúÎïäÖÈ¾",
+            "²»äÖÈ¾ÒÑËÀÍöµÄÉúÎï",
             performance::isDisableDeadMobRendering,
             performance::setDisableDeadMobRendering,
             y);
         y += spacing;
 
         addBooleanOption("disableEntityRendering",
-            "å…³é—­å®žä½“æ¸²æŸ“",
-            "ä¸æ¸²æŸ“éžçŽ©å®¶å®žä½“",
+            "¹Ø±ÕÊµÌåäÖÈ¾",
+            "²»äÖÈ¾·ÇÍæ¼ÒÊµÌå",
             performance::isDisableEntityRendering,
             performance::setDisableEntityRendering,
             y);
         y += spacing;
 
         addBooleanOption("disableFallingBlockEntityRendering",
-            "å…³é—­æŽ‰è½æ–¹å—æ¸²æŸ“",
-            "ä¸æ¸²æŸ“æŽ‰è½çš„æ–¹å—å®žä½“",
+            "¹Ø±ÕµôÂä·½¿éäÖÈ¾",
+            "²»äÖÈ¾µôÂäµÄ·½¿éÊµÌå",
             performance::isDisableFallingBlockEntityRendering,
             performance::setDisableFallingBlockEntityRendering,
             y);
         y += spacing;
 
         addBooleanOption("disableParticles",
-            "å…³é—­ç²’å­æ•ˆæžœ",
-            "ç¦ç”¨æ‰€æœ‰ç²’å­æ•ˆæžœ",
+            "¹Ø±ÕÁ£×ÓÐ§¹û",
+            "½ûÓÃËùÓÐÁ£×ÓÐ§¹û",
             performance::isDisableParticles,
             performance::setDisableParticles,
             y);
         y += spacing;
 
         addBooleanOption("disablePortalGuiClosing",
-            "ç¦ç”¨ä¼ é€é—¨GUIå…³é—­",
-            "é˜²æ­¢ä¼ é€é—¨æ•ˆæžœå…³é—­GUIç•Œé¢",
+            "½ûÓÃ´«ËÍÃÅGUI¹Ø±Õ",
+            "·ÀÖ¹´«ËÍÃÅÐ§¹û¹Ø±ÕGUI½çÃæ",
             performance::isDisablePortalGuiClosing,
             performance::setDisablePortalGuiClosing,
             y);
         y += spacing;
 
-        // æ·»åŠ è¿”å›žæŒ‰é’®
+        // Ìí¼Ó·µ»Ø°´Å¥
         this.addRenderableWidget(Button.builder(
-            Component.literal("å®Œæˆ"),
+            Component.literal("Íê³É"),
             button -> this.onClose()
         ).bounds(this.width / 2 - 100, this.height - 27, 200, 20).build());
     }
@@ -89,7 +88,7 @@ public class PerformanceSettingsScreen extends Screen {
     private void addBooleanOption(String id, String name, String tooltip,
                                   BooleanSupplier getter, BooleanConsumer setter, int y) {
         CycleButton<Boolean> button = CycleButton.<Boolean>builder(value -> 
-                Component.literal(Boolean.TRUE.equals(value) ? "å¼€å¯" : "å…³é—­"))
+                Component.literal(Boolean.TRUE.equals(value) ? "¿ªÆô" : "¹Ø±Õ"))
             .withValues(true, false)
             .withInitialValue(getter.getAsBoolean())
             .withTooltip(value -> Tooltip.create(Component.literal(tooltip)))
@@ -103,7 +102,7 @@ public class PerformanceSettingsScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(graphics);
+        this.renderMenuBackground(graphics);
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 5, 16777215);
         super.render(graphics, mouseX, mouseY, partialTick);
 

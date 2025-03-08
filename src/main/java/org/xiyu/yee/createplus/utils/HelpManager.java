@@ -9,177 +9,178 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HelpManager {
+public class
+HelpManager {
     private static final Map<String, FeatureHelp> featureHelps = new HashMap<>();
 
-    // åŠŸèƒ½å¸®åŠ©çš„æ•°æ®ç»“æ„
+    // ¹¦ÄÜ°ïÖúµÄÊı¾İ½á¹¹
     private record FeatureHelp(
-        List<String> usage,      // ä½¿ç”¨æ–¹æ³•
-        List<String> notes,      // æ³¨æ„äº‹é¡¹ï¼ˆå¯é€‰ï¼‰
-        List<String> examples    // ç¤ºä¾‹ï¼ˆå¯é€‰ï¼‰
+        List<String> usage,      // Ê¹ÓÃ·½·¨
+        List<String> notes,      // ×¢ÒâÊÂÏî£¨¿ÉÑ¡£©
+        List<String> examples    // Ê¾Àı£¨¿ÉÑ¡£©
     ) {}
 
-    // åˆå§‹åŒ–æ‰€æœ‰åŠŸèƒ½çš„å¸®åŠ©ä¿¡æ¯
+    // ³õÊ¼»¯ËùÓĞ¹¦ÄÜµÄ°ïÖúĞÅÏ¢
     static {
-        // å»ºç­‘å¯¼å‡ºåŠŸèƒ½å¸®åŠ©
-        featureHelps.put("å»ºç­‘å¯¼å‡º", new FeatureHelp(
+        // ½¨Öşµ¼³ö¹¦ÄÜ°ïÖú
+        featureHelps.put("½¨Öşµ¼³ö", new FeatureHelp(
             List.of(
-                "1. ä½¿ç”¨æœ¨é“²å³é”®é€‰æ‹©ç¬¬ä¸€ä¸ªç‚¹",
-                "2. ä½¿ç”¨æœ¨é“²å³é”®é€‰æ‹©ç¬¬äºŒä¸ªç‚¹",
-                "3. è¾“å…¥ /exportbuilding <åç§°>",
-                "4. å»ºç­‘ä¼šä¿å­˜åˆ° buildings/<åç§°>.mcfunction"
+                "1. Ê¹ÓÃÄ¾²ùÓÒ¼üÑ¡ÔñµÚÒ»¸öµã",
+                "2. Ê¹ÓÃÄ¾²ùÓÒ¼üÑ¡ÔñµÚ¶ş¸öµã",
+                "3. ÊäÈë /exportbuilding <Ãû³Æ>",
+                "4. ½¨Öş»á±£´æµ½ buildings/<Ãû³Æ>.mcfunction"
             ),
-            List.of("å¯¼å‡ºçš„å»ºç­‘æ–‡ä»¶å¯ä»¥åœ¨å…¶ä»–å­˜æ¡£ä¸­ä½¿ç”¨"),
+            List.of("µ¼³öµÄ½¨ÖşÎÄ¼ş¿ÉÒÔÔÚÆäËû´æµµÖĞÊ¹ÓÃ"),
             List.of(
                 "/exportbuilding myhouse",
                 "/exportbuilding tower1"
             )
         ));
 
-        // é•œåƒå»ºé€ åŠŸèƒ½å¸®åŠ©
-        featureHelps.put("é•œåƒå»ºé€ ", new FeatureHelp(
+        // ¾µÏñ½¨Ôì¹¦ÄÜ°ïÖú
+        featureHelps.put("¾µÏñ½¨Ôì", new FeatureHelp(
             List.of(
-                "1. ä½¿ç”¨æœ¨å‰‘å³é”®é€‰æ‹©é•œåƒç‚¹",
-                "2. Shift+å³é”®åˆ‡æ¢é•œåƒè½´(X/Y/Z)",
-                "3. æ”¾ç½®æ–¹å—æ—¶ä¼šè‡ªåŠ¨åœ¨å¯¹ç§°ä½ç½®æ”¾ç½®",
-                "4. å†æ¬¡å³é”®é•œåƒç‚¹å¯ä»¥ç§»åŠ¨ä½ç½®"
+                "1. Ê¹ÓÃÄ¾½£ÓÒ¼üÑ¡Ôñ¾µÏñµã",
+                "2. Shift+ÓÒ¼üÇĞ»»¾µÏñÖá(X/Y/Z)",
+                "3. ·ÅÖÃ·½¿éÊ±»á×Ô¶¯ÔÚ¶Ô³ÆÎ»ÖÃ·ÅÖÃ",
+                "4. ÔÙ´ÎÓÒ¼ü¾µÏñµã¿ÉÒÔÒÆ¶¯Î»ÖÃ"
             ),
-            List.of("é•œåƒç‚¹ä¼šä»¥è“è‰²ç²’å­æ•ˆæœæ˜¾ç¤º"),
-            List.of("é€‚åˆå»ºé€ å¯¹ç§°çš„å»ºç­‘ï¼Œå¦‚åŸå ¡ã€ç¥æ®¿ç­‰")
+            List.of("¾µÏñµã»áÒÔÀ¶É«Á£×ÓĞ§¹ûÏÔÊ¾"),
+            List.of("ÊÊºÏ½¨Ôì¶Ô³ÆµÄ½¨Öş£¬Èç³Ç±¤¡¢ÉñµîµÈ")
         ));
 
-        // æ–¹å—å˜è‰²åŠŸèƒ½å¸®åŠ©
-        featureHelps.put("æ–¹å—å˜è‰²", new FeatureHelp(
+        // ·½¿é±äÉ«¹¦ÄÜ°ïÖú
+        featureHelps.put("·½¿é±äÉ«", new FeatureHelp(
             List.of(
-                "1. æ‰‹æŒå¯å˜è‰²æ–¹å—(å¦‚ç¾Šæ¯›ã€ç»ç’ƒç­‰)",
-                "2. æŒ‰ä½å·¦CTRLå¹¶æ»šåŠ¨é¼ æ ‡æ»šè½®",
-                "3. æ–¹å—ä¼šåœ¨åŒç±»å‹ä¸­å¾ªç¯åˆ‡æ¢"
+                "1. ÊÖ³Ö¿É±äÉ«·½¿é(ÈçÑòÃ«¡¢²£Á§µÈ)",
+                "2. °´×¡×óCTRL²¢¹ö¶¯Êó±ê¹öÂÖ",
+                "3. ·½¿é»áÔÚÍ¬ÀàĞÍÖĞÑ­»·ÇĞ»»"
             ),
             List.of(
-                "æ”¯æŒçš„æ–¹å—ç±»å‹:",
-                "- ç¾Šæ¯›ã€æ··å‡åœŸã€ç»ç’ƒ",
-                "- åœ°æ¯¯ã€é™¶ç“¦ã€åºŠ",
-                "- æ——å¸œã€æ½œå½±ç›’ç­‰"
+                "Ö§³ÖµÄ·½¿éÀàĞÍ:",
+                "- ÑòÃ«¡¢»ìÄıÍÁ¡¢²£Á§",
+                "- µØÌº¡¢ÌÕÍß¡¢´²",
+                "- ÆìÖÄ¡¢Ç±Ó°ºĞµÈ"
             ),
             null
         ));
 
-        // å¿«é€Ÿå»ºé€ åŠŸèƒ½å¸®åŠ©
-        featureHelps.put("å¿«é€Ÿå»ºé€ ", new FeatureHelp(
+        // ¿ìËÙ½¨Ôì¹¦ÄÜ°ïÖú
+        featureHelps.put("¿ìËÙ½¨Ôì", new FeatureHelp(
             List.of(
-                "1. å¼€å¯åŠŸèƒ½åè‡ªåŠ¨ç”Ÿæ•ˆ",
-                "2. ç§»é™¤æ–¹å—æ”¾ç½®çš„å†·å´æ—¶é—´",
-                "3. å¯ä»¥å¿«é€Ÿè¿ç»­æ”¾ç½®æ–¹å—"
+                "1. ¿ªÆô¹¦ÄÜºó×Ô¶¯ÉúĞ§",
+                "2. ÒÆ³ı·½¿é·ÅÖÃµÄÀäÈ´Ê±¼ä",
+                "3. ¿ÉÒÔ¿ìËÙÁ¬Ğø·ÅÖÃ·½¿é"
             ),
-            List.of("ä»…åœ¨åˆ›é€ æ¨¡å¼ä¸‹æœ‰æ•ˆ"),
+            List.of("½öÔÚ´´ÔìÄ£Ê½ÏÂÓĞĞ§"),
             null
         ));
 
-        // çµé­‚å‡ºçªåŠŸèƒ½å¸®åŠ©
-        featureHelps.put("çµé­‚å‡ºçª", new FeatureHelp(
+        // Áé»ê³öÇÏ¹¦ÄÜ°ïÖú
+        featureHelps.put("Áé»ê³öÇÏ", new FeatureHelp(
             List.of(
-                "1. æŒ‰ F6 å¼€å¯/å…³é—­çµé­‚å‡ºçª",
-                "2. ä½¿ç”¨ WASD å’Œç©ºæ ¼é”®é£è¡Œ",
-                "3. ä½¿ç”¨é¼ æ ‡æ»šè½®è°ƒèŠ‚é£è¡Œé€Ÿåº¦",
-                "4. å†æ¬¡æŒ‰ F6 æˆ–æ­»äº¡æ—¶è‡ªåŠ¨é€€å‡º"
+                "1. °´ F6 ¿ªÆô/¹Ø±ÕÁé»ê³öÇÏ",
+                "2. Ê¹ÓÃ WASD ºÍ¿Õ¸ñ¼ü·ÉĞĞ",
+                "3. Ê¹ÓÃÊó±ê¹öÂÖµ÷½Ú·ÉĞĞËÙ¶È",
+                "4. ÔÙ´Î°´ F6 »òËÀÍöÊ±×Ô¶¯ÍË³ö"
             ),
             List.of(
-                "- å¯ä»¥ç©¿å¢™è§‚å¯Ÿ",
-                "- ä¸ä¼šå½±å“ç©å®¶å®é™…ä½ç½®",
-                "- é€‚åˆæŸ¥çœ‹åœ°å½¢å’Œå»ºç­‘"
+                "- ¿ÉÒÔ´©Ç½¹Û²ì",
+                "- ²»»áÓ°ÏìÍæ¼ÒÊµ¼ÊÎ»ÖÃ",
+                "- ÊÊºÏ²é¿´µØĞÎºÍ½¨Öş"
             ),
-            List.of("è§‚å¯Ÿåœ°ä¸‹å»ºç­‘æˆ–å¤æ‚ç»“æ„æ—¶ç‰¹åˆ«æœ‰ç”¨")
+            List.of("¹Û²ìµØÏÂ½¨Öş»ò¸´ÔÓ½á¹¹Ê±ÌØ±ğÓĞÓÃ")
         ));
 
-        // é•¿è‡‚çŒ¿åŠŸèƒ½å¸®åŠ©
-        featureHelps.put("é•¿è‡‚çŒ¿", new FeatureHelp(
+        // ³¤±ÛÔ³¹¦ÄÜ°ïÖú
+        featureHelps.put("³¤±ÛÔ³", new FeatureHelp(
             List.of(
-                "1. å¼€å¯åŠŸèƒ½åè‡ªåŠ¨è£…å¤‡ç‰¹æ®Šè£¤å­",
-                "2. å¢åŠ æ”¾ç½®å’Œç ´åæ–¹å—çš„è·ç¦»",
-                "3. å…³é—­åŠŸèƒ½åè‡ªåŠ¨æ¢å¤åŸè£…å¤‡"
+                "1. ¿ªÆô¹¦ÄÜºó×Ô¶¯×°±¸ÌØÊâ¿ã×Ó",
+                "2. Ôö¼Ó·ÅÖÃºÍÆÆ»µ·½¿éµÄ¾àÀë",
+                "3. ¹Ø±Õ¹¦ÄÜºó×Ô¶¯»Ö¸´Ô­×°±¸"
             ),
             List.of(
-                "- ä»…åœ¨åˆ›é€ æ¨¡å¼ä¸‹æœ‰æ•ˆ",
-                "- ä¸ä¼šå½±å“ç”Ÿå­˜æ¨¡å¼çš„å¹³è¡¡æ€§"
-            ),
-            null
-        ));
-
-        // å¤œè§†åŠŸèƒ½å¸®åŠ©
-        featureHelps.put("å¤œè§†", new FeatureHelp(
-            List.of(
-                "1. å¼€å¯åŠŸèƒ½åè‡ªåŠ¨ç”Ÿæ•ˆ",
-                "2. æé«˜æ¸¸æˆæ•´ä½“äº®åº¦",
-                "3. åœ¨é»‘æš—å¤„ä¹Ÿèƒ½çœ‹æ¸…å‘¨å›´"
-            ),
-            List.of("ä¸éœ€è¦ä½¿ç”¨å¤œè§†è¯æ°´æ•ˆæœ"),
-            null
-        ));
-
-        // ç¼©æ”¾åŠŸèƒ½å¸®åŠ©
-        featureHelps.put("ç¼©æ”¾", new FeatureHelp(
-            List.of(
-                "1. æŒ‰ä½ C é”®è¿›è¡Œç¼©æ”¾",
-                "2. ä½¿ç”¨é¼ æ ‡æ»šè½®è°ƒèŠ‚ç¼©æ”¾å€ç‡",
-                "3. æ¾å¼€ C é”®æ¢å¤æ­£å¸¸è§†è§’"
-            ),
-            List.of(
-                "- é»˜è®¤ç¼©æ”¾å€ç‡ä¸º 4 å€",
-                "- å¯åœ¨ 1-10 å€ä¹‹é—´è°ƒèŠ‚"
+                "- ½öÔÚ´´ÔìÄ£Ê½ÏÂÓĞĞ§",
+                "- ²»»áÓ°ÏìÉú´æÄ£Ê½µÄÆ½ºâĞÔ"
             ),
             null
         ));
 
-        // é€Ÿåº¦è°ƒèŠ‚åŠŸèƒ½å¸®åŠ©
-        featureHelps.put("é€Ÿåº¦è°ƒèŠ‚", new FeatureHelp(
+        // Ò¹ÊÓ¹¦ÄÜ°ïÖú
+        featureHelps.put("Ò¹ÊÓ", new FeatureHelp(
             List.of(
-                "1. å¼€å¯åŠŸèƒ½åä½¿ç”¨å¿«æ·é”®è°ƒèŠ‚",
-                "2. Alt + é¼ æ ‡æ»šè½®è°ƒèŠ‚è¡Œèµ°é€Ÿåº¦",
-                "3. Alt + Shift + é¼ æ ‡æ»šè½®è°ƒèŠ‚é£è¡Œé€Ÿåº¦"
+                "1. ¿ªÆô¹¦ÄÜºó×Ô¶¯ÉúĞ§",
+                "2. Ìá¸ßÓÎÏ·ÕûÌåÁÁ¶È",
+                "3. ÔÚºÚ°µ´¦Ò²ÄÜ¿´ÇåÖÜÎ§"
+            ),
+            List.of("²»ĞèÒªÊ¹ÓÃÒ¹ÊÓÒ©Ë®Ğ§¹û"),
+            null
+        ));
+
+        // Ëõ·Å¹¦ÄÜ°ïÖú
+        featureHelps.put("Ëõ·Å", new FeatureHelp(
+            List.of(
+                "1. °´×¡ C ¼ü½øĞĞËõ·Å",
+                "2. Ê¹ÓÃÊó±ê¹öÂÖµ÷½ÚËõ·Å±¶ÂÊ",
+                "3. ËÉ¿ª C ¼ü»Ö¸´Õı³£ÊÓ½Ç"
             ),
             List.of(
-                "- ä»…åœ¨åˆ›é€ æ¨¡å¼ä¸‹æœ‰æ•ˆ",
-                "- å¯ä»¥ç²¾ç¡®æ§åˆ¶ç§»åŠ¨é€Ÿåº¦",
-                "- é€‚åˆç²¾ç»†å»ºé€ æ—¶ä½¿ç”¨"
+                "- Ä¬ÈÏËõ·Å±¶ÂÊÎª 4 ±¶",
+                "- ¿ÉÔÚ 1-10 ±¶Ö®¼äµ÷½Ú"
+            ),
+            null
+        ));
+
+        // ËÙ¶Èµ÷½Ú¹¦ÄÜ°ïÖú
+        featureHelps.put("ËÙ¶Èµ÷½Ú", new FeatureHelp(
+            List.of(
+                "1. ¿ªÆô¹¦ÄÜºóÊ¹ÓÃ¿ì½İ¼üµ÷½Ú",
+                "2. Alt + Êó±ê¹öÂÖµ÷½ÚĞĞ×ßËÙ¶È",
+                "3. Alt + Shift + Êó±ê¹öÂÖµ÷½Ú·ÉĞĞËÙ¶È"
             ),
             List.of(
-                "å»ºè®®åœ¨éœ€è¦ç²¾ç¡®ç§»åŠ¨æ—¶é™ä½é€Ÿåº¦",
-                "åœ¨é•¿è·ç¦»ç§»åŠ¨æ—¶æé«˜é€Ÿåº¦"
+                "- ½öÔÚ´´ÔìÄ£Ê½ÏÂÓĞĞ§",
+                "- ¿ÉÒÔ¾«È·¿ØÖÆÒÆ¶¯ËÙ¶È",
+                "- ÊÊºÏ¾«Ï¸½¨ÔìÊ±Ê¹ÓÃ"
+            ),
+            List.of(
+                "½¨ÒéÔÚĞèÒª¾«È·ÒÆ¶¯Ê±½µµÍËÙ¶È",
+                "ÔÚ³¤¾àÀëÒÆ¶¯Ê±Ìá¸ßËÙ¶È"
             )
         ));
 
-        // èŒƒå›´å»ºé€ åŠŸèƒ½å¸®åŠ©
-        featureHelps.put("èŒƒå›´å»ºé€ ", new FeatureHelp(
+        // ·¶Î§½¨Ôì¹¦ÄÜ°ïÖú
+        featureHelps.put("·¶Î§½¨Ôì", new FeatureHelp(
             List.of(
-                "1. å‰¯æ‰‹æŒæ–¹å—æ—¶è‡ªåŠ¨å¯ç”¨",
-                "2. åœ¨ç›®æ ‡ä½ç½®å½¢æˆçƒå½¢æ”¾ç½®åŒºåŸŸ",
-                "3. ä½¿ç”¨é¼ æ ‡æ»šè½®è°ƒèŠ‚èŒƒå›´å¤§å°",
-                "4. å·¦é”®æ”¾ç½®æ–¹å—ï¼Œå³é”®æ¸…é™¤æ–¹å—"
+                "1. ¸±ÊÖ³Ö·½¿éÊ±×Ô¶¯ÆôÓÃ",
+                "2. ÔÚÄ¿±êÎ»ÖÃĞÎ³ÉÇòĞÎ·ÅÖÃÇøÓò",
+                "3. Ê¹ÓÃÊó±ê¹öÂÖµ÷½Ú·¶Î§´óĞ¡",
+                "4. ×ó¼ü·ÅÖÃ·½¿é£¬ÓÒ¼üÇå³ı·½¿é"
             ),
             List.of(
-                "- é€‚åˆå¿«é€Ÿå¡«å……å¤§é¢ç§¯åŒºåŸŸ",
-                "- å¯ç”¨äºåˆ›å»ºçƒå½¢æˆ–åœ†å½¢ç»“æ„",
-                "- æ”¯æŒæ‰€æœ‰ç±»å‹çš„æ–¹å—"
+                "- ÊÊºÏ¿ìËÙÌî³ä´óÃæ»ıÇøÓò",
+                "- ¿ÉÓÃÓÚ´´½¨ÇòĞÎ»òÔ²ĞÎ½á¹¹",
+                "- Ö§³ÖËùÓĞÀàĞÍµÄ·½¿é"
             ),
             List.of(
-                "åˆ›å»ºçƒå½¢å»ºç­‘",
-                "å¿«é€Ÿå¡«å……ç©ºæ´",
-                "æ‰¹é‡æ¸…é™¤æ–¹å—"
+                "´´½¨ÇòĞÎ½¨Öş",
+                "¿ìËÙÌî³ä¿Õ¶´",
+                "ÅúÁ¿Çå³ı·½¿é"
             )
         ));
 
-        // å»ºç­‘å¯¼å…¥åŠŸèƒ½å¸®åŠ©
-        featureHelps.put("å»ºç­‘å¯¼å…¥", new FeatureHelp(
+        // ½¨Öşµ¼Èë¹¦ÄÜ°ïÖú
+        featureHelps.put("½¨Öşµ¼Èë", new FeatureHelp(
             List.of(
-                "1. ä½¿ç”¨ /importbuilding <åç§°> é€‰æ‹©å»ºç­‘",
-                "2. ä¼šæ˜¾ç¤ºç»¿è‰²é¢„è§ˆæ¡†",
-                "3. ä½¿ç”¨ /confirmimport ç¡®è®¤å¯¼å…¥",
-                "4. ä½¿ç”¨ /cancelimport å–æ¶ˆå¯¼å…¥"
+                "1. Ê¹ÓÃ /importbuilding <Ãû³Æ> Ñ¡Ôñ½¨Öş",
+                "2. »áÏÔÊ¾ÂÌÉ«Ô¤ÀÀ¿ò",
+                "3. Ê¹ÓÃ /confirmimport È·ÈÏµ¼Èë",
+                "4. Ê¹ÓÃ /cancelimport È¡Ïûµ¼Èë"
             ),
             List.of(
-                "- éœ€è¦OPæƒé™(2çº§)æ‰èƒ½å¯¼å…¥",
-                "- å»ºç­‘æ–‡ä»¶å¿…é¡»ä½äº buildings æ–‡ä»¶å¤¹",
-                "- æ”¯æŒå¯¼å…¥å…¶ä»–å­˜æ¡£çš„å»ºç­‘"
+                "- ĞèÒªOPÈ¨ÏŞ(2¼¶)²ÅÄÜµ¼Èë",
+                "- ½¨ÖşÎÄ¼ş±ØĞëÎ»ÓÚ buildings ÎÄ¼ş¼Ğ",
+                "- Ö§³Öµ¼ÈëÆäËû´æµµµÄ½¨Öş"
             ),
             List.of(
                 "/importbuilding myhouse",
@@ -189,43 +190,43 @@ public class HelpManager {
         ));
     }
 
-    // æ˜¾ç¤ºé€šç”¨å¸®åŠ©
+    // ÏÔÊ¾Í¨ÓÃ°ïÖú
     public static void showGeneralHelp(CommandSourceStack source) {
-        source.sendSuccess(() -> Component.literal("Â§6=== CreatePlus åŠŸèƒ½å¸®åŠ© ==="), false);
+        source.sendSuccess(() -> Component.literal("¡ì6=== CreatePlus ¹¦ÄÜ°ïÖú ==="), false);
         
-        // ä½œè€…ä¿¡æ¯
-        source.sendSuccess(() -> Component.literal("\nÂ§dä½œè€…ä¿¡æ¯:"), false);
-        source.sendSuccess(() -> Component.literal("Â§7ä½œè€…: Â§bé¥©é›¨(God_xiyu)"), false);
-        source.sendSuccess(() -> Component.literal("Â§7äº¤æµç¾¤: Â§b691870136"), false);
-        source.sendSuccess(() -> Component.literal("Â§cè¯·å‹¿ä½¿ç”¨æœ¬æ¨¡ç»„è¿›è¡Œæ¶æ„ç ´åï¼Œè¿è€…å°†è¢«äº‘é»‘åå•å°ç¦ï¼"), false);
+        // ×÷ÕßĞÅÏ¢
+        source.sendSuccess(() -> Component.literal("\n¡ìd×÷ÕßĞÅÏ¢:"), false);
+        source.sendSuccess(() -> Component.literal("¡ì7×÷Õß: ¡ìbâ¾Óê(God_xiyu)"), false);
+        source.sendSuccess(() -> Component.literal("¡ì7½»Á÷Èº: ¡ìb691870136"), false);
+        source.sendSuccess(() -> Component.literal("¡ìcÇëÎğÊ¹ÓÃ±¾Ä£×é½øĞĞ¶ñÒâÆÆ»µ£¬Î¥Õß½«±»ÔÆºÚÃûµ¥·â½û£¡"), false);
         
-        // å‘½ä»¤å¸®åŠ©
-        source.sendSuccess(() -> Component.literal("\nÂ§eå‘½ä»¤å¸®åŠ©:"), false);
+        // ÃüÁî°ïÖú
+        source.sendSuccess(() -> Component.literal("\n¡ìeÃüÁî°ïÖú:"), false);
         showCommandHelp(source);
 
-        source.sendSuccess(() -> Component.literal("\nÂ§eä½¿ç”¨ Â§6/features help <åŠŸèƒ½å> Â§eæŸ¥çœ‹å…·ä½“åŠŸèƒ½çš„è¯¦ç»†å¸®åŠ©"), false);
+        source.sendSuccess(() -> Component.literal("\n¡ìeÊ¹ÓÃ ¡ì6/features help <¹¦ÄÜÃû> ¡ìe²é¿´¾ßÌå¹¦ÄÜµÄÏêÏ¸°ïÖú"), false);
     }
 
-    // æ˜¾ç¤ºå‘½ä»¤å¸®åŠ©
+    // ÏÔÊ¾ÃüÁî°ïÖú
     public static void showCommandHelp(CommandSourceStack source) {
         List<String> commands = List.of(
-            "/features - æ˜¾ç¤ºæ‰€æœ‰åŠŸèƒ½",
-            "/features <åŠŸèƒ½å> - å¼€å¯/å…³é—­åŠŸèƒ½",
-            "/features help - æ˜¾ç¤ºæ­¤å¸®åŠ©",
-            "/features help <åŠŸèƒ½å> - æ˜¾ç¤ºæŒ‡å®šåŠŸèƒ½çš„è¯¦ç»†å¸®åŠ©",
-            ".give <ç©å®¶> <ç‰©å“>[{nbt}] [æ•°é‡] - å¿«é€Ÿç»™äºˆç‰©å“",
-            "/exportbuilding <åç§°> - å¯¼å‡ºé€‰åŒºå»ºç­‘",
-            "/importbuilding <åç§°> - å¯¼å…¥å»ºç­‘",
-            "/confirmimport - ç¡®è®¤å¯¼å…¥å»ºç­‘",
-            "/cancelimport - å–æ¶ˆå¯¼å…¥å»ºç­‘"
+            "/features - ÏÔÊ¾ËùÓĞ¹¦ÄÜ",
+            "/features <¹¦ÄÜÃû> - ¿ªÆô/¹Ø±Õ¹¦ÄÜ",
+            "/features help - ÏÔÊ¾´Ë°ïÖú",
+            "/features help <¹¦ÄÜÃû> - ÏÔÊ¾Ö¸¶¨¹¦ÄÜµÄÏêÏ¸°ïÖú",
+            ".give <Íæ¼Ò> <ÎïÆ·>[{nbt}] [ÊıÁ¿] - ¿ìËÙ¸øÓèÎïÆ·",
+            "/exportbuilding <Ãû³Æ> - µ¼³öÑ¡Çø½¨Öş",
+            "/importbuilding <Ãû³Æ> - µ¼Èë½¨Öş",
+            "/confirmimport - È·ÈÏµ¼Èë½¨Öş",
+            "/cancelimport - È¡Ïûµ¼Èë½¨Öş"
         );
 
         for (String cmd : commands) {
-            source.sendSuccess(() -> Component.literal("Â§7" + cmd), false);
+            source.sendSuccess(() -> Component.literal("¡ì7" + cmd), false);
         }
     }
 
-    // æ˜¾ç¤ºç‰¹å®šåŠŸèƒ½çš„å¸®åŠ©
+    // ÏÔÊ¾ÌØ¶¨¹¦ÄÜµÄ°ïÖú
     public static void showFeatureHelp(CommandSourceStack source, String featureName) {
         var features = Createplus.FEATURE_MANAGER.getFeatures();
         CreativePlusFeature targetFeature = features.stream()
@@ -234,46 +235,46 @@ public class HelpManager {
             .orElse(null);
 
         if (targetFeature == null) {
-            source.sendFailure(Component.literal("Â§cæœªæ‰¾åˆ°åŠŸèƒ½: Â§f" + featureName));
+            source.sendFailure(Component.literal("¡ìcÎ´ÕÒµ½¹¦ÄÜ: ¡ìf" + featureName));
             return;
         }
 
-        // æ˜¾ç¤ºåŠŸèƒ½æ ‡é¢˜
-        source.sendSuccess(() -> Component.literal("Â§6=== " + featureName + " åŠŸèƒ½å¸®åŠ© ==="), false);
+        // ÏÔÊ¾¹¦ÄÜ±êÌâ
+        source.sendSuccess(() -> Component.literal("¡ì6=== " + featureName + " ¹¦ÄÜ°ïÖú ==="), false);
         
-        // æ˜¾ç¤ºåŠŸèƒ½æè¿°
-        source.sendSuccess(() -> Component.literal("\nÂ§eåŠŸèƒ½æè¿°:"), false);
-        source.sendSuccess(() -> Component.literal("Â§7" + targetFeature.getDescription()), false);
+        // ÏÔÊ¾¹¦ÄÜÃèÊö
+        source.sendSuccess(() -> Component.literal("\n¡ìe¹¦ÄÜÃèÊö:"), false);
+        source.sendSuccess(() -> Component.literal("¡ì7" + targetFeature.getDescription()), false);
 
-        // è·å–å¹¶æ˜¾ç¤ºåŠŸèƒ½çš„è¯¦ç»†å¸®åŠ©
+        // »ñÈ¡²¢ÏÔÊ¾¹¦ÄÜµÄÏêÏ¸°ïÖú
         FeatureHelp help = featureHelps.get(featureName);
         if (help != null) {
-            // æ˜¾ç¤ºä½¿ç”¨æ–¹æ³•
-            source.sendSuccess(() -> Component.literal("\nÂ§eä½¿ç”¨æ–¹æ³•:"), false);
+            // ÏÔÊ¾Ê¹ÓÃ·½·¨
+            source.sendSuccess(() -> Component.literal("\n¡ìeÊ¹ÓÃ·½·¨:"), false);
             help.usage.forEach(line -> 
-                source.sendSuccess(() -> Component.literal("Â§7" + line), false));
+                source.sendSuccess(() -> Component.literal("¡ì7" + line), false));
 
-            // æ˜¾ç¤ºæ³¨æ„äº‹é¡¹ï¼ˆå¦‚æœæœ‰ï¼‰
+            // ÏÔÊ¾×¢ÒâÊÂÏî£¨Èç¹ûÓĞ£©
             if (help.notes != null && !help.notes.isEmpty()) {
-                source.sendSuccess(() -> Component.literal("\nÂ§eæ³¨æ„äº‹é¡¹:"), false);
+                source.sendSuccess(() -> Component.literal("\n¡ìe×¢ÒâÊÂÏî:"), false);
                 help.notes.forEach(line -> 
-                    source.sendSuccess(() -> Component.literal("Â§7" + line), false));
+                    source.sendSuccess(() -> Component.literal("¡ì7" + line), false));
             }
 
-            // æ˜¾ç¤ºç¤ºä¾‹ï¼ˆå¦‚æœæœ‰ï¼‰
+            // ÏÔÊ¾Ê¾Àı£¨Èç¹ûÓĞ£©
             if (help.examples != null && !help.examples.isEmpty()) {
-                source.sendSuccess(() -> Component.literal("\nÂ§eç¤ºä¾‹:"), false);
+                source.sendSuccess(() -> Component.literal("\n¡ìeÊ¾Àı:"), false);
                 help.examples.forEach(line -> 
-                    source.sendSuccess(() -> Component.literal("Â§7" + line), false));
+                    source.sendSuccess(() -> Component.literal("¡ì7" + line), false));
             }
         } else {
-            // å¯¹äºæ²¡æœ‰ç‰¹å®šå¸®åŠ©ä¿¡æ¯çš„åŠŸèƒ½ï¼Œæ˜¾ç¤ºé»˜è®¤å¸®åŠ©
-            source.sendSuccess(() -> Component.literal("\nÂ§eä½¿ç”¨æ–¹æ³•:"), false);
-            source.sendSuccess(() -> Component.literal("Â§7ä½¿ç”¨ /features " + featureName + " å¼€å¯/å…³é—­æ­¤åŠŸèƒ½"), false);
+            // ¶ÔÓÚÃ»ÓĞÌØ¶¨°ïÖúĞÅÏ¢µÄ¹¦ÄÜ£¬ÏÔÊ¾Ä¬ÈÏ°ïÖú
+            source.sendSuccess(() -> Component.literal("\n¡ìeÊ¹ÓÃ·½·¨:"), false);
+            source.sendSuccess(() -> Component.literal("¡ì7Ê¹ÓÃ /features " + featureName + " ¿ªÆô/¹Ø±Õ´Ë¹¦ÄÜ"), false);
         }
 
-        // æ˜¾ç¤ºå½“å‰çŠ¶æ€
-        String status = targetFeature.isEnabled() ? "Â§a[å·²å¯ç”¨]" : "Â§7[å·²ç¦ç”¨]";
-        source.sendSuccess(() -> Component.literal("\nÂ§eå½“å‰çŠ¶æ€: " + status), false);
+        // ÏÔÊ¾µ±Ç°×´Ì¬
+        String status = targetFeature.isEnabled() ? "¡ìa[ÒÑÆôÓÃ]" : "¡ì7[ÒÑ½ûÓÃ]";
+        source.sendSuccess(() -> Component.literal("\n¡ìeµ±Ç°×´Ì¬: " + status), false);
     }
 } 

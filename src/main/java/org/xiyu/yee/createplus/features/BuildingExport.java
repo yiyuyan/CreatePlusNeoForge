@@ -18,7 +18,7 @@ public class BuildingExport extends CreativePlusFeature {
     private Map<BlockPos, BlockState> selectedBlocks = new HashMap<>();
 
     public BuildingExport() {
-        super("å»ºç­‘å¯¼å‡º", "ä½¿ç”¨æœ¨é“²é€‰æ‹©åŒºåŸŸå¹¶å¯¼å‡ºå»ºç­‘");
+        super("½¨Öşµ¼³ö", "Ê¹ÓÃÄ¾²ùÑ¡ÔñÇøÓò²¢µ¼³ö½¨Öş");
     }
 
     @Override
@@ -27,7 +27,7 @@ public class BuildingExport extends CreativePlusFeature {
         secondPos = null;
         selectedBlocks.clear();
         Minecraft.getInstance().player.sendSystemMessage(
-            Component.literal("Â§bå»ºç­‘å¯¼å‡ºå·²å¯ç”¨ï¼Œä½¿ç”¨æœ¨é“²å³é”®é€‰æ‹©ä¸¤ä¸ªç‚¹")
+            Component.literal("¡ìb½¨Öşµ¼³öÒÑÆôÓÃ£¬Ê¹ÓÃÄ¾²ùÓÒ¼üÑ¡ÔñÁ½¸öµã")
         );
     }
 
@@ -44,7 +44,7 @@ public class BuildingExport extends CreativePlusFeature {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || !mc.player.isCreative()) return;
 
-        // æ£€æŸ¥æ˜¯å¦æ‰‹æŒæœ¨é“²
+        // ¼ì²éÊÇ·ñÊÖ³ÖÄ¾²ù
         if (!mc.player.getMainHandItem().is(Items.WOODEN_SHOVEL)) {
             return;
         }
@@ -57,21 +57,21 @@ public class BuildingExport extends CreativePlusFeature {
             if (firstPos == null) {
                 firstPos = pos;
                 mc.player.sendSystemMessage(
-                    Component.literal("Â§aå·²è®¾ç½®ç¬¬ä¸€ä¸ªç‚¹: " + pos.toShortString())
+                    Component.literal("¡ìaÒÑÉèÖÃµÚÒ»¸öµã: " + pos.toShortString())
                 );
             } else {
                 secondPos = pos;
                 mc.player.sendSystemMessage(
-                    Component.literal("Â§aå·²è®¾ç½®ç¬¬äºŒä¸ªç‚¹: " + pos.toShortString())
+                    Component.literal("¡ìaÒÑÉèÖÃµÚ¶ş¸öµã: " + pos.toShortString())
                 );
                 updateSelection();
             }
         } else {
-            // å·¦é”®é‡ç½®é€‰æ‹©
+            // ×ó¼üÖØÖÃÑ¡Ôñ
             firstPos = null;
             secondPos = null;
             selectedBlocks.clear();
-            mc.player.sendSystemMessage(Component.literal("Â§cå·²é‡ç½®é€‰æ‹©"));
+            mc.player.sendSystemMessage(Component.literal("¡ìcÒÑÖØÖÃÑ¡Ôñ"));
         }
     }
 
@@ -102,7 +102,7 @@ public class BuildingExport extends CreativePlusFeature {
         }
 
         mc.player.sendSystemMessage(
-            Component.literal("Â§aå·²é€‰æ‹© " + selectedBlocks.size() + " ä¸ªæ–¹å—ï¼Œå¯ä»¥ä½¿ç”¨ /exportbuilding <åç§°> å¯¼å‡º")
+            Component.literal("¡ìaÒÑÑ¡Ôñ " + selectedBlocks.size() + " ¸ö·½¿é£¬¿ÉÒÔÊ¹ÓÃ /exportbuilding <Ãû³Æ> µ¼³ö")
         );
     }
 

@@ -1,4 +1,4 @@
-package org.xiyu.yee.createplus.mixin;
+package org.xiyu.yee.createplus.mixin.render;
 
         import net.minecraft.client.multiplayer.ClientLevel;
         import net.minecraft.world.entity.Entity;
@@ -30,9 +30,9 @@ package org.xiyu.yee.createplus.mixin;
                 }
             }
 
-            @Inject(method = "addParticle", at = @At("HEAD"), cancellable = true)
+            @Inject(method = "addParticle*", at = @At("HEAD"), cancellable = true)
             private void onAddParticle(CallbackInfo ci) {
-                Performance performance = (Performance) Createplus.FEATURE_MANAGER.getFeature("鎬ц兘浼樺寲");
+                Performance performance = (Performance) Createplus.FEATURE_MANAGER.getFeature("性能优化");
                 if (performance != null && performance.isEnabled() && performance.isDisableParticles()) {
                     ci.cancel();
                 }
